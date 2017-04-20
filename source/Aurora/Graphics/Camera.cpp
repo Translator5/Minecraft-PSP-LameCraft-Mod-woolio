@@ -8,7 +8,9 @@ namespace Aurora
 		Camera::Camera()
 		{
 			//needUpdate = true;
+			upDownAngle2 = 0.0f;
 			upDownAngle = 0.0f;
+			horAngle = 0.0f;
 			m_vOffset = Vector3(0.0f, 0.0f, 0.0f);
 		}
 
@@ -190,6 +192,15 @@ namespace Aurora
 			// our new rotated view of our camera.
 			m_vView = m_vPosition + m_vOffset + vNewView;
             horAngle = (PI+(atan2f(m_vPosition.z-m_vView.z,m_vPosition.x-m_vView.x)))/PI*180;
+
+            if(horAngle < 180)
+            {
+                upDownAngle2 = atan2f(m_vPosition.y-m_vView.y,m_vPosition.x-m_vView.x);
+            }
+            else
+            {
+                upDownAngle2 = atan2f(m_vPosition.y-m_vView.y,m_vPosition.z-m_vView.z);
+            }
 
 			vVector = vNewView;
 			needUpdate = true;

@@ -276,7 +276,7 @@ void StatePlay::LoadMap(std::string fileName,bool compressed)
     //save name
     saveFileName = fileName;
     //
-    playerPosition = newPlayerPos = oldPlayerPos = Vector3(64.0f,80,64.0f);
+    playerPosition = newPlayerPos = oldPlayerPos = Vector3(64.0f,64,64);
 
     //then create our perfect world
     mWorld = new CraftWorld();
@@ -1189,7 +1189,7 @@ void StatePlay::CraftItem3x3()
             craftItemAm3 = 1562;
 
         }
-        if(craftSlotId3[0] == 279 && craftSlotId3[4] == 276 && craftSlotId3[7] == 276 && craftSlotId3[1] == 279 && craftSlotId3[3] == 278)
+        if(craftSlotId3[0] == 279 && craftSlotId3[4] == 276 && craftSlotId3[7] == 276 && craftSlotId3[1] == 279 && craftSlotId3[3] == 279)
         {
             craftItemId3 = 268;
             craftItemSt3 = 0;
@@ -1212,7 +1212,7 @@ void StatePlay::CraftItem3x3()
         {
             craftItemId3 = 263;
             craftItemSt3 = 0;
-            craftItemAm3 = 251;
+            craftItemAm3 = 1562;
         }
     break;
 
@@ -1585,9 +1585,9 @@ void StatePlay::HandleEvents(StateManager* sManager)
             }
             fppCam->StrafePhysic(cameraMoveSpeed);
 
-            if(mWorld->HG > 0.0003)
+            if(mWorld->HG > 0.0001)
             {
-                mWorld->HG -= 0.0003;
+                mWorld->HG -= 0.0001;
             }
         }
         //move left
@@ -1600,18 +1600,18 @@ void StatePlay::HandleEvents(StateManager* sManager)
             }
             fppCam->StrafePhysic(-cameraMoveSpeed);
 
-            if(mWorld->HG > 0.0003)
+            if(mWorld->HG > 0.0001)
             {
-                mWorld->HG -= 0.0003;
+                mWorld->HG -= 0.0001;
             }
         }
 
         //move back
         if(keyHold(InputHelper::Instance()->getButtonToAction(1)))
         {
-            if(mWorld->HG > 0.0003)
+            if(mWorld->HG > 0.0001)
             {
-                mWorld->HG -= 0.0003;
+                mWorld->HG -= 0.0001;
             }
 
             if (startDt == true)
@@ -1628,9 +1628,9 @@ void StatePlay::HandleEvents(StateManager* sManager)
         //move forward
         if(keyHold(InputHelper::Instance()->getButtonToAction(0)))
         {
-            if(mWorld->HG > 0.0003)
+            if(mWorld->HG > 0.0001)
             {
-                mWorld->HG -= 0.0003;
+                mWorld->HG -= 0.0001;
             }
 
             if (startDt == true)
@@ -2238,6 +2238,52 @@ void StatePlay::HandleEvents(StateManager* sManager)
                                                 }
                                                 break;
 
+                                                case 60:
+                                                if(fppCam->horAngle > 45 && fppCam->horAngle < 135)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 60; // 3
+                                                }
+                                                if(fppCam->horAngle > 225 && fppCam->horAngle < 315)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 61; // 4
+                                                }
+                                                if(fppCam->horAngle < 45 || fppCam->horAngle > 315)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 62; // 1
+                                                }
+                                                if(fppCam->horAngle > 135 && fppCam->horAngle < 225)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 63; // 2
+                                                }
+                                                if(mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) == 0)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 60;
+                                                }
+                                                break;
+
+                                                case 67:
+                                                if(fppCam->horAngle > 45 && fppCam->horAngle < 135)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 67; // 3
+                                                }
+                                                if(fppCam->horAngle > 225 && fppCam->horAngle < 315)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 68; // 4
+                                                }
+                                                if(fppCam->horAngle < 45 || fppCam->horAngle > 315)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 69; // 1
+                                                }
+                                                if(fppCam->horAngle > 135 && fppCam->horAngle < 225)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 70; // 2
+                                                }
+                                                if(mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) == 0)
+                                                {
+                                                    mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = 67;
+                                                }
+                                                break;
+
                                                 default:
                                                 mWorld->GetBlock(testPos2.x,testPos2.y,testPos2.z) = mWorld->invId[27+barPosition];
                                                 break;
@@ -2636,17 +2682,23 @@ void StatePlay::HandleEvents(StateManager* sManager)
                     if(mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 100 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 131 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 132 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 133) // if it is chest
                     {
                         chestId = FindChestId(testPos1.x,testPos1.y,testPos1.z);
-                        delete mWorld->mChests[chestId];
-                        mWorld->mChests.erase(mWorld->mChests.begin()+chestId);
-                        //delete mWorld->mChests[chestId];
+                        if(chestId != -1)
+                        {
+                            delete mWorld->mChests[chestId];
+                            mWorld->mChests.erase(mWorld->mChests.begin()+chestId);
+                            //delete mWorld->mChests[chestId];
+                        }
                     }
 
-                    if(mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 104 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 105)
+                    if(mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 106 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 107)
                     {
                         furnaceId = FindFurnaceId(testPos1.x,testPos1.y,testPos1.z);
-                        delete mWorld->mFurnaces[furnaceId];
-                        mWorld->mFurnaces.erase(mWorld->mFurnaces.begin()+furnaceId);
-                        //delete mWorld->mChests[chestId];
+                        if(furnaceId != -1)
+                        {
+                            delete mWorld->mFurnaces[furnaceId];
+                            mWorld->mFurnaces.erase(mWorld->mFurnaces.begin()+furnaceId);
+                            //delete mWorld->mChests[chestId];
+                        }
                     }
                     //mWorld->BlockSoundAtPos(testPos1);
 
@@ -2761,7 +2813,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
                     {
                         mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) = 4;
                     }
-                    else if(mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 9 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 93 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 8 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 31)
+                    else if(mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 9 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 93 || mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) == 31)
                     {
                         mWorld->GetBlock(testPos1.x,testPos1.y,testPos1.z) = 0;
                         mWorld->initPutBlocksLight(testPos1.x,testPos1.z);
@@ -3390,7 +3442,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
                                 else
                                 {
                                     mWorld->mAm = (UseChest->chestSlotAm[invYPosition*9 + invXPosition] + mWorld->mAm) - 64;
-                                    UseChest->chestSlotId[invYPosition*9 + invXPosition]=64;
+                                    UseChest->chestSlotAm[invYPosition*9 + invXPosition]=64;
 
                                     if(mWorld->mAm == 0)
                                     {
@@ -3848,6 +3900,18 @@ void StatePlay::HandleEvents(StateManager* sManager)
 
                 }
 
+                if(optionsMenuPos == 7)
+                {
+                     mWorld->mainOptions.fakeShadowsRendering = !mWorld->mainOptions.fakeShadowsRendering;
+                     mSoundMgr->PlayMenuSound();
+
+                     for(int i = 0; i < 512; i++)
+                     {
+                         mWorld->rebuildChunk(i);
+                     }
+
+                }
+
                 //block animation
                 if(optionsMenuPos == 5)
                 {
@@ -4020,8 +4084,8 @@ void StatePlay::HandleEvents(StateManager* sManager)
             mWorld->UpdatePlayerZoneBB(playerPosition);	//Move player back to original spawn point
             fppCam->m_vPosition = playerPosition; //important
             cameraSpeed = 2.0/ 60.0f;	//Possibly fix camera bug
-            fppCam->RotateView(0,0,90,0);
-            fppCam->upDownAngle = 0;
+            //fppCam->RotateView(0,0,90,0);
+            //fppCam->upDownAngle = 0;
             mWorld->HP = 20;
             mWorld->HG = 20;
             dieFactor = 1;
@@ -4582,7 +4646,7 @@ void StatePlay::Draw(StateManager* sManager)
 
     if(mWorld->mainOptions.fogRendering == 1)
     {
-        sceGuFog(mWorld->mainOptions.fogDistance * 3.0, mWorld->mainOptions.horizontalViewDistance * 10 + 20.0f + 80.0f, GU_COLOR(0.5*mWorld->bright,0.662*mWorld->bright,1*mWorld->bright,1.0));	// Fog parameters 100.75
+        sceGuFog(mWorld->mainOptions.fogDistance * 1.75, mWorld->mainOptions.horizontalViewDistance * 10 + 20.0f + 60.0f, GU_COLOR(0.5*mWorld->bright,0.662*mWorld->bright,1*mWorld->bright,1.0));	// Fog parameters 100.75
         sceGuEnable(GU_FOG );
     }
 
@@ -5869,9 +5933,9 @@ void StatePlay::Draw(StateManager* sManager)
             mWorld->mainOptions.headBob == true ? mRender->DebugPrint(110,225,"Head Bob: ON"): mRender->DebugPrint(110,225,"Head Bob: OFF");
 
             RenderManager::InstancePtr()->SetFontStyle(0.35,GU_COLOR(0.24,0.24,0.24,1),0,0,0x00004000|0x00000200);
-            mRender->DebugPrint(111,256,"Don't Press This Button");
+            mWorld->mainOptions.fakeShadowsRendering == true ? mRender->DebugPrint(111,256,"Fake Shadows: ON"): mRender->DebugPrint(111,256,"Fake Shadows: OFF");
             RenderManager::InstancePtr()->SetFontStyle(0.35,GU_COLOR(1,1,1,1),0,0,0x00004000|0x00000200);
-            mRender->DebugPrint(110,255,"Don't Press This Button");
+            mWorld->mainOptions.fakeShadowsRendering == true ? mRender->DebugPrint(110,255,"Fake Shadows: ON"): mRender->DebugPrint(110,255,"Fake Shadows: OFF");
 
             RenderManager::InstancePtr()->SetFontStyle(0.35,GU_COLOR(0.24,0.24,0.24,1),0,0,0x00004000|0x00000200);
             mWorld->mainOptions.sunMoodRendering == true ? mRender->DebugPrint(371,106,"Sun&Moon Rendering: ON"): mRender->DebugPrint(371,106,"Sun&Moon Rendering: OFF");
@@ -6067,7 +6131,8 @@ void StatePlay::Draw(StateManager* sManager)
         mRender->DebugPrint(20,110,"player.x: %f",playerPosition.x);
         mRender->DebugPrint(20,120,"player.y: %f",playerPosition.y);
         mRender->DebugPrint(20,130,"player.z: %f",playerPosition.z);
-        mRender->DebugPrint(20,140,"angle: %f",mWorld->lightAngle);
+        mRender->DebugPrint(20,140,"angle: %f",fppCam->upDownAngle);
+        mRender->DebugPrint(20,150,"angle: %f",fppCam->m_vView.y);
         mRender->DebugPrint(20,180,"GetBlock(x, y, z) %f", (float)mWorld->GetBlock(cubePos.x, cubePos.y, cubePos.z));
         /*if(playSB != NULL)
         {

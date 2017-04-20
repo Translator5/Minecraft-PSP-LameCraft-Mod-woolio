@@ -67,6 +67,7 @@ namespace Aurora
 			float horAngle;
 
 			float upDownAngle;
+			float upDownAngle2;
 		};
 	}
 }

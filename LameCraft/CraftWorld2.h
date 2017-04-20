@@ -252,6 +252,7 @@ private:
 
 	//transparent order rendering
 	float lightShadowFactor;
+	Vector3 lightFactor;
 
 	char cloudTexX;
 	char cloudTexY;

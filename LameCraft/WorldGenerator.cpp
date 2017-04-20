@@ -53,7 +53,7 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
         builder.setSize(worldSize, worldSize);
 
 
-        builder.setBounds(0, 0, 1.5f-((rand() % 9)*0.1f), 1-((rand() % 4)*0.1f));
+        builder.setBounds(0, 0, 1.5f-((rand() % 9)*0.1f), 1-((rand() % 9)*0.1f));
 
         builder.setDestination(data);
         builder.build ();
@@ -188,23 +188,6 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
         initWaterAndCanes(WORLD_SIZE, world);
     }
 
-    if(makeTrees)
-    {
-        initGreatTrees(WORLD_SIZE, world);
-        initTrees(WORLD_SIZE, world, perlin, seed);
-    }
-
-    initBiome(WORLD_SIZE, world, perlin, seed);
-
-    initPumpkins(WORLD_SIZE, world);
-    initIron(WORLD_SIZE, world);
-    initCoal(WORLD_SIZE, world);
-    initGold(WORLD_SIZE, world);
-    initRedStone(WORLD_SIZE, world);
-    initDiamond(WORLD_SIZE, world);
-    initClay(WORLD_SIZE, world);
-    initTypes(WORLD_SIZE, world);
-
     if(makeCaves) //worm cave generator
 	{
         int x = 10 + rand() % 117;
@@ -279,6 +262,23 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
             }
         }
 	}
+
+    if(makeTrees)
+    {
+        initGreatTrees(WORLD_SIZE, world);
+        initTrees(WORLD_SIZE, world, perlin, seed);
+    }
+
+    initBiome(WORLD_SIZE, world, perlin, seed);
+
+    initPumpkins(WORLD_SIZE, world);
+    initIron(WORLD_SIZE, world);
+    initCoal(WORLD_SIZE, world);
+    initGold(WORLD_SIZE, world);
+    initRedStone(WORLD_SIZE, world);
+    initDiamond(WORLD_SIZE, world);
+    initClay(WORLD_SIZE, world);
+    initTypes(WORLD_SIZE, world);
 
     initLava(WORLD_SIZE, world);
     initDirt(WORLD_SIZE, world);
@@ -465,6 +465,10 @@ void WorldGenerator::initBiome(int WORLD_SIZE, CraftWorld *world, PerlinModule* 
     float *dataBiomes = new float[WORLD_SIZE * WORLD_SIZE];
     char frequency = 20 + rand() % 20; //0 - 100%
 
+    if (seed >= 1000 && seed <= 2000)
+    {
+        frequency = 100;
+    }
     perlin->setSeed(seed+5);
     perlin->setOctaveCount(6);
     perlin->setPersistence(0.5f);
@@ -945,7 +949,7 @@ void WorldGenerator::initTypes(int WORLD_SIZE, CraftWorld *world) //generate flo
 
 void WorldGenerator::initIron(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumOres = 700;
+    int NumOres = 800;
     short Ore = 41;
     char HighestLayer = 64;
     char NumOreBlocks;
@@ -980,7 +984,7 @@ void WorldGenerator::initIron(int WORLD_SIZE, CraftWorld *world)
 
 void WorldGenerator::initCoal(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumOres = 950;
+    int NumOres = 1050;
     short Ore = 42;
     char HighestLayer = 100;
     char NumOreBlocks;

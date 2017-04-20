@@ -275,7 +275,7 @@ GoldenBar::GoldenBar():BaseItem()
 {
 	textureRow = 15;
 
-	plane = 13;
+	plane = 12;
 }
 
 item_t GoldenBar::getID(){ return 280;}
