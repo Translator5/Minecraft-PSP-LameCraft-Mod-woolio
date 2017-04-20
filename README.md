@@ -1,9 +1,6 @@
 Info:
-
 author: Marcin Ploska(drakon)
-
 contact: marcin.ploska@gmail.com
-
 modified by: Joel16 (https://github.com/joel16) & woolio
 
 authors of the source code that i have used/modified/inspired by:
@@ -13,7 +10,6 @@ authors of the source code that i have used/modified/inspired by:
 
 
 Installation:
-
 1. Download and install latest Minimalist PSPSDK from http://sourceforge.net/projects/minpspw/ for your platform.
 2. Go to 3libs folder and unpack noisepp.rar and libpspmath.zip
 3. Go to noisepp folder and compile source(if you are using windows just click on compile.bat).
