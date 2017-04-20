@@ -258,7 +258,8 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
 
 
 
-
+        float x3 = rand() % 4;
+        float x4 = rand() % 8;
 
     float *data = new float[worldSize * worldSize];
 
@@ -272,16 +273,12 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
 
         //data = new float[worldSize * worldSize];
 
-        float x1 = rand() % 10;
-        float x2 = rand() % 10;
-        float x3 = rand() % 10;
-        float x4 = rand() % 10;
 
         noisepp::utils::PlaneBuilder2D builder;
         builder.setModule(perlin);
         builder.setSize(worldSize, worldSize);
 
-        builder.setBounds(x1, x2, x3, x4);
+        builder.setBounds(0, 0, 2.0+x3, 3.0+x3);
         builder.setDestination(data);
         builder.build ();
 
@@ -307,58 +304,6 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
 
             }
         }
-
-        //carve terrain
-
-        /*
-        float *data2 = new float[worldSize * worldSize];
-        float *data3 = new float[worldSize * worldSize];
-
-        perlin.setSeed(seed+1);
-        noisepp::utils::PlaneBuilder2D builder2;
-        builder2.setModule(perlin);
-        builder2.setSize(worldSize, worldSize);
-        builder2.setBounds(0.0, 0.0, 4.0, 4.0);
-        builder2.setDestination(data2);
-        builder2.build ();
-
-        perlin.setSeed(seed+2);
-        noisepp::utils::PlaneBuilder2D builder3;
-        builder3.setModule(perlin);
-        builder3.setSize(worldSize, worldSize);
-        builder3.setBounds(0.0, 0.0, 4.0, 4.0);
-        builder3.setDestination(data3);
-        builder3.build ();
-
-        int height1= 0;
-        int height2= 0;
-
-        for (int z = 0; z < WORLD_SIZE; ++z)
-        {
-            for (int x = 0; x < WORLD_SIZE; ++x)
-            {
-                height1 = data2[x + z*WORLD_SIZE]* 10 + WORLD_SIZE/2;
-                height2 = data3[x + z*WORLD_SIZE]* 12 + WORLD_SIZE/2;
-
-                if (height2 > height1)
-                {
-                    //put at height1 grass
-                    if(world->GetBlock(x, height1, z) != 0)
-                        world->GetBlock(x, height1, z) = grass;
-
-                    //delete blocks
-                    for (int y = height1+1; y < height2; y++)
-                    {
-                        world->GetBlock(x, y, z) = 0;
-                    }
-                }
-            }
-        }
-
-
-        //delete tempdata
-        delete []data2;
-        delete []data3;*/
 
     }
     else
@@ -445,8 +390,7 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
 
 
 
-    //watering
-    int waterLevel = 62;
+    int waterLevel = 63;
 
     for (int z = 0; z < WORLD_SIZE; ++z)
     {
@@ -482,7 +426,12 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
         }
     }
 
-    delete []data;
+	delete []data;
+
+
+
+    //watering
+
 
     //make the most bottom layer of cube not destroyable
     for (int z = 0; z < WORLD_SIZE; ++z)

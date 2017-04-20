@@ -43,6 +43,7 @@ StatePlay::StatePlay()
     dET = 0;
     dS = 0;
     dT = 0;
+    dStd = -1;
 
     testPos1.x = -1;
     testPos1.y = -1;
@@ -132,8 +133,6 @@ void StatePlay::Init()
     mSoundMgr = SoundManager::Instance();
     mIhelper = InputHelper::Instance();
 
-    playerPosition = newPlayerPos = oldPlayerPos = Vector3(64.0f,80.0f,64.0f);
-
     WorldGenerator *mGen = new WorldGenerator();
 
     //then create our perfect world
@@ -148,6 +147,8 @@ void StatePlay::Init()
     mWorld->UpdatePlayerZoneBB(playerPosition);
     mWorld->buildMap();
     mWorld->buildblocksVerts();
+
+    playerPosition = newPlayerPos = oldPlayerPos = Vector3(64.0f,mWorld->groundHeight(64,64)+1.5,64.0f);
 
     dt = mTimer.GetDeltaTime();
 
@@ -177,7 +178,6 @@ void StatePlay::InitParametric(int terrainType,bool makeFlat,bool makeTrees,bool
     mIhelper = InputHelper::Instance();
 
     //
-    playerPosition = newPlayerPos = oldPlayerPos = Vector3(64.0f,80.0f,64.0f);
 
     //then create our perfect world
     mWorld = new CraftWorld();
@@ -193,6 +193,8 @@ void StatePlay::InitParametric(int terrainType,bool makeFlat,bool makeTrees,bool
     mWorld->UpdatePlayerZoneBB(playerPosition);
     mWorld->buildMap();
     mWorld->buildblocksVerts();
+
+    playerPosition = newPlayerPos = oldPlayerPos = Vector3(64.0f,mWorld->groundHeight(64,64)+1.5,64.0f);
 
     dt = mTimer.GetDeltaTime();
 
@@ -242,7 +244,7 @@ void StatePlay::LoadMap(std::string fileName,bool compressed)
     //save name
     saveFileName = fileName;
     //
-    playerPosition = newPlayerPos = oldPlayerPos = Vector3(64.0f,80.0f,64.0f);
+    playerPosition = newPlayerPos = oldPlayerPos = Vector3(64.0f,80,64.0f);
 
     //then create our perfect world
     mWorld = new CraftWorld();
@@ -365,6 +367,29 @@ void StatePlay::LoadTextures()
     cubeModel->LoadObj("Assets/Lamecraft/textureCube.obj");
     cubeModel->Optimize();
 
+    //Говнокод начинается здесь
+
+    dModel[0] = new ObjModel();
+    dModel[0]->LoadObj("Assets/Lamecraft/Models/Destroy/1/textureCube.obj");
+    dModel[0]->Optimize();
+
+    dModel[1] = new ObjModel();
+    dModel[1]->LoadObj("Assets/Lamecraft/Models/Destroy/2/textureCube.obj");
+    dModel[1]->Optimize();
+
+    dModel[2] = new ObjModel();
+    dModel[2]->LoadObj("Assets/Lamecraft/Models/Destroy/3/textureCube.obj");
+    dModel[2]->Optimize();
+
+    dModel[3] = new ObjModel();
+    dModel[3]->LoadObj("Assets/Lamecraft/Models/Destroy/4/textureCube.obj");
+    dModel[3]->Optimize();
+
+    dModel[4] = new ObjModel();
+    dModel[4]->LoadObj("Assets/Lamecraft/Models/Destroy/5/textureCube.obj");
+    dModel[4]->Optimize();
+    //
+
     //sky dome
     if(terrainType == 4)
     {
@@ -419,6 +444,10 @@ void StatePlay::Enter()
 }
 void StatePlay::CleanUp()
 {
+    for(int i = 0; i <= 4; i++)
+    {
+        delete dModel[i];
+    }
     delete mRender->mCam;
     mRender->mCam = NULL;
     delete buttonSprite;
@@ -637,40 +666,40 @@ void StatePlay::CraftItem3x3()
     break;
 
     case 99://clay
-        if(craftSlotId[0] == 99 || craftSlotId[1] == 99 || craftSlotId[2] == 99 || craftSlotId[3] == 99 || craftSlotId[4] == 99 || craftSlotId[5] == 99 || craftSlotId[6] == 99 || craftSlotId[7] == 99 || craftSlotId[8] == 99)
+        if(craftSlotId3[0] == 99 || craftSlotId3[1] == 99 || craftSlotId3[2] == 99 || craftSlotId3[3] == 99 || craftSlotId3[4] == 99 || craftSlotId3[5] == 99 || craftSlotId3[6] == 99 || craftSlotId3[7] == 99 || craftSlotId3[8] == 99)
         {
-            craftItemId = 283;
-            craftItemSt = 1;
-            craftItemAm = 4;
+            craftItemId3 = 283;
+            craftItemSt3 = 1;
+            craftItemAm3 = 4;
         }
     break;
 
     // half blocks
 
     case 108://cobblestone
-        if((craftSlotId[0] == 36 && craftSlotId[1] == 36 && craftSlotId[2] == 36) || (craftSlotId[3] == 36 && craftSlotId[4] == 36 && craftSlotId[5] == 36) || (craftSlotId[6] == 36 && craftSlotId[7] == 36 && craftSlotId[8] == 36))
+        if((craftSlotId3[0] == 36 && craftSlotId3[1] == 36 && craftSlotId3[2] == 36) || (craftSlotId3[3] == 36 && craftSlotId3[4] == 36 && craftSlotId3[5] == 36) || (craftSlotId3[6] == 36 && craftSlotId3[7] == 36 && craftSlotId3[8] == 36))
         {
-            craftItemId = 82;
-            craftItemSt = 1;
-            craftItemAm = 3;
+            craftItemId3 = 82;
+            craftItemSt3 = 1;
+            craftItemAm3 = 3;
         }
     break;
 
     case 102://planks
-        if((craftSlotId[0] == 34 && craftSlotId[1] == 34 && craftSlotId[2] == 34) || (craftSlotId[3] == 34 && craftSlotId[4] == 34 && craftSlotId[5] == 34) || (craftSlotId[6] == 34 && craftSlotId[7] == 34 && craftSlotId[8] == 34))
+        if((craftSlotId3[0] == 34 && craftSlotId3[1] == 34 && craftSlotId3[2] == 34) || (craftSlotId3[3] == 34 && craftSlotId3[4] == 34 && craftSlotId3[5] == 34) || (craftSlotId3[6] == 34 && craftSlotId3[7] == 34 && craftSlotId3[8] == 34))
         {
-            craftItemId = 86;
-            craftItemSt = 1;
-            craftItemAm = 3;
+            craftItemId3 = 86;
+            craftItemSt3 = 1;
+            craftItemAm3 = 3;
         }
     break;
 
     case 9://stone
-        if((craftSlotId[0] == 3 && craftSlotId[1] == 3 && craftSlotId[2] == 3) || (craftSlotId[3] == 3 && craftSlotId[4] == 3 && craftSlotId[5] == 3) || (craftSlotId[6] == 3 && craftSlotId[7] == 3 && craftSlotId[8] == 3))
+        if((craftSlotId3[0] == 3 && craftSlotId3[1] == 3 && craftSlotId3[2] == 3) || (craftSlotId3[3] == 3 && craftSlotId3[4] == 3 && craftSlotId3[5] == 3) || (craftSlotId3[6] == 3 && craftSlotId3[7] == 3 && craftSlotId3[8] == 3))
         {
-            craftItemId = 84;
-            craftItemSt = 1;
-            craftItemAm = 3;
+            craftItemId3 = 84;
+            craftItemSt3 = 1;
+            craftItemAm3 = 3;
         }
     break;
 
@@ -927,6 +956,8 @@ void StatePlay::CraftItem3x3()
         }
     break;
 
+
+
     case 2511: //diamond block
         if(craftSlotId3[0] == 279 && craftSlotId3[1] == 279 && craftSlotId3[2] == 279 && craftSlotId3[3] == 279 && craftSlotId3[4] == 279 && craftSlotId3[5] == 279 && craftSlotId3[6] == 279 && craftSlotId3[7] == 279 && craftSlotId3[8] == 279)
         {
@@ -978,6 +1009,15 @@ void StatePlay::CraftItem3x3()
         if(craftSlotId3[4] == 7 && craftSlotId3[1] == 281 && craftSlotId3[3] == 281 && craftSlotId3[5] == 281 && craftSlotId3[7] == 281)
         {
             craftItemId3 = 40;
+            craftItemSt3 = 1;
+            craftItemAm3 = 1;
+        }
+    break;
+
+    case 1160: //glass
+        if(craftSlotId3[4] == 36 && craftSlotId3[1] == 281 && craftSlotId3[3] == 281 && craftSlotId3[5] == 281 && craftSlotId3[7] == 281)
+        {
+            craftItemId3 = 3;
             craftItemSt3 = 1;
             craftItemAm3 = 1;
         }
@@ -1111,6 +1151,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             dT = 0;
             dET = 0;
             dS = 0;
+            dStd = -1;
         }
         //switch right
         if(keyPressed(InputHelper::Instance()->getButtonToAction(8)))
@@ -1122,6 +1163,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             dT = 0;
             dET = 0;
             dS = 0;
+            dStd = -1;
         }
         //menu
         if(keyPressed(InputHelper::Instance()->getButtonToAction(15)))
@@ -1138,6 +1180,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt == true)
             {
                 startDt = false;
+                dStd = -1;
             }
             fppCam->PitchView(cameraSpeed);
 
@@ -1161,6 +1204,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt == true)
             {
                 startDt = false;
+                dStd = -1;
             }
             fppCam->PitchView(-cameraSpeed);
 
@@ -1184,6 +1228,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt == true)
             {
                 startDt = false;
+                dStd = -1;
             }
             fppCam->RotateView(cameraSpeed,0,1,0);
 
@@ -1207,6 +1252,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt == true)
             {
                 startDt = false;
+                dStd = -1;
             }
             fppCam->RotateView(-cameraSpeed,0,1,0);
 
@@ -1231,6 +1277,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt == true)
             {
                 startDt = false;
+                dStd = -1;
             }
             fppCam->StrafePhysic(cameraMoveSpeed);
         }
@@ -1240,6 +1287,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt == true)
             {
                 startDt = false;
+                dStd = -1;
             }
             fppCam->StrafePhysic(-cameraMoveSpeed);
         }
@@ -1250,6 +1298,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt == true)
             {
                 startDt = false;
+                dStd = -1;
             }
             if(canFly)
                 fppCam->MovePhysic(-cameraMoveSpeed);
@@ -1263,12 +1312,40 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt == true)
             {
                 startDt = false;
+                dStd = -1;
             }
             if(canFly)
                 fppCam->MovePhysic(cameraMoveSpeed);
             else
                 fppCam->MovePhysicNoY(cameraMoveSpeed);
 
+        }
+
+        if(keyHold(InputHelper::Instance()->getButtonToAction(12)))
+        {
+            dStd = -1;
+            if (headInWater || headInLava)	//Legit swimming
+            {
+                if (walkingOnGround)
+                {
+                    jumping = true;
+                }else
+                {
+                    playerVelocity.y = 0.4 * JUMPVELOCITY;
+                    walkingOnGround = false;
+                }
+            }
+            if ((!headInWater || !headInLava) && !walkingOnGround && (footInWater || footInLava))	//Your above he water, so Jump out
+            {
+                playerVelocity.y = 0.9 * JUMPVELOCITY;
+                walkingOnGround = false;
+            }
+            if(walkingOnGround)	//Just in case...
+            {
+                jumping = true;
+            }
+            else
+                jumping = false;	//Don't bounce
         }
 
         if((keyPressed(InputHelper::Instance()->getButtonToAction(13)))&&(keyPressed(InputHelper::Instance()->getButtonToAction(14))))
@@ -1754,7 +1831,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
                         {
                             case 2:
 
-                            dET = 72;
+                            dET = 110;
                             if(mWorld->invId[27+barPosition] == 250)
                             {
                                 dS = 1.5;
@@ -1779,22 +1856,47 @@ void StatePlay::HandleEvents(StateManager* sManager)
 
                             case 1:
 
-                            dET = 40;
+                            dET = 100;
                             if(mWorld->invId[27+barPosition] == 265)
                             {
-                                dS = 3;
+                                dS = 1.5;
                             }
                             else if(mWorld->invId[27+barPosition] == 266)
                             {
-                                dS = 5;
+                                dS = 3;
                             }
                             else if(mWorld->invId[27+barPosition] == 267)
                             {
-                                dS = 6;
+                                dS = 4;
                             }
                             else if(mWorld->invId[27+barPosition] == 268)
                             {
+                                dS = 5;
+                            }
+                            else
+                            {
+                                dS = 1;
+                            }
+                            break;
+
+                            case 3:
+
+                            dET = 80;
+                            if(mWorld->invId[27+barPosition] == 260)
+                            {
+                                dS = 4;
+                            }
+                            else if(mWorld->invId[27+barPosition] == 261)
+                            {
+                                dS = 6;
+                            }
+                            else if(mWorld->invId[27+barPosition] == 262)
+                            {
                                 dS = 8;
+                            }
+                            else if(mWorld->invId[27+barPosition] == 263)
+                            {
+                                dS = 10;
                             }
                             else
                             {
@@ -1802,41 +1904,16 @@ void StatePlay::HandleEvents(StateManager* sManager)
                             }
                             break;
 
-                            case 3:
+                            case 4:
 
-                            dET = 55;
-                            if(mWorld->invId[27+barPosition] == 260)
+                            dET = 50;
+                            if(mWorld->invId[27+barPosition] == 275)
                             {
-                                dS = 6;
-                            }
-                            else if(mWorld->invId[27+barPosition] == 261)
-                            {
-                                dS = 8;
-                            }
-                            else if(mWorld->invId[27+barPosition] == 262)
-                            {
-                                dS = 10;
-                            }
-                            else if(mWorld->invId[27+barPosition] == 263)
-                            {
-                                dS = 12;
+                                dS = 5;
                             }
                             else
                             {
                                 dS = 2.5;
-                            }
-                            break;
-
-                            case 4:
-
-                            dET = 41;
-                            if(mWorld->invId[27+barPosition] == 275)
-                            {
-                                dS = 12;
-                            }
-                            else
-                            {
-                                dS = 5;
                             }
                             break;
 
@@ -1863,6 +1940,43 @@ void StatePlay::HandleEvents(StateManager* sManager)
 
 
             dT < dET ? dT += dS : dT = 0;
+            if(dT < dET / 5)
+            {
+                if(dStd != 0)
+                {
+                    dStd = 0;
+                }
+            }
+            if(dT >= dET / 5 && dT < (dET / 5)*2)
+            {
+                if(dStd != 1)
+                {
+                    dStd = 1;
+                }
+            }
+            if(dT >= (dET / 5)*2 && dT < (dET / 5)*3)
+            {
+                if(dStd != 2)
+                {
+                    dStd = 2;
+                }
+            }
+            if(dT >= (dET / 5)*3 && dT < (dET / 5)*4)
+            {
+                if(dStd != 3)
+                {
+                    dStd = 3;
+                }
+            }
+            if(dT >= (dET / 5)*4 && dT < (dET / 5)*5)
+            {
+                if(dStd != 4)
+                {
+                    dStd = 4;
+                }
+            }
+
+
 
 
                     //remove block99
@@ -1986,6 +2100,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
                     dET = 0;
                     dS = 0;
                     chestId = -1;
+                    dStd = -1;
                     return;
                     }
                 }
@@ -1996,6 +2111,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
             if (startDt != false)
             {
                 dT = 0;
+                dStd = -1;
                 startDt = false;
                 chestId = -1;
             }
@@ -2004,31 +2120,7 @@ void StatePlay::HandleEvents(StateManager* sManager)
 
 
         //jump
-        if(keyHold(InputHelper::Instance()->getButtonToAction(12)))
-        {
-            if (headInWater || headInLava)	//Legit swimming
-            {
-                if (walkingOnGround)
-                {
-                    jumping = true;
-                }else
-                {
-                    playerVelocity.y = 0.4 * JUMPVELOCITY;
-                    walkingOnGround = false;
-                }
-            }
-            if ((!headInWater || !headInLava) && !walkingOnGround && (footInWater || footInLava))	//Your above he water, so Jump out
-            {
-                playerVelocity.y = 0.9 * JUMPVELOCITY;
-                walkingOnGround = false;
-            }
-            if(walkingOnGround)	//Just in case...
-            {
-                jumping = true;
-            }
-            else
-                jumping = false;	//Don't bounce
-        }
+
 
         }
 
@@ -2362,6 +2454,13 @@ void StatePlay::HandleEvents(StateManager* sManager)
                     {
                         mWorld->mAm = (mWorld->invAm[invYPosition*9 + invXPosition] + mWorld->mAm) - 64;
                         mWorld->invAm[invYPosition*9 + invXPosition]=64;
+
+                        if(mWorld->mAm == 0)
+                        {
+                            mWorld->mAm = -1;
+                            mWorld->mId = -1;
+                            mWorld->mSt = 0;
+                        }
                     }
                     }
                 }
@@ -2996,11 +3095,6 @@ void StatePlay::Update(StateManager* sManager)
             }
         }
 
-        if(walkingOnGround == false)
-        {
-            yy += 1;
-        }
-
         if(fppCam->needUpdate)
         {
             showCube = false;
@@ -3037,7 +3131,6 @@ void StatePlay::Update(StateManager* sManager)
         //update player position
         if(dt < 0.1f)
         {
-            yy = 0;
             Vector3 delta = fppCam->m_vView - fppCam->m_vPosition;
             playerPosition = fppCam->m_vPosition;
 
@@ -3056,7 +3149,14 @@ void StatePlay::Update(StateManager* sManager)
             if(mWorld->PlayerInWater(headPosition))
             {
                 //change gravity
-                playerVelocity.y += (GRAVITY/3.0f) * dt;
+                if (playerVelocity.y > -3)
+                {
+                    playerVelocity.y += (GRAVITY/3.0f) * dt;
+                }
+                else
+                {
+                    playerVelocity.y = -3;
+                }
                 headInWater = true;
             }
             else
@@ -3104,7 +3204,23 @@ void StatePlay::Update(StateManager* sManager)
                     playerPosition.y = (float)(blockOn + 1 + 1.45f);
                 }
 
-
+                if (!mWorld->PlayerInWater(footPosition))
+                {
+                    if(playerVelocity.y < -10 && playerVelocity.y > -18)
+                    {
+                        mSoundMgr->PlayFallSound(playerVelocity.y);
+                        mWorld->HP -= (int)((playerVelocity.y*-1) - 8) / 2;
+                        hurt = true;
+                        hurt_time = 1.0f;
+                    }
+                    if(playerVelocity.y < -18)
+                    {
+                        mSoundMgr->PlayFallSound(playerVelocity.y);
+                        mWorld->HP -= (int)((playerVelocity.y*-1) - 8) / 1.5;
+                        hurt = true;
+                        hurt_time = 1.0f;
+                    }
+                }
                 playerVelocity.y = 0.0f;
 
                 //dodatkowa logika podczas stania na klocku
@@ -3339,6 +3455,23 @@ void StatePlay::Draw(StateManager* sManager)
 
 		//GU_COLOR()
 		mRender->Draw(cubeModel);
+		sceGuDisable(GU_BLEND);
+
+		sceGumPopMatrix();
+	}
+
+	if (startDt == 1 && dStd >= 0 && dStd <= 4)
+	{
+		sceGumPushMatrix();
+
+		ScePspFVector3 move = {cubePos.x,cubePos.y,cubePos.z};
+		sceGumTranslate(&move);
+
+		sceGuEnable(GU_BLEND);
+		sceGuColor(0xFFFFFFFF);
+
+		//GU_COLOR()
+		mRender->Draw(dModel[dStd]);
 		sceGuDisable(GU_BLEND);
 
 		sceGumPopMatrix();
@@ -4252,6 +4385,8 @@ void StatePlay::Draw(StateManager* sManager)
         mRender->DebugPrint(20,130,"player.z: %f",playerPosition.z);
         mRender->DebugPrint(20,150,"Cycle %f",bobCycle);
         mRender->DebugPrint(20,160,"chunk %i",chunks);
+        mRender->DebugPrint(20,170,"CLIMBVELOCITY %f",CLIMBVELOCITY);
+        mRender->DebugPrint(20,180," playerVelocity.y %f", playerVelocity.y);
 
 
         mRender->SetFontStyle(0.5f,0xFFFFFFFF,0xFF000000,0x00000200);

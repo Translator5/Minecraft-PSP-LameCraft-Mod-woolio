@@ -8433,13 +8433,21 @@ void CraftWorld::UpdateChunkBlocks(int id)
             {
                 if(x > 0 && x < 128 && y > 0 && y < 128 && z > 0 && z < 128)
                 {
+                    if(GetBlock(x,y,z) == 0)
+                    {
+                       continue;
+                    }
+
+
                     if(GetBlock(x,y,z) == 2 && GetBlock(x,y+1,z) == 0)
                     {
                         GetBlock(x,y,z) = 1;
+                        continue;
                     }
                     if(GetBlock(x,y,z) == 1 && GetBlock(x,y+1,z) != 0)
                     {
                         GetBlock(x,y,z) = 2;
+                        continue;
 
                     }
 
@@ -8448,6 +8456,7 @@ void CraftWorld::UpdateChunkBlocks(int id)
                         if(rand() % 3 == 1)
                         {
                             GetBlock(x,y,z) = 135;
+                            continue;
                         }
                     }
                     if(GetBlock(x,y,z) == 135 && GetBlock(x,y-1,z) == 79)
@@ -8455,6 +8464,7 @@ void CraftWorld::UpdateChunkBlocks(int id)
                         if(rand() % 3 == 1)
                         {
                             GetBlock(x,y,z) = 136;
+                            continue;
                         }
                     }
                     if(GetBlock(x,y,z) == 79 && GetBlock(x,y+1,z) == 0)
@@ -8462,8 +8472,19 @@ void CraftWorld::UpdateChunkBlocks(int id)
                         if(rand() % 4 == 1)
                         {
                             GetBlock(x,y,z) = 2;
+                            continue;
                         }
                     }
+
+                    if(GetBlock(x,y,z) == 33 && GetBlock(x,y+1,z) == 0 && GetBlock(x,y-3,z) != 33 && GetBlock(x,y-3,z) != 0)
+                    {
+                        if(rand() % 4 == 1)
+                        {
+                            GetBlock(x,y+1,z) = 33;
+                            continue;
+                        }
+                    }
+
                     if(GetBlock(x,y,z) == 121)
                     {
                         if(rand() % 10 == 1)

@@ -609,6 +609,7 @@ CobbleStone::CobbleStone():BaseBlock()
 	soundType = 2;
 
 		loot = 36;
+		material = 2;
 
 }
 block_t CobbleStone::getID(){ return 36;}
@@ -1290,6 +1291,9 @@ HalfBlock8::HalfBlock8():BaseBlock()
     transparent = false;
     blockSpecial = true;
 
+    loot = 82;
+    material = 1;
+
 }
 block_t HalfBlock8::getID(){ return 82;}
 
@@ -1303,6 +1307,9 @@ HalfBlock0::HalfBlock0():BaseBlock()
     editable = true;
     transparent = false;
     blockSpecial = true;
+
+    loot = 83;
+    material = 1;
 
 }
 block_t HalfBlock0::getID(){ return 83;}
@@ -1319,6 +1326,9 @@ HalfBlock1::HalfBlock1():BaseBlock()
     blockSpecial = true;
     lightSource = false;
 
+    loot = 84;
+    material = 1;
+
 }
 block_t HalfBlock1::getID(){ return 84;}
 
@@ -1333,6 +1343,9 @@ HalfBlock2::HalfBlock2():BaseBlock()
     transparent = false;
     blockSpecial = true;
     lightSource = false;
+
+    loot = 85;
+    material = 1;
 
 }
 block_t HalfBlock2::getID(){ return 85;}
@@ -1349,6 +1362,8 @@ HalfBlock3::HalfBlock3():BaseBlock()
     blockSpecial = true;
     lightSource = false;
 
+    loot = 86;
+    material = 1;
 }
 block_t HalfBlock3::getID(){ return 86;}
 
@@ -1363,6 +1378,9 @@ HalfBlock4::HalfBlock4():BaseBlock()
     transparent = false;
     blockSpecial = true;
     lightSource = false;
+
+    loot = 87;
+    material = 1;
 
 }
 block_t HalfBlock4::getID(){ return 87;}
@@ -1905,7 +1923,7 @@ Pumpkin2::Pumpkin2():BaseBlock()
     transparent = false;
     blockSpecial = true;
 
-
+    material = 1;
     loot = 74;
 }
 block_t Pumpkin2::getID(){ return 122;}
@@ -1924,6 +1942,7 @@ Pumpkin3::Pumpkin3():BaseBlock()
     transparent = false;
     blockSpecial = true;
 
+    material = 1;
     loot = 74;
 
 }
@@ -1944,6 +1963,7 @@ Pumpkin4::Pumpkin4():BaseBlock()
     transparent = false;
     blockSpecial = true;
 
+    material = 1;
     loot = 74;
 
 }

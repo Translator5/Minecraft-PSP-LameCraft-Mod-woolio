@@ -26,6 +26,7 @@ public:
 	void TNTSound();
 	void doorSound();
 	void PlayCaveSound();
+	void PlayFallSound(float i);
 
 	int PlayRandomAmbient();
 
@@ -54,6 +55,7 @@ private:
 	OSL_SOUND *stoneSounds[4];
 	OSL_SOUND *woodSounds[4];
     OSL_SOUND *ambientSounds[6];
+    OSL_SOUND *fallSounds[2];
 
 	//TNT
 	OSL_SOUND *tnt;

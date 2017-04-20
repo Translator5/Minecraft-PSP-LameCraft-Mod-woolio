@@ -87,6 +87,8 @@ private:
 
 	CraftWorld *mWorld;
 	ObjModel *cubeModel;
+	ObjModel *dModel[5];
+
     SkyLight *skyLight;
 	SkyDome *skyDome;
 
@@ -98,6 +100,7 @@ private:
     float dT; //time of destr
     float dET; //end time of destt
     float dS; //speed of destr
+    int dStd; //
 
     bool hurt;
     float hurt_time;

@@ -34,6 +34,9 @@ void SoundManager::Init()
 
 	//plop sound
 	plopSound = oslLoadSoundFile("Assets/Sounds/plop.wav",OSL_FMT_NONE);
+
+    fallSounds[0] = oslLoadSoundFile("Assets/Sounds/Damage/fallbig.wav",OSL_FMT_NONE);
+    fallSounds[1] = oslLoadSoundFile("Assets/Sounds/Damage/fallsmall.wav",OSL_FMT_NONE);
     //cave sounds
     caveSounds[0] = oslLoadSoundFile("Assets/Sounds/cave2.wav",OSL_FMT_NONE);
     caveSounds[1] = oslLoadSoundFile("Assets/Sounds/cave3.wav",OSL_FMT_NONE);
@@ -112,6 +115,21 @@ void SoundManager::PlayCaveSound()
     {
         short randSound = rand() % 5;
         oslPlaySound(caveSounds[randSound],6);
+    }
+}
+
+void SoundManager::PlayFallSound(float i)
+{
+	if(playerSounds)
+    {
+        if (i < -9 && i > -21)
+        {
+            oslPlaySound(fallSounds[1],6);
+        }
+        if (i < -21)
+        {
+            oslPlaySound(fallSounds[0],6);
+        }
     }
 }
 

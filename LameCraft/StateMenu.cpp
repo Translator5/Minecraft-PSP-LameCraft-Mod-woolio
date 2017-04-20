@@ -827,7 +827,7 @@ void StateMenu::Draw(StateManager* sManager)
         mRender->DebugPrint(240,125,"SinglePlayer");
         mRender->DebugPrint(240,165,"Options");
         mRender->DebugPrint(240,205,"About");
-		mRender->DebugPrint(60,265,"v1.0.0 Beta");
+		mRender->DebugPrint(60,265,"v1.0.2 Beta");
 
 		//Text
         float time_s = ((float)(clock() % CLOCKS_PER_SEC)) / ((float)CLOCKS_PER_SEC);
@@ -996,7 +996,7 @@ void StateMenu::Draw(StateManager* sManager)
         mRender->SetFontStyle(0.7f,0xFFFFFFFF,0xFF000000,0x00000000);
         mRender->DebugPrint(40,100,"Original Code:  Drakon");
         mRender->DebugPrint(40,120,"Mod by:        Woolio & Joel16");
-        mRender->DebugPrint(40,140,"Version:        1.0.0");
+        mRender->DebugPrint(40,140,"Version:        1.0.2");
 
         //button text
         mRender->SetFontStyle(0.5f,0xFFFFFFFF,0xFF000000,0x00000200);
