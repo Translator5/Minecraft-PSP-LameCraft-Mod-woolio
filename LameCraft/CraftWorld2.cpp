@@ -787,7 +787,7 @@ void CraftWorld::LoadCompressedWorld(std::string  filename)
 
         gzread(saveFile, data7,sizeof(float)*(mFurnacesize));
         gzread(saveFile, data8,sizeof(float)*(mFurnacesize));
-
+        gzread(saveFile, data9,sizeof(bool)*(mFurnacesize));
         gzread(saveFile, data10,sizeof(int)*(mFurnacesize));
 
         for(int k = 0; k < mFurnacesize; k++)

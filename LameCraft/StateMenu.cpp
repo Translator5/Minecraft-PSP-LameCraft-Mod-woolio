@@ -853,9 +853,9 @@ void StateMenu::Draw(StateManager* sManager)
         DrawText(240,205,GU_COLOR(1,1,1,1) ,0.35f,"About");
 
         mRender->SetFontStyle(0.35f ,GU_COLOR(0.24,0.24,0.24,1),0,0,0x00000000|0x00004000);
-        mRender->DebugPrint(3,270,"1.1.21 beta");
+        mRender->DebugPrint(3,270,"1.1.3 beta");
         mRender->SetFontStyle(0.35f ,GU_COLOR(1,1,1,1),0,0,0x00000000|0x00004000);
-        mRender->DebugPrint(2,269,"1.1.21 beta");
+        mRender->DebugPrint(2,269,"1.1.3 beta");
 
         if (fontcoloroption == 0)
         {
@@ -887,7 +887,7 @@ void StateMenu::Draw(StateManager* sManager)
             SplashText = "With survival!";
             break;
         case 2:
-            SplashText = "For psp!";
+            SplashText = "Thanks for michal5575!";
             break;
         case 3:
             SplashText = "Woolio <3";
@@ -1028,7 +1028,7 @@ void StateMenu::Draw(StateManager* sManager)
 
         DrawText(240,100,GU_COLOR(1,1,1,1) ,0.7f,"Original Code: Drakon");
         DrawText(240,120,GU_COLOR(1,1,1,1) ,0.7f,"Mod by: Woolio");
-        DrawText(240,140,GU_COLOR(1,1,1,1) ,0.7f,"Version: 1.1.2 beta");
+        DrawText(240,140,GU_COLOR(1,1,1,1) ,0.7f,"Version: 1.1.3 beta");
 
         DrawText(240,240,GU_COLOR(1,1,1,1) ,0.35f,"Check for update");
         DrawText(240,265,GU_COLOR(1,1,1,1) ,0.35f,"Back");
