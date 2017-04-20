@@ -10,9 +10,6 @@ namespace Aurora
 	{
 		SkyLight::SkyLight()
 		{
-			//21600;	// time of sunrise in seconds -- 06.00
-			//75600;		// time of sunset in seconds -- 21.00
-
 			skyVertices = (TexturesPSPVertex*)memalign(16,4 * sizeof(TexturesPSPVertex));
 		}
 
@@ -59,7 +56,7 @@ namespace Aurora
 			skyVertices[i].u = 1.f;// * textureScale;
 			skyVertices[i].v = 1.f;// * textureScale;
 
-			sceKernelDcacheWritebackInvalidateRange(skyVertices,4 * sizeof(CraftPSPVertex));
+			sceKernelDcacheWritebackInvalidateRange(skyVertices,4 * sizeof(TexturesPSPVertex));
 		}
 
 		void SkyLight::Render()
@@ -68,7 +65,6 @@ namespace Aurora
 			sceGuEnable(GU_BLEND);
 
 			sceGuBlendFunc(GU_ADD, GU_FIX,GU_FIX, 0xFFFFFFFF, 0xFFFFFFFF);
-
 			sceGumDrawArray(GU_TRIANGLE_STRIP, GU_TEXTURE_32BITF|GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, skyVertices);
 
 			sceGuDisable(GU_TEXTURE_2D);

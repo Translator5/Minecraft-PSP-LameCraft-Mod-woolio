@@ -3,7 +3,8 @@
 
 extern "C"
 {
-	#include "sound_utils/oslib.h"
+    #include "sound_utils/pgeWav.h"
+    #include "sound_utils/oslib.h"
 }
 
 #include <stdlib.h>
@@ -24,22 +25,44 @@ public:
     void PlayHitSound();
     void PlayEatSound();
 
+    void PlayZombieHurtSound(float distanceToPlayer);
+    void PlayZombieDieSound(float distanceToPlayer);
+    void PlayZombieSaySound(float distanceToPlayer);
+
+    void PlayCowHurtSound(float distanceToPlayer);
+    void PlayCowSaySound(float distanceToPlayer);
+
+    void PlayCreeperHurtSound(float distanceToPlayer);
+    void PlaySheepHurtSound(float distanceToPlayer);
+
+    void PlayRainSound(int volume);
+
+    void PlaySplashSound();
+    void PlayFuseSound();
+    void PlayShearSound();
     void PlayBowSound();
 	void PlayMenuSound();
 	void PlayPlopSound();
 	void PlayWalkSound(int type);
+	void PlayDigSound(int type);
+	void PlayEndDigSound(int type);
 	void TNTSound();
-	void doorSound();
-	void PlayCaveSound();
+	void PlayDoorSound(bool open);
 	void PlayFallSound(float i);
+	void PlayGlassSound();
+    void PlayNoteSound(unsigned int noteType, float pitch);
 
+    void PlayDiskSound(int diskNumber);
 	int PlayRandomAmbient();
 
+	void StopAmbient();
+	void StopDiskSounds();
 
 	bool playerSounds;
 	bool ambientSoundsEnabled;
 
 	int currentAmbientSound;
+	int lastAmbientSound;
 
 private:
 
@@ -47,31 +70,53 @@ private:
 	int lastWalkSound;
 
 	//sounds
-	OSL_SOUND *buttonSound;
-
+	pgeWav *buttonSound;
 	//plop sound
-	OSL_SOUND *plopSound;
-	//cave sounds
-    OSL_SOUND *caveSounds[6];
+	pgeWav *plopSound;
 	//grass sounds
-	OSL_SOUND *grassSounds[4];
-	OSL_SOUND *grawelSounds[4];
-	OSL_SOUND *stoneSounds[4];
-	OSL_SOUND *woodSounds[4];
-	OSL_SOUND *clothSounds[4];
-	OSL_SOUND *sandSounds[4];
-	OSL_SOUND *snowSounds[4];
-    OSL_SOUND *ambientSounds[6];
+	pgeWav *grassSounds[4];
+	pgeWav *grawelSounds[4];
+	pgeWav *stoneSounds[4];
+	pgeWav *woodSounds[4];
+	pgeWav *sandSounds[4];
+	pgeWav *snowSounds[4];
 
-	OSL_SOUND *eatSounds[3];
+	pgeWav *eatSounds[3];
 
-	OSL_SOUND *hitSounds[3];
-    OSL_SOUND *fallSounds[2];
+	pgeWav *hitSounds[3];
+    pgeWav *fallSounds[2];
 
-	OSL_SOUND *door;
-	OSL_SOUND *tnt;
-	OSL_SOUND *bow;
-	OSL_SOUND *breakSound;
+    pgeWav *zombieHurtSounds[2];
+    pgeWav *zombieSaySound;
+    pgeWav *zombieDieSound;
+
+    pgeWav *cowHurtSounds[2];
+    pgeWav *cowSaySound;
+
+    pgeWav *creeperHurtSounds[2];
+
+    pgeWav *sheepHurtSounds[2];
+
+	pgeWav *doorOpen;
+	pgeWav *doorClose;
+	pgeWav *tnt;
+	pgeWav *bow;
+	pgeWav *breakSound;
+	pgeWav *fuse;
+	pgeWav *splash;
+	pgeWav *glass;
+	pgeWav *shear;
+
+	pgeWav *rainSound;
+
+	pgeWav *digSounds[3];
+
+	pgeWav *noteSounds[2]; // bass and pling
+
+	// this lib can stream
+	OSL_SOUND *ambientSounds[6];
+
+	OSL_SOUND *diskSounds[3];
 
 };
 

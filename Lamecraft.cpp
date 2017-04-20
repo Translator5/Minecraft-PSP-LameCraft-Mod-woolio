@@ -35,8 +35,9 @@ int main()
 
 	//set perspectives
 	RenderManager::InstancePtr()->SetOrtho(0,0,0,0,0,0);
-	
+
 	//init and load sounds
+	TextureHelper::Instance()->Init();
 	SoundManager::Instance()->Init();
 
 	srand(time(NULL));
@@ -51,11 +52,8 @@ int main()
 	SplashScreen *screen = new SplashScreen(TextureHelper::Instance()->GetTexture(TextureHelper::Genesis),0,0,480,272,3);
 	screen->ShowSplash();
 	delete screen;
-	SplashScreen *screen2 = new SplashScreen(TextureHelper::Instance()->GetTexture(TextureHelper::PspTeam),0,0,424,72,3);
-	screen2->ShowSplash();
-	delete screen2;
 
-	RenderManager::InstancePtr()->SetClearColour(0xFFF5B783);
+	RenderManager::InstancePtr()->SetClearColour(0xFFFFFFFF);
 
 	//new active state
 	StateMenu *statePlay = new StateMenu();

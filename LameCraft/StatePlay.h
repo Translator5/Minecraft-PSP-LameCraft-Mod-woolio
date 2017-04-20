@@ -15,16 +15,33 @@
 #include <Aurora/Graphics/Models/ObjModel.h>
 #include <Aurora/Graphics/Camera.h>
 #include <Aurora/Graphics/Sprite.h>
+
+#include <Aurora/Graphics/Effects/InventoryPlayer.h>
 #include <Aurora/Graphics/Effects/SkyLight.h>
 #include <Aurora/Graphics/Effects/SnowBall2.h>
+#include <Aurora/Graphics/Effects/SkyBox.h>
+#include <Aurora/Graphics/Effects/Destroyer.h>
+#include <Aurora/Graphics/Effects/StarsBox.h>
+#include <Aurora/Graphics/Effects/Drop.h>
+#include <Aurora/Graphics/Effects/Particle.h>
 
+#include "Zombie2.h"
+#include "Cow2.h"
+#include "Creeper2.h"
+#include "Sheep2.h"
 #include "LameMob.h"
+
 #include "CraftWorld2.h"
 #include "InputHelper.h"
 #include "SoundManager.h"
 #include "Chest2.h"
 #include "Furnace2.h"
+#include "NoteBlockEntity.h"
+#include "JukeboxEntity.h"
+#include "MonsterSpawnerEntity.h"
+#include "ItemFrameEntity.h"
 
+#include "LameFunctions.h"
 
 using namespace Aurora::Graphics;
 using namespace Aurora::Utils;
@@ -39,7 +56,7 @@ public:
 	virtual ~StatePlay();
 
 	void Init();
-	void InitParametric(bool makeTrees,bool makePumpkins,bool makeTypes,bool makeWater,bool makeCaves,bool makeSnow,bool makeCoal,bool makeGold,bool makeRedStone,bool makeDiamond,bool makeDirt,bool makeCanes,int seedIII, int terBuilderType);
+	void InitParametric(bool makeTrees,bool makeWater,bool makeCaves, unsigned int seedIII, int worldType, char gameMode);
 	void Enter();
 	void CleanUp();
 
@@ -68,17 +85,21 @@ private:
 	void CraftItem2x2();
 	void CraftItem3x3();
 
+	void DrawSlotItem(short& itemId);
+	void DrawSlotAmount(short& itemAmount, bool& itemStackable);
+	void DrawSlotToolPoints(short& itemAmount, bool& itemStackable);
+
 	void CheckForFurnFuel(Furnace* Fur);
 	void CheckForFurnWorking(Furnace* Fur);
 	void ReadyFurnSmelting(Furnace* Fur);
 
     int FindFurnaceId(int x, int y, int z);
-
 	int FindChestId(int x, int y, int z);
 
 	void HungerTime();
 	void HealthTime();
 	void OxygenTime();
+	void HurtPlayer(float damage);
 
 private:
 
@@ -92,24 +113,27 @@ private:
 	int freeMemory;
 	float freeMemoryTimer;
 
-    float cloudsMove;
-    bool cloudsWay;
+    float cloudsOffset;
 
 	CraftWorld *mWorld;
-	ObjModel *dModel[5];
 
     SkyLight *skyLight;
     SkyLight *skyMoonLight;
+    SkyBox *skyBox;
+    Destroyer *destroyer;
+    StarsBox *starsBox;
+    InventoryPlayer* invPlayer;
 
     bool cycle;
-	float sunTime;
-	float sunTimeTick;
-	bool sunMoonSwitch;
+    bool loadReady;
 	bool startDt;
-    float dT; //time of destr
-    float dET; //end time of destt
-    float dS; //speed of destr
-    char dStd; //destroy animation
+	bool tryToDt;
+    float dT;
+    float dET;          // Конец таймера
+    char dStd;          // Стадия анимации разрушения блока
+
+    float sleepMessageTime;
+    float sleepTime;
 
     bool hurt;
     float hurt_time;
@@ -118,25 +142,24 @@ private:
     float furnaceTimes;
 
     Vector3 testPos1;
-
 	Vector3 cubePos;
+
 	bool showCube;
 
-
-    int craftSlotId[4];
-    int craftSlotAm[4];
+    short craftSlotId[4];
+    short craftSlotAm[4];
     bool craftSlotSt[4];
 
-    int craftSlotId3[9];
-    int craftSlotAm3[9];
+    short craftSlotId3[9];
+    short craftSlotAm3[9];
     bool craftSlotSt3[9];
 
-    int craftItemId;
-    int craftItemAm;
+    short craftItemId;
+    short craftItemAm;
     bool craftItemSt;
 
-    int craftItemId3;
-    int craftItemAm3;
+    short craftItemId3;
+    short craftItemAm3;
     bool craftItemSt3;
 
     float musicTimeGo;
@@ -144,6 +167,7 @@ private:
 
     char chestId;
     char furnaceId;
+
     Chest* UseChest;
     Furnace* UseFurnace;
 	//zmienne do poruszania
@@ -156,15 +180,19 @@ private:
 	Vector3 newPlayerPos;
 	Vector3 oldPlayerPos;
 
+    bool moveForward;
+    bool moving;
 	bool walkingOnGround;
 	bool jumping;
 	bool headInWater;
 	bool footInWater;
 	bool headInLava;
 	bool footInLava;
+	bool touchingCactus;
 
 	bool invEn;
 	bool upEn;
+	bool armorEn;
 	bool craft3xEn;
 	bool chestEn;
 	bool furnaceEn;
@@ -172,39 +200,59 @@ private:
     char barPosition;
     char invXPosition;
     char invYPosition;
-
-    short time_z; //cave sounds timer
+    float invSteveAngle;
 
 	int ram1;
 	int ram2;
+
+    float tickCave; //cave sounds timer
 	float tickHunger;
 	float tickHealth;
-	int tickChunk;
+	float tickChunk;
+	float tickLavaDamage;
+	float tickCactusDamage;
 	float tickOS;
+	float tickShowSlotName;
 	short chunks; // 0 - 7;
 
-    int chunkId;
+	float tutorialTimer;
 
-	int terrainType;
+	float rainSoundFrequency;
+
+	float inputDiskNameTimer;
+	std::string inputDiskName;
+
+    int chunkId;
 
 	Timer mTimer;
 	float dt;
 
-	//textures info
 	//int texture[16];
-	int texture[16];
-	int blue;
-	int red;
-	int black;
+	int barItems;
+	int texture;
+	int waterAnimation;
 
+	unsigned char blue;
+	unsigned char red;
+	unsigned char black;
+	unsigned char stars;
+
+    int invPlayerTex;
+    int zombieTex;
+    int cowTex;
     int snowBall4;
 	int cloudsTex;
 	int suntex;
 	int moontex;
+	int rainTex;
 
 	unsigned char currentTexture;
 	unsigned char timeTexture;
 
+	Sprite *waterScreen;
+	Sprite *pumpkinMask;
+
+    Sprite *invCellSprite;
 	Sprite *invSprite;
     Sprite *crtSprite;
     Sprite *chtSprite;
@@ -213,23 +261,29 @@ private:
 	Sprite *crossSprite;
 	Sprite *selectSprite;
 
-	Sprite *furArrowSprite;
-	Sprite *furFireSprite;
+	Sprite *furArrowSprite[22];
+	Sprite *furFireSprite[14];
     Sprite *furSprite;
 
 	Sprite *hpCellSprite;
-	Sprite *hp44Sprite;
-	Sprite *hp34Sprite;
-	Sprite *hp24Sprite;
-	Sprite *hp14Sprite;
+	Sprite *hpCellSpriteW;
+	Sprite *hpSprite;
+	Sprite *hpHardSprite;
+	Sprite *hpHalfSprite;
+	Sprite *hpHardHalfSprite;
 
 	Sprite *hgCellSprite;
-	Sprite *hg44Sprite;
-	Sprite *hg34Sprite;
-	Sprite *hg24Sprite;
-	Sprite *hg14Sprite;
-
+	Sprite *hgSprite;
+	Sprite *hgHalfSprite;
 	Sprite *bubbleSprite;
+
+    Sprite *arCellSprite;
+	Sprite *arSprite;
+	Sprite *arHalfSprite;
+
+	Sprite *toolPointSprite[14];
+
+	float hpAnim;
 
 	float cameraSpeed;
 	float cameraMoveSpeed;
@@ -240,10 +294,10 @@ private:
 	Sprite *nbuttonSprite;
 	Sprite *moverSprite;
 
-	int menuState;//0 game,1 menu
 	bool menuOptions;
-	int optionsMenuPos;
-	int selectPos;
+	char menuState;//0 game,1 menu
+	char optionsMenuPos;
+	char selectPos;
 
     char statisticsPage;
 
@@ -260,21 +314,31 @@ private:
 	bool canHeadBob;
 	float bobCycle;
 	bool bobType;
+	float cubeLight;
 
     float shift_x;
     float shift_y;
-
     float changeY;
+    float changeScale;
+    int slotForChangeScale;
+
+    float animDest;
+    float animSpeed;
+    bool animGo;
 
     bool anim[3];
 	bool makeScreen;
 	bool dieFactor;
 
+	float angleFactor;
+
     void DrawText(int x,int y, unsigned int color, float size, const char *message, ...);
     void DrawText2(int x,int y, unsigned int color, float size, const char *message, ...);
 
-	std::vector<SnowBall2*> mSnowBalls;
+    void DrawAmount(int x,int y, int amount);
 
+	std::vector<SnowBall2*> mSnowBalls;
+	std::vector<Particle*> mParticles;
 };
 
 #endif

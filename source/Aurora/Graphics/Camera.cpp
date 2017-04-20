@@ -7,11 +7,18 @@ namespace Aurora
 	{
 		Camera::Camera()
 		{
-			//needUpdate = true;
+			needUpdate = true;
 			upDownAngle2 = 0.0f;
 			upDownAngle = 0.0f;
 			horAngle = 0.0f;
+
 			m_vOffset = Vector3(0.0f, 0.0f, 0.0f);
+			m_vPosition = Vector3(0.0f, 0.0f, 0.0f);
+			m_vView = Vector3(0.0f, 0.0f, 0.0f);
+			m_vUpVector = Vector3(0.0f, 0.0f, 0.0f);
+			m_vStrafe = Vector3(0.0f, 0.0f, 0.0f);
+			vVector = Vector3(0.0f, 0.0f, 0.0f);
+			m_vVelocity = Vector3(0.0f, 0.0f, 0.0f);
 		}
 
 		Camera::~Camera()
@@ -170,8 +177,8 @@ namespace Aurora
 			Vector3 vView = m_vView - (m_vPosition + m_vOffset);
 
 			// Calculate the sine and cosine of the angle once
-			float cosTheta = vfpu_cosf(angle);
-			float sinTheta = vfpu_sinf(angle);
+			float cosTheta = cosf(angle);
+			float sinTheta = sinf(angle);
 
 			// Find the new x position for the new rotated point
 			vNewView.x  = (cosTheta + (1 - cosTheta) * x * x)		* vView.x;
@@ -191,16 +198,11 @@ namespace Aurora
 			// Now we just add the newly rotated vector to our position to set
 			// our new rotated view of our camera.
 			m_vView = m_vPosition + m_vOffset + vNewView;
-            horAngle = (PI+(atan2f(m_vPosition.z-m_vView.z,m_vPosition.x-m_vView.x)))/PI*180;
+			if(m_vPosition.z-m_vView.z != 0 && m_vPosition.x-m_vView.x != 0)
+            {
+                horAngle = (PI+(atan2f(m_vPosition.z-m_vView.z,m_vPosition.x-m_vView.x)))/PI*180;
+            }
 
-            if(horAngle < 180)
-            {
-                upDownAngle2 = atan2f(m_vPosition.y-m_vView.y,m_vPosition.x-m_vView.x);
-            }
-            else
-            {
-                upDownAngle2 = atan2f(m_vPosition.y-m_vView.y,m_vPosition.z-m_vView.z);
-            }
 
 			vVector = vNewView;
 			needUpdate = true;

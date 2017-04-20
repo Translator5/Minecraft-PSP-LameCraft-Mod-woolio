@@ -76,19 +76,19 @@ public:
 	static block_t getID();
 };
 
-class GrayWoolBlock : public BaseBlock
-{
-public:
-
-	GrayWoolBlock();
-	static block_t getID();
-};
-
 class BlackWoolBlock : public BaseBlock
 {
 public:
 
 	BlackWoolBlock();
+	static block_t getID();
+};
+
+class GrayWoolBlock : public BaseBlock
+{
+public:
+
+	GrayWoolBlock();
 	static block_t getID();
 };
 
@@ -100,30 +100,6 @@ public:
 	static block_t getID();
 };
 
-class DarkGreyWoolBlock : public BaseBlock
-{
-public:
-
-	DarkGreyWoolBlock();
-	static block_t getID();
-};
-
-class BrownWoolBlock : public BaseBlock
-{
-public:
-
-	BrownWoolBlock();
-	static block_t getID();
-};
-
-class LightBlackWoolBlock : public BaseBlock
-{
-public:
-
-	LightBlackWoolBlock();
-	static block_t getID();
-};
-
 class PinkWoolBlock : public BaseBlock
 {
 public:
@@ -132,11 +108,27 @@ public:
 	static block_t getID();
 };
 
-class LightGreenWoolBlock : public BaseBlock
+class DarkGreenWoolBlock : public BaseBlock
 {
 public:
 
-	LightGreenWoolBlock();
+	DarkGreenWoolBlock();
+	static block_t getID();
+};
+
+class GreenWoolBlock : public BaseBlock
+{
+public:
+
+	GreenWoolBlock();
+	static block_t getID();
+};
+
+class BrownWoolBlock : public BaseBlock
+{
+public:
+
+	BrownWoolBlock();
 	static block_t getID();
 };
 
@@ -164,11 +156,11 @@ public:
 	static block_t getID();
 };
 
-class FioletWoolBlock : public BaseBlock
+class VioletWoolBlock : public BaseBlock
 {
 public:
 
-	FioletWoolBlock();
+	VioletWoolBlock();
 	static block_t getID();
 };
 
@@ -180,19 +172,27 @@ public:
 	static block_t getID();
 };
 
-class LightFioletWoolBlock : public BaseBlock
-{
-public:
-
-	LightFioletWoolBlock();
-	static block_t getID();
-};
-
 class OrangeWoolBlock : public BaseBlock
 {
 public:
 
 	OrangeWoolBlock();
+	static block_t getID();
+};
+
+class LightGrayWoolBlock : public BaseBlock
+{
+public:
+
+	LightGrayWoolBlock();
+	static block_t getID();
+};
+
+class WhiteWoolBlock : public BaseBlock
+{
+public:
+
+	WhiteWoolBlock();
 	static block_t getID();
 };
 
@@ -204,11 +204,11 @@ public:
 	static block_t getID();
 };
 
-class AllSnowBlock : public BaseBlock
+class SandStone : public BaseBlock
 {
 public:
 
-	AllSnowBlock();
+	SandStone();
 	static block_t getID();
 };
 
@@ -228,11 +228,11 @@ public:
 	static block_t getID();
 };
 
-class SnowBlock : public BaseBlock
+class SnowSoil : public BaseBlock
 {
 public:
 
-	SnowBlock();
+	SnowSoil();
 	static block_t getID();
 };
 
@@ -268,11 +268,11 @@ public:
 	static block_t getID();
 };
 
-class BoxBlock : public BaseBlock
+class OakPlanks : public BaseBlock
 {
 public:
 
-	BoxBlock();
+	OakPlanks();
 	static block_t getID();
 };
 
@@ -293,19 +293,19 @@ public:
 };
 
 //
-class DrySandBlock : public BaseBlock
+class SpruceLeaves : public BaseBlock
 {
 public:
 
-	DrySandBlock();
+	SpruceLeaves();
 	static block_t getID();
 };
 
-class SnowLewesBlock : public BaseBlock
+class BirchLeaves : public BaseBlock
 {
 public:
 
-	SnowLewesBlock();
+	BirchLeaves();
 	static block_t getID();
 };
 
@@ -357,11 +357,11 @@ public:
 	static block_t getID();
 };
 
-class SlamRockBlock : public BaseBlock
+class LapisOre : public BaseBlock
 {
 public:
 
-	SlamRockBlock();
+	LapisOre();
 	static block_t getID();
 };
 
@@ -373,11 +373,11 @@ public:
 	static block_t getID();
 };
 
-class JackOLantern : public BaseBlock
+class SnowBlock : public BaseBlock
 {
 public:
 
-	JackOLantern();
+	SnowBlock();
 	static block_t getID();
 };
 
@@ -565,11 +565,11 @@ public:
     static block_t getID();
 };
 
-class MelonBlock : public BaseBlock
+class NoteBlock : public BaseBlock
 {
 public:
 
-    MelonBlock();
+    NoteBlock();
     static block_t getID();
 };
 
@@ -589,35 +589,35 @@ public:
     static block_t getID();
 };
 
-class EndStone : public BaseBlock
+class Pumpkin1 : public BaseBlock
 {
 public:
 
-    EndStone();
+    Pumpkin1();
     static block_t getID();
 };
 
-class Pumpkin : public BaseBlock
+class Pumpkin2 : public BaseBlock
 {
 public:
 
-    Pumpkin();
+    Pumpkin2();
     static block_t getID();
 };
 
-class GlowStone : public BaseBlock
+class Pumpkin3 : public BaseBlock
 {
 public:
 
-    GlowStone();
+    Pumpkin3();
     static block_t getID();
 };
 
-class HayBale : public BaseBlock
+class Pumpkin4 : public BaseBlock
 {
 public:
 
-    HayBale();
+    Pumpkin4();
     static block_t getID();
 };
 
@@ -653,99 +653,99 @@ public:
     static block_t getID();
 };
 
-class MooshroomWood : public BaseBlock
+class MelonBlock : public BaseBlock
 {
 public:
 
-    MooshroomWood();
+    MelonBlock();
     static block_t getID();
 };
 
-class HalfBlock8 : public BaseBlock
+class OakHalfBlock : public BaseBlock
 {
 public:
 
-    HalfBlock8();
+    OakHalfBlock();
     static block_t getID();
 };
 
-class HalfBlock0 : public BaseBlock
+class CobbleHalfBlock : public BaseBlock
 {
 public:
 
-    HalfBlock0();
+    CobbleHalfBlock();
     static block_t getID();
 };
 
-class HalfBlock1 : public BaseBlock
+class BrickHalfBlock : public BaseBlock
 {
 public:
 
-    HalfBlock1();
+    BrickHalfBlock();
     static block_t getID();
 };
 
-class HalfBlock2 : public BaseBlock
+class Slab : public BaseBlock
 {
 public:
 
-    HalfBlock2();
+    Slab();
     static block_t getID();
 };
 
-class HalfBlock3 : public BaseBlock
+class StoneSandHalfBlock : public BaseBlock
 {
 public:
 
-    HalfBlock3();
+    StoneSandHalfBlock();
     static block_t getID();
 };
 
-class HalfBlock4 : public BaseBlock
+class Ladder1 : public BaseBlock
 {
 public:
 
-    HalfBlock4();
+    Ladder1();
     static block_t getID();
 };
 
-class HalfBlock5 : public BaseBlock
+class Ladder2 : public BaseBlock
 {
 public:
 
-    HalfBlock5();
+    Ladder2();
     static block_t getID();
 };
 
-class HalfBlock6 : public BaseBlock
+class Ladder3 : public BaseBlock
 {
 public:
 
-    HalfBlock6();
+    Ladder3();
     static block_t getID();
 };
 
-class HalfBlock7 : public BaseBlock
+class Ladder4 : public BaseBlock
 {
 public:
 
-    HalfBlock7();
+    Ladder4();
     static block_t getID();
 };
 
-class Cake : public BaseBlock
+class DoubleSlab : public BaseBlock
 {
 public:
 
-    Cake();
+    DoubleSlab();
     static block_t getID();
 };
 
-class TrapDoor : public BaseBlock
+class MossyCobblestone : public BaseBlock
 {
 public:
 
-    TrapDoor();
+    MossyCobblestone();
     static block_t getID();
 };
 
@@ -757,45 +757,46 @@ public:
     static block_t getID();
 };
 
-class Table : public BaseBlock
+class ChestBlock1 : public BaseBlock
 {
 public:
 
-    Table();
+    ChestBlock1();
     static block_t getID();
 };
 
-class AetherStone : public BaseBlock
+class ChestBlock2 : public BaseBlock
 {
 public:
 
-    AetherStone();
+    ChestBlock2();
     static block_t getID();
 };
 
-class MushRoomLeave : public BaseBlock
+class ChestBlock3 : public BaseBlock
 {
 public:
 
-    MushRoomLeave();
+    ChestBlock3();
     static block_t getID();
 };
 
-class MossAetherStone : public BaseBlock
+class ChestBlock4 : public BaseBlock
 {
 public:
 
-    MossAetherStone();
+    ChestBlock4();
     static block_t getID();
 };
 
-class AetherBlock1 : public BaseBlock
+class ChestLock : public BaseBlock
 {
 public:
 
-    AetherBlock1();
+    ChestLock();
     static block_t getID();
 };
+
 
 class ClayBlock : public BaseBlock
 {
@@ -813,43 +814,43 @@ public:
     static block_t getID();
 };
 
-class BasaltCobble : public BaseBlock
+class LapisBlock : public BaseBlock
 {
 public:
 
-    BasaltCobble();
+    LapisBlock();
     static block_t getID();
 };
 
-class GabbroCobble : public BaseBlock
+class StoneBrick : public BaseBlock
 {
 public:
 
-    GabbroCobble();
+    StoneBrick();
     static block_t getID();
 };
 
-class DaciteCobble : public BaseBlock
+class CrackedStoneBrick : public BaseBlock
 {
 public:
 
-    DaciteCobble();
+    CrackedStoneBrick();
     static block_t getID();
 };
 
-class Furnace2 : public BaseBlock
+class CarvedStoneBrick : public BaseBlock
 {
 public:
 
-    Furnace2();
+    CarvedStoneBrick();
     static block_t getID();
 };
 
-class Crafting : public BaseBlock
+class CraftingTable : public BaseBlock
 {
 public:
 
-    Crafting();
+    CraftingTable();
     static block_t getID();
 };
 
@@ -869,27 +870,27 @@ public:
     static block_t getID();
 };
 
-class Furnace5 : public BaseBlock
+class HalfStoneBrick : public BaseBlock
 {
 public:
 
-    Furnace5();
+    HalfStoneBrick();
     static block_t getID();
 };
 
-class Furnace6 : public BaseBlock
+class Spawner : public BaseBlock
 {
 public:
 
-    Furnace6();
+    Spawner();
     static block_t getID();
 };
 
-class TNT : public BaseBlock
+class TNTBlock : public BaseBlock
 {
 public:
 
-    TNT();
+    TNTBlock();
     static block_t getID();
 };
 
@@ -917,43 +918,43 @@ public:
     static block_t getID();
 };
 
-class LavaStone : public BaseBlock
+class GlassPanel : public BaseBlock
 {
 public:
 
-    LavaStone();
+    GlassPanel();
     static block_t getID();
 };
 
-class LavaObsidian : public BaseBlock
+class IronBars : public BaseBlock
 {
 public:
 
-    LavaObsidian();
+    IronBars();
     static block_t getID();
 };
 
-class BlackStone : public BaseBlock
+class TallGrass : public BaseBlock
 {
 public:
 
-    BlackStone();
+    TallGrass();
     static block_t getID();
 };
 
-class CryObsidian : public BaseBlock
+class Fern : public BaseBlock
 {
 public:
 
-    CryObsidian();
+    Fern();
     static block_t getID();
 };
 
-class MossBlack : public BaseBlock
+class DrySapling : public BaseBlock
 {
 public:
 
-    MossBlack();
+    DrySapling();
     static block_t getID();
 };
 
@@ -973,36 +974,36 @@ public:
     static block_t getID();
 };
 
-class Sapling : public BaseBlock
+class OakSapling : public BaseBlock
 {
 public:
 
-    Sapling();
+    OakSapling();
     static block_t getID();
 };
 
 
-class Pumpkin2 : public BaseBlock
+class SpruceSapling : public BaseBlock
 {
 public:
 
-    Pumpkin2();
+    SpruceSapling();
     static block_t getID();
 };
 
-class Pumpkin3 : public BaseBlock
+class BirchSapling : public BaseBlock
 {
 public:
 
-    Pumpkin3();
+    BirchSapling();
     static block_t getID();
 };
 
-class Pumpkin4 : public BaseBlock
+class FreeBlock5 : public BaseBlock
 {
 public:
 
-    Pumpkin4();
+    FreeBlock5();
     static block_t getID();
 };
 
@@ -1038,43 +1039,43 @@ public:
     static block_t getID();
 };
 
-class Marble : public BaseBlock
+class MelonPlant4Reverse : public BaseBlock
 {
 public:
 
-    Marble();
+    MelonPlant4Reverse();
     static block_t getID();
 };
 
-class Cube : public BaseBlock
+class MelonPlant1 : public BaseBlock
 {
 public:
 
-    Cube();
+    MelonPlant1();
     static block_t getID();
 };
 
-class Chest2 : public BaseBlock
+class MelonPlant2 : public BaseBlock
 {
 public:
 
-    Chest2();
+    MelonPlant2();
     static block_t getID();
 };
 
-class Chest3 : public BaseBlock
+class MelonPlant3 : public BaseBlock
 {
 public:
 
-    Chest3();
+    MelonPlant3();
     static block_t getID();
 };
 
-class Chest4 : public BaseBlock
+class MelonPlant4 : public BaseBlock
 {
 public:
 
-    Chest4();
+    MelonPlant4();
     static block_t getID();
 };
 
@@ -1110,19 +1111,19 @@ public:
     static block_t getID();
 };
 
-class FreeBlock3 : public BaseBlock
+class WheatBlock5 : public BaseBlock
 {
 public:
 
-	FreeBlock3();
+	WheatBlock5();
 	static block_t getID();
 };
 
-class FreeBlock4 : public BaseBlock
+class WheatBlock6 : public BaseBlock
 {
 public:
 
-	FreeBlock4();
+	WheatBlock6();
 	static block_t getID();
 };
 
@@ -1142,7 +1143,6 @@ public:
     static block_t getID();
 };
 
-//must be always last
 class IronBlock : public BaseBlock
 {
 public:
@@ -1151,5 +1151,445 @@ public:
 	static block_t getID();
 };
 
+class JackOLantern1 : public BaseBlock
+{
+public:
+
+	JackOLantern1();
+	static block_t getID();
+};
+
+class JackOLantern2 : public BaseBlock
+{
+public:
+
+	JackOLantern2();
+	static block_t getID();
+};
+
+class JackOLantern3 : public BaseBlock
+{
+public:
+
+	JackOLantern3();
+	static block_t getID();
+};
+
+class JackOLantern4 : public BaseBlock
+{
+public:
+
+	JackOLantern4();
+	static block_t getID();
+};
+
+class TrapdoorOpen1 : public BaseBlock
+{
+public:
+
+	TrapdoorOpen1();
+	static block_t getID();
+};
+
+class TrapdoorOpen2 : public BaseBlock
+{
+public:
+
+	TrapdoorOpen2();
+	static block_t getID();
+};
+
+class TrapdoorOpen3 : public BaseBlock
+{
+public:
+
+	TrapdoorOpen3();
+	static block_t getID();
+};
+
+class TrapdoorOpen4 : public BaseBlock
+{
+public:
+
+	TrapdoorOpen4();
+	static block_t getID();
+};
+
+class TrapdoorClosed1 : public BaseBlock
+{
+public:
+
+	TrapdoorClosed1();
+	static block_t getID();
+};
+
+class TrapdoorClosed2 : public BaseBlock
+{
+public:
+
+	TrapdoorClosed2();
+	static block_t getID();
+};
+
+class TrapdoorClosed3 : public BaseBlock
+{
+public:
+
+	TrapdoorClosed3();
+	static block_t getID();
+};
+
+class TrapdoorClosed4 : public BaseBlock
+{
+public:
+
+	TrapdoorClosed4();
+	static block_t getID();
+};
+
+class BirchPlanks : public BaseBlock
+{
+public:
+
+	BirchPlanks();
+	static block_t getID();
+};
+
+class SprucePlanks : public BaseBlock
+{
+public:
+
+	SprucePlanks();
+	static block_t getID();
+};
+
+class BirchHalfBlock : public BaseBlock
+{
+public:
+
+	BirchHalfBlock();
+	static block_t getID();
+};
+
+class SpruceHalfBlock : public BaseBlock
+{
+public:
+
+	SpruceHalfBlock();
+	static block_t getID();
+};
+
+class BirchFence : public BaseBlock
+{
+public:
+
+	BirchFence();
+	static block_t getID();
+};
+
+class SpruceFence : public BaseBlock
+{
+public:
+
+	SpruceFence();
+	static block_t getID();
+};
+
+class BirchStair1 : public BaseBlock
+{
+public:
+
+    BirchStair1();
+    static block_t getID();
+};
+
+class BirchStair2 : public BaseBlock
+{
+public:
+
+    BirchStair2();
+    static block_t getID();
+};
+
+class BirchStair3 : public BaseBlock
+{
+public:
+
+    BirchStair3();
+    static block_t getID();
+};
+
+class BirchStair4 : public BaseBlock
+{
+public:
+
+    BirchStair4();
+    static block_t getID();
+};
+
+class SpruceStair1 : public BaseBlock
+{
+public:
+
+    SpruceStair1();
+    static block_t getID();
+};
+
+class SpruceStair2 : public BaseBlock
+{
+public:
+
+    SpruceStair2();
+    static block_t getID();
+};
+
+class SpruceStair3 : public BaseBlock
+{
+public:
+
+    SpruceStair3();
+    static block_t getID();
+};
+
+class SpruceStair4 : public BaseBlock
+{
+public:
+
+    SpruceStair4();
+    static block_t getID();
+};
+
+class WaterBlock1 : public BaseBlock
+{
+public:
+
+    WaterBlock1();
+    static block_t getID();
+};
+
+
+class WaterBlock2 : public BaseBlock
+{
+public:
+
+    WaterBlock2();
+    static block_t getID();
+};
+
+class WaterBlock3 : public BaseBlock
+{
+public:
+
+    WaterBlock3();
+    static block_t getID();
+};
+
+class WaterBlock4 : public BaseBlock
+{
+public:
+
+    WaterBlock4();
+    static block_t getID();
+};
+
+class ItemFrame1 : public BaseBlock
+{
+public:
+
+    ItemFrame1();
+    static block_t getID();
+};
+
+class ItemFrame2 : public BaseBlock
+{
+public:
+
+    ItemFrame2();
+    static block_t getID();
+};
+
+class ItemFrame3 : public BaseBlock
+{
+public:
+
+    ItemFrame3();
+    static block_t getID();
+};
+
+class ItemFrame4 : public BaseBlock
+{
+public:
+
+    ItemFrame4();
+    static block_t getID();
+};
+
+class PumpkinPlant4Reverse : public BaseBlock
+{
+public:
+
+    PumpkinPlant4Reverse();
+    static block_t getID();
+};
+
+class PumpkinPlant1 : public BaseBlock
+{
+public:
+
+    PumpkinPlant1();
+    static block_t getID();
+};
+
+class PumpkinPlant2 : public BaseBlock
+{
+public:
+
+    PumpkinPlant2();
+    static block_t getID();
+};
+
+class PumpkinPlant3 : public BaseBlock
+{
+public:
+
+    PumpkinPlant3();
+    static block_t getID();
+};
+
+class PumpkinPlant4 : public BaseBlock
+{
+public:
+
+    PumpkinPlant4();
+    static block_t getID();
+};
+
+class PotatoPlant1 : public BaseBlock
+{
+public:
+
+    PotatoPlant1();
+    static block_t getID();
+};
+
+class PotatoPlant2 : public BaseBlock
+{
+public:
+
+    PotatoPlant2();
+    static block_t getID();
+};
+
+class PotatoPlant3 : public BaseBlock
+{
+public:
+
+    PotatoPlant3();
+    static block_t getID();
+};
+
+class PotatoPlant4 : public BaseBlock
+{
+public:
+
+    PotatoPlant4();
+    static block_t getID();
+};
+
+class CarrotPlant1 : public BaseBlock
+{
+public:
+
+    CarrotPlant1();
+    static block_t getID();
+};
+
+class CarrotPlant2 : public BaseBlock
+{
+public:
+
+    CarrotPlant2();
+    static block_t getID();
+};
+
+class CarrotPlant3 : public BaseBlock
+{
+public:
+
+    CarrotPlant3();
+    static block_t getID();
+};
+
+class CarrotPlant4 : public BaseBlock
+{
+public:
+
+    CarrotPlant4();
+    static block_t getID();
+};
+
+class BedBlock1 : public BaseBlock
+{
+public:
+
+    BedBlock1();
+    static block_t getID();
+};
+
+class BedBlock2 : public BaseBlock
+{
+public:
+
+    BedBlock2();
+    static block_t getID();
+};
+
+class BedBlock3 : public BaseBlock
+{
+public:
+
+    BedBlock3();
+    static block_t getID();
+};
+
+class BedBlock4 : public BaseBlock
+{
+public:
+
+    BedBlock4();
+    static block_t getID();
+};
+
+class BedBlock5 : public BaseBlock
+{
+public:
+
+    BedBlock5();
+    static block_t getID();
+};
+
+class BedBlock6 : public BaseBlock
+{
+public:
+
+    BedBlock6();
+    static block_t getID();
+};
+
+class BedBlock7 : public BaseBlock
+{
+public:
+
+    BedBlock7();
+    static block_t getID();
+};
+
+class BedBlock8 : public BaseBlock
+{
+public:
+
+    BedBlock8();
+    static block_t getID();
+};
 
 #endif

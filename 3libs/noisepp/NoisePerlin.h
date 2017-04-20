@@ -55,7 +55,7 @@ namespace noisepp
 		public:
 			/// Constructor.
 			PerlinModuleBase () :
-			mFrequency(1.0), mOctaveCount(6), mSeed(0), mQuality(NOISE_QUALITY_STD), mLacunarity(2.0), mPersistence(0.5), mScale(2.12) {}
+			mFrequency(1.0), mOctaveCount(6), mSeed(0), mQuality(NOISE_QUALITY_STD), mLacunarity(2.0), mPersistence(0.05), mScale(2.12) {}
 			virtual ~PerlinModuleBase () {}
 
 			/// Sets the frequency.

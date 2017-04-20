@@ -1,34 +1,8 @@
-+ new world generator
-	+ biomes
-	+ level carving
-+ blocks' animations
-+ busket
-	+ water
-	+ lava busket
-+ ambient music 
-+ upgrade farming
-+ add limited supply of oxygen
-+ fix font problems
-+ fix bugs with trasperent blocks rendering
-
-- weather rain/snow
-- add hardcore mode
-- add Lapiz generation
-- mobs
-	- cripers
-	- zombies
-	- pigs
-~ new blocks and recipes
-	- ladder b/r
-	- fence b/r
-	+ stair b/r
-	- furnace b/r
-	- melons
-- increase world size to 192 * 192 * 128 blocks
-- more world options 
-	- ability to change lacunarity of noise
-	- ability to change persistence of noise
-	- ability to change bounds of noise
-	- ability to change number of octaves of noise
-	- bonus chest option
-	- ability to change sea level
+-Саженцы не уничтожаются при удалении под ними блоков
+-Динамит надувается как бешенный 
+-Картошка и Морковь - баг, если сломать под ними блок, то они 
+-Почему после погоды (Снега) У меня снег почти везде! Даже в пещерах, куда бы я не пошёл он появляется возле меня!
+invSteveAngle
+invPlayerTex
+black
+craftItemId

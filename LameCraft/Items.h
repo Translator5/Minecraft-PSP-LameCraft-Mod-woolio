@@ -417,11 +417,11 @@ public:
 	static item_t getID();
 };
 
-class SaplingItem : public BaseItem
+class OakSaplingItem : public BaseItem
 {
 public:
 
-	SaplingItem();
+	OakSaplingItem();
 
 	static item_t getID();
 };
@@ -512,6 +512,690 @@ class DoorItem : public BaseItem
 public:
 
 	DoorItem();
+
+	static item_t getID();
+};
+
+class LadderItem : public BaseItem
+{
+public:
+
+	LadderItem();
+
+	static item_t getID();
+};
+
+class TorchItem : public BaseItem
+{
+public:
+
+	TorchItem();
+
+	static item_t getID();
+};
+
+class SpruceSaplingItem : public BaseItem
+{
+public:
+
+	SpruceSaplingItem();
+
+	static item_t getID();
+};
+
+class BirchSaplingItem : public BaseItem
+{
+public:
+
+	BirchSaplingItem();
+
+	static item_t getID();
+};
+
+class MelonItem : public BaseItem
+{
+public:
+
+	MelonItem();
+
+	static item_t getID();
+};
+
+class MelonSeeds : public BaseItem
+{
+public:
+
+	MelonSeeds();
+
+	static item_t getID();
+};
+
+class Sugar : public BaseItem
+{
+public:
+
+	Sugar();
+
+	static item_t getID();
+};
+
+class CocoaBeans : public BaseItem
+{
+public:
+
+	CocoaBeans();
+
+	static item_t getID();
+};
+
+class Cookie : public BaseItem
+{
+public:
+
+	Cookie();
+
+	static item_t getID();
+};
+
+class RawBeef : public BaseItem
+{
+public:
+
+	RawBeef();
+
+	static item_t getID();
+};
+
+class Steak : public BaseItem
+{
+public:
+
+	Steak();
+
+	static item_t getID();
+};
+
+class LapisLazuli : public BaseItem
+{
+public:
+
+	LapisLazuli();
+
+	static item_t getID();
+};
+
+class MilkBusket : public BaseItem
+{
+public:
+
+	MilkBusket();
+
+	static item_t getID();
+};
+
+class CakeItem : public BaseItem
+{
+public:
+
+	CakeItem();
+
+	static item_t getID();
+};
+
+class Bone : public BaseItem
+{
+public:
+
+	Bone();
+
+	static item_t getID();
+};
+
+class BoneMeal : public BaseItem
+{
+public:
+
+	BoneMeal();
+
+	static item_t getID();
+};
+
+class Leather : public BaseItem
+{
+public:
+
+	Leather();
+
+	static item_t getID();
+};
+
+class SampleHelmet : public BaseItem
+{
+public:
+
+	SampleHelmet();
+
+	static item_t getID();
+};
+
+class SampleChestplate : public BaseItem
+{
+public:
+
+	SampleChestplate();
+
+	static item_t getID();
+};
+
+class SampleLeggings : public BaseItem
+{
+public:
+
+	SampleLeggings();
+
+	static item_t getID();
+};
+
+class SampleBoots : public BaseItem
+{
+public:
+
+	SampleBoots();
+
+	static item_t getID();
+};
+
+class LeatherHelmet : public BaseItem
+{
+public:
+
+	LeatherHelmet();
+
+	static item_t getID();
+};
+
+class LeatherChestplate : public BaseItem
+{
+public:
+
+	LeatherChestplate();
+
+	static item_t getID();
+};
+
+class LeatherLeggings : public BaseItem
+{
+public:
+
+	LeatherLeggings();
+
+	static item_t getID();
+};
+
+class LeatherBoots : public BaseItem
+{
+public:
+
+	LeatherBoots();
+
+	static item_t getID();
+};
+
+class ChainmailHelmet : public BaseItem
+{
+public:
+
+	ChainmailHelmet();
+
+	static item_t getID();
+};
+
+class ChainmailChestplate : public BaseItem
+{
+public:
+
+	ChainmailChestplate();
+
+	static item_t getID();
+};
+
+class ChainmailLeggings : public BaseItem
+{
+public:
+
+	ChainmailLeggings();
+
+	static item_t getID();
+};
+
+class ChainmailBoots : public BaseItem
+{
+public:
+
+	ChainmailBoots();
+
+	static item_t getID();
+};
+
+class IronHelmet : public BaseItem
+{
+public:
+
+	IronHelmet();
+
+	static item_t getID();
+};
+
+class IronChestplate : public BaseItem
+{
+public:
+
+	IronChestplate();
+
+	static item_t getID();
+};
+
+class IronLeggings : public BaseItem
+{
+public:
+
+	IronLeggings();
+
+	static item_t getID();
+};
+
+class IronBoots : public BaseItem
+{
+public:
+
+	IronBoots();
+
+	static item_t getID();
+};
+
+class DiamondHelmet : public BaseItem
+{
+public:
+
+	DiamondHelmet();
+
+	static item_t getID();
+};
+
+class DiamondChestplate : public BaseItem
+{
+public:
+
+	DiamondChestplate();
+
+	static item_t getID();
+};
+
+class DiamondLeggings : public BaseItem
+{
+public:
+
+	DiamondLeggings();
+
+	static item_t getID();
+};
+
+class DiamondBoots : public BaseItem
+{
+public:
+
+	DiamondBoots();
+
+	static item_t getID();
+};
+
+class GoldenHelmet : public BaseItem
+{
+public:
+
+	GoldenHelmet();
+
+	static item_t getID();
+};
+
+class GoldenChestplate : public BaseItem
+{
+public:
+
+	GoldenChestplate();
+
+	static item_t getID();
+};
+
+class GoldenLeggings : public BaseItem
+{
+public:
+
+	GoldenLeggings();
+
+	static item_t getID();
+};
+
+class GoldenBoots : public BaseItem
+{
+public:
+
+	GoldenBoots();
+
+	static item_t getID();
+};
+
+class RottenFlesh : public BaseItem
+{
+public:
+
+	RottenFlesh();
+
+	static item_t getID();
+};
+
+class GlassPanelItem : public BaseItem
+{
+public:
+
+	GlassPanelItem();
+
+	static item_t getID();
+};
+
+class IronBarsItem : public BaseItem
+{
+public:
+
+	IronBarsItem();
+
+	static item_t getID();
+};
+
+class Flint : public BaseItem
+{
+public:
+
+	Flint();
+
+	static item_t getID();
+};
+
+class Gunpowder : public BaseItem
+{
+public:
+
+	Gunpowder();
+
+	static item_t getID();
+};
+
+class Redstone : public BaseItem
+{
+public:
+
+	Redstone();
+
+	static item_t getID();
+};
+
+class Clock : public BaseItem
+{
+public:
+
+	Clock();
+
+	static item_t getID();
+};
+
+class Compass : public BaseItem
+{
+public:
+
+	Compass();
+
+	static item_t getID();
+};
+
+class Saddle : public BaseItem
+{
+public:
+
+	Saddle();
+
+	static item_t getID();
+};
+
+class Sign : public BaseItem
+{
+public:
+
+	Sign();
+
+	static item_t getID();
+};
+
+class ItemFrameItem : public BaseItem
+{
+public:
+
+	ItemFrameItem ();
+
+	static item_t getID();
+};
+
+class FlowerPotItem : public BaseItem
+{
+public:
+
+	FlowerPotItem ();
+
+	static item_t getID();
+};
+
+class PaintningItem : public BaseItem
+{
+public:
+
+	PaintningItem ();
+
+	static item_t getID();
+};
+
+class BedItem : public BaseItem
+{
+public:
+
+	BedItem ();
+
+	static item_t getID();
+};
+
+class Disk1 : public BaseItem
+{
+public:
+
+	Disk1 ();
+
+	static item_t getID();
+};
+
+class Disk2 : public BaseItem
+{
+public:
+
+	Disk2 ();
+
+	static item_t getID();
+};
+
+class Disk3 : public BaseItem
+{
+public:
+
+	Disk3 ();
+
+	static item_t getID();
+};
+
+class LightGrayDye : public BaseItem
+{
+public:
+
+	LightGrayDye ();
+
+	static item_t getID();
+};
+
+class GrayDye : public BaseItem
+{
+public:
+
+	GrayDye ();
+
+	static item_t getID();
+};
+
+class InkSac : public BaseItem
+{
+public:
+
+	InkSac ();
+
+	static item_t getID();
+};
+
+class PinkDye : public BaseItem
+{
+public:
+
+	PinkDye ();
+
+	static item_t getID();
+};
+
+class RoseRed : public BaseItem
+{
+public:
+
+	RoseRed ();
+
+	static item_t getID();
+};
+
+class OrangeDye : public BaseItem
+{
+public:
+
+	OrangeDye ();
+
+	static item_t getID();
+};
+
+class DandelionYellow : public BaseItem
+{
+public:
+
+	DandelionYellow ();
+
+	static item_t getID();
+};
+
+class LimeDye : public BaseItem
+{
+public:
+
+	LimeDye ();
+
+	static item_t getID();
+};
+
+class CactusGreen : public BaseItem
+{
+public:
+
+	CactusGreen ();
+
+	static item_t getID();
+};
+
+class LightBlueDye : public BaseItem
+{
+public:
+
+	LightBlueDye ();
+
+	static item_t getID();
+};
+
+class PurpleDye : public BaseItem
+{
+public:
+
+	PurpleDye ();
+
+	static item_t getID();
+};
+
+class MagnetaDye : public BaseItem
+{
+public:
+
+	MagnetaDye ();
+
+	static item_t getID();
+};
+
+class PumpkinSeeds : public BaseItem
+{
+public:
+
+	PumpkinSeeds ();
+
+	static item_t getID();
+};
+
+class FlintAndSteel : public BaseItem
+{
+public:
+
+	FlintAndSteel ();
+
+	static item_t getID();
+};
+
+class Potato : public BaseItem
+{
+public:
+
+	Potato ();
+
+	static item_t getID();
+};
+
+class BakedPotato : public BaseItem
+{
+public:
+
+	BakedPotato ();
+
+	static item_t getID();
+};
+
+class PoisonedPotato : public BaseItem
+{
+public:
+
+	PoisonedPotato ();
+
+	static item_t getID();
+};
+
+class Carrot : public BaseItem
+{
+public:
+
+	Carrot ();
 
 	static item_t getID();
 };

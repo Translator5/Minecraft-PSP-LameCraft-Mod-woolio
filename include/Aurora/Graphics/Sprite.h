@@ -1,6 +1,6 @@
 #ifndef SPRITE_H_
 #define SPRITE_H_
-
+#include <string>
 #include <Aurora/Graphics/Vertex.h>
 
 namespace Aurora
@@ -13,18 +13,29 @@ namespace Aurora
 		public:
 			Sprite();
 			Sprite(const char* filename);
-			Sprite(int textureNumer);
+			Sprite(std::string filename, bool constOne);
 			Sprite(const char* filename,int startW,int startH,int endW,int endH);
+			Sprite(int textureNumer, bool constOne);
+			Sprite(int textureNumer);
 			Sprite(int textureNumer,int startW,int startH,int endW,int endH);
+            Sprite(int textureNumer,int startW,int startH,int endW,int endH, bool obr);
 			~Sprite();
 
 
             void SetMapPos(int textureNumer,int startW,int startH,int endW,int endH);
-            void SetNaklon(float x);
 			void SetPosition(float x,float y);
 			void Scale(float x,float y);
-			void Draw(float yAngle = 0);
+			void NewScale(float x);
 			void RemoveImage();
+			void Draw();
+			void ConstDraw();
+
+			void Alpha(float _alpha);
+			void RGB(float _red, float _green, float _blue);
+
+			float GetPositionX();
+			float GetPositionY();
+
 
 		private:
 			int imageNumber;
@@ -34,7 +45,6 @@ namespace Aurora
 			float scaleX,scaleY;
 			float posX,posY;
 			int width,height;
-
 		};
 
 	}

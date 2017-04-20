@@ -20,14 +20,13 @@ namespace Aurora
 
 			void SetTexture(int texture);
 			void SetVeloc(float verAngle, float horAngle);
-			void Update(CraftWorld* crtf);
+			void Update(CraftWorld* crtf, float dt);
 			bool CheckCollision(CraftWorld* crtf);
 
 			void Render();
-			float pos_x;
-			float pos_y;
-			float pos_z;
-			ScePspFVector3 veloc;
+
+			Vector3 position;
+			Vector3 velocity;
 
 		private:
 
@@ -35,8 +34,8 @@ namespace Aurora
 			int textureNumber;
 			float snowHScale;
 			float snowVScale;
-			float startImpulse;
-			float speed;
+
+			float startSpeed;
 		};
 	}
 }

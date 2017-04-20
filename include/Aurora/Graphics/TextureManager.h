@@ -19,6 +19,9 @@
 #include <psputils.h>
 #include <pspdisplay.h>
 
+#include <math.h>
+#include <psptypes.h>
+
 namespace Aurora
 {
 	namespace Graphics
@@ -42,10 +45,9 @@ namespace Aurora
 			//more like for psp
 			unsigned short *ImageData;
 
-			~Image()
+            virtual ~Image()
 			{
-				if(ImageData != NULL)
-				free(ImageData);
+
 			}
 		};
 
@@ -147,6 +149,9 @@ namespace Aurora
 			std::vector<std::string> Names;
 			std::vector<Image*> Images;
 
+            std::vector<std::string> ConstNames;
+			std::vector<Image*> ConstImages;
+
 			int currentTexture;
 
 			static TextureManager* Instance();
@@ -162,15 +167,31 @@ namespace Aurora
 			void SetTextureModeulate(int number);
 			void SetMipMapsTextures(int texture,int mipmap1,int mipmap2,int mipmap3);
 
+            void LoadConstTexture(std::string fileName);
+            int GetConstTextureNumber(std::string name);
+            void SetConstTexture(int number,int minFilter = GU_LINEAR,int maxFilter = GU_LINEAR);
+            void RemoveConstTextures();
+
 			void LoadTexture(std::string fileName);
 			void LoadTexureVFS(std::string fileName);
 
 			void RemoveTexture(int number);
+			void RemoveTextures();
 
 			Image* LoadPng(std::string fileName);
 			Image* LoadPngFromMemory(std::string fileName);
 
 			Image* CreateImage(int width,int height,int ColorMode,int Vram);
+
+			int getAlpha(int x,int y,int number);
+			int getGreen(int x,int y,int number);
+			int getRed(int x,int y,int number);
+			int getBlue(int x,int y,int number);
+
+			void setColour(int x,int y, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha, int number);
+
+			float getWidth(int number);
+			int getHeight(int number);
 		};
 
 	}

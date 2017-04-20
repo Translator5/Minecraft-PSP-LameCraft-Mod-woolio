@@ -18,7 +18,7 @@ namespace Aurora
 
 			static Vector3 cross(const Vector3 &p, const Vector3 &q);
 			static float distance(const Vector3 &pt1, const Vector3 &pt2);
-			static float distanceSq(const Vector3 &pt1, const Vector3 &pt2);  
+			static float distanceSq(const Vector3 &pt1, const Vector3 &pt2);
 			static float dot(const Vector3 &p, const Vector3 &q);
 			static Vector3 lerp(const Vector3 &p, const Vector3 &q, float t);
 			static void orthogonalize(Vector3 &v1, Vector3 &v2);
@@ -346,7 +346,7 @@ namespace Aurora
 
 		inline Vector3 Vector3::operator*(float scalar) const
 		{
-			return Vector3(x * scalar, y * scalar, z * scalar);    
+			return Vector3(x * scalar, y * scalar, z * scalar);
 		}
 
 		inline Vector3 Vector3::operator/(float scalar) const

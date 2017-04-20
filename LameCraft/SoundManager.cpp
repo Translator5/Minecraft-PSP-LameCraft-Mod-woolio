@@ -14,148 +14,449 @@ SoundManager::SoundManager()
 
 SoundManager::~SoundManager()
 {
+    pgeWavStopAll();
 
+    pgeWavUnload(rainSound);
+    pgeWavUnload(buttonSound);
+    pgeWavUnload(tnt);
+    pgeWavUnload(doorOpen);
+    pgeWavUnload(doorClose);
+    pgeWavUnload(breakSound);
+    pgeWavUnload(bow);
+    pgeWavUnload(plopSound);
+    pgeWavUnload(zombieDieSound);
+    pgeWavUnload(cowSaySound);
+    pgeWavUnload(fuse);
+    pgeWavUnload(splash);
+    pgeWavUnload(glass);
+    pgeWavUnload(zombieSaySound);
+    pgeWavUnload(shear);
+
+    for(int i = 0; i <= 3; i++)
+    {
+        pgeWavUnload(grassSounds[i]);
+        pgeWavUnload(grawelSounds[i]);
+        pgeWavUnload(stoneSounds[i]);
+        pgeWavUnload(woodSounds[i]);
+        pgeWavUnload(sandSounds[i]);
+        pgeWavUnload(snowSounds[i]);
+    }
+    for(int i = 0; i <= 2; i++)
+    {
+        pgeWavUnload(eatSounds[i]);
+        pgeWavUnload(hitSounds[i]);
+        pgeWavUnload(digSounds[i]);
+    }
+    for(int i = 0; i <= 1; i++)
+    {
+        pgeWavUnload(fallSounds[i]);
+        pgeWavUnload(cowHurtSounds[i]);
+        pgeWavUnload(creeperHurtSounds[i]);
+        pgeWavUnload(zombieHurtSounds[i]);
+        pgeWavUnload(sheepHurtSounds[i]);
+        pgeWavUnload(noteSounds[i]);
+    }
 }
 
 void SoundManager::Init()
 {
-	//first of all init audio engine
-	VirtualFileInit();
-	//oslInitAudioME(OSL_FMT_MP3);
+    //first of all init audio engine
+    VirtualFileInit();
 	oslInitAudio();
+	pgeWavInit();
+
+    //set default values
+	currentWalkSound = 0;
+	lastWalkSound = 0;
+	playerSounds = true;
+	lastAmbientSound = 0;
+	currentAmbientSound = 0;
+	ambientSoundsEnabled = true;
+	srand(time(NULL));
 
 	//button sound
-	buttonSound = oslLoadSoundFile("Assets/Sounds/button1.wav",OSL_FMT_NONE);
+	buttonSound = pgeWavLoad("Assets/Sounds/other/button1.wav");
 
 	//TNT
-	tnt = oslLoadSoundFile("Assets/Sounds/tnt.wav",OSL_FMT_NONE);
+	tnt = pgeWavLoad("Assets/Sounds/other/tnt.wav");
+	fuse = pgeWavLoad("Assets/Sounds/other/fuse.wav");
 
-	door = oslLoadSoundFile("Assets/Sounds/door.wav",OSL_FMT_NONE);
+	splash = pgeWavLoad("Assets/Sounds/other/splash.wav");
 
-	breakSound = oslLoadSoundFile("Assets/Sounds/break.wav",OSL_FMT_NONE);
+	doorOpen = pgeWavLoad("Assets/Sounds/other/door_open.wav");
+	doorClose = pgeWavLoad("Assets/Sounds/other/door_close.wav");
 
-	bow = oslLoadSoundFile("Assets/Sounds/bow.wav",OSL_FMT_NONE);
+	breakSound = pgeWavLoad("Assets/Sounds/other/break.wav");
+
+	rainSound = pgeWavLoad("Assets/Sounds/other/rain.wav");
+
+	bow = pgeWavLoad("Assets/Sounds/other/bow.wav");
+
+	shear = pgeWavLoad("Assets/Sounds/mobs/sheep/shear.wav");
 
 	//plop sound
-	plopSound = oslLoadSoundFile("Assets/Sounds/plop.wav",OSL_FMT_NONE);
+	plopSound = pgeWavLoad("Assets/Sounds/other/plop.wav");
+	pgeWavVolume(plopSound,50,50);
 
-    fallSounds[0] = oslLoadSoundFile("Assets/Sounds/Damage/fallbig.wav",OSL_FMT_NONE);
-    fallSounds[1] = oslLoadSoundFile("Assets/Sounds/Damage/fallsmall.wav",OSL_FMT_NONE);
-    //cave sounds
-    caveSounds[0] = oslLoadSoundFile("Assets/Sounds/cave2.wav",OSL_FMT_NONE);
-    caveSounds[1] = oslLoadSoundFile("Assets/Sounds/cave3.wav",OSL_FMT_NONE);
-    caveSounds[2] = oslLoadSoundFile("Assets/Sounds/cave4.wav",OSL_FMT_NONE);
-    caveSounds[3] = oslLoadSoundFile("Assets/Sounds/cave5.wav",OSL_FMT_NONE);
-    caveSounds[4] = oslLoadSoundFile("Assets/Sounds/cave6.wav",OSL_FMT_NONE);
-    caveSounds[5] = oslLoadSoundFile("Assets/Sounds/cave7.wav",OSL_FMT_NONE);
+    //fall sounds
+    fallSounds[0] = pgeWavLoad("Assets/Sounds/Damage/fallbig.wav");
+    fallSounds[1] = pgeWavLoad("Assets/Sounds/Damage/fallsmall.wav");
+
+    //note sounds
+    noteSounds[0] = pgeWavLoad("Assets/Sounds/notes/bass.wav");
+    noteSounds[1] = pgeWavLoad("Assets/Sounds/notes/pling.wav");
+    pgeWavVolume(noteSounds[0],85,85);
+    pgeWavVolume(noteSounds[1],85,85);
+
+    //zombie sounds
+    zombieHurtSounds[0] = pgeWavLoad("Assets/Sounds/mobs/zombie/hurt1.wav");
+    zombieHurtSounds[1] = pgeWavLoad("Assets/Sounds/mobs/zombie/hurt2.wav");
+    zombieSaySound = pgeWavLoad("Assets/Sounds/mobs/zombie/say.wav");
+    zombieDieSound = pgeWavLoad("Assets/Sounds/mobs/zombie/death.wav");
+
+    //cow sounds
+    cowHurtSounds[0] = pgeWavLoad("Assets/Sounds/mobs/cow/hurt1.wav");
+    cowHurtSounds[1] = pgeWavLoad("Assets/Sounds/mobs/cow/hurt2.wav");
+    cowSaySound = pgeWavLoad("Assets/Sounds/mobs/cow/say1.wav");
+
+    //creeper sounds
+    creeperHurtSounds[0] = pgeWavLoad("Assets/Sounds/mobs/creeper/hurt1.wav");
+    creeperHurtSounds[1] = pgeWavLoad("Assets/Sounds/mobs/creeper/hurt2.wav");
+
+    //sheep sounds
+    sheepHurtSounds[0] = pgeWavLoad("Assets/Sounds/mobs/sheep/say1.wav");
+    sheepHurtSounds[1] = pgeWavLoad("Assets/Sounds/mobs/sheep/say2.wav");
+
 	//grass sounds
-	grassSounds[0] = oslLoadSoundFile("Assets/Sounds/walking/grass1.wav",OSL_FMT_NONE);
-	grassSounds[1] = oslLoadSoundFile("Assets/Sounds/walking/grass2.wav",OSL_FMT_NONE);
-	grassSounds[2] = oslLoadSoundFile("Assets/Sounds/walking/grass3.wav",OSL_FMT_NONE);
-	grassSounds[3] = oslLoadSoundFile("Assets/Sounds/walking/grass4.wav",OSL_FMT_NONE);
+	grassSounds[0] = pgeWavLoad("Assets/Sounds/walking/grass/grass1.wav");
+	grassSounds[1] = pgeWavLoad("Assets/Sounds/walking/grass/grass2.wav");
+	grassSounds[2] = pgeWavLoad("Assets/Sounds/walking/grass/grass3.wav");
+	grassSounds[3] = pgeWavLoad("Assets/Sounds/walking/grass/grass4.wav");
 
-	//grawel
-	grawelSounds[0] = oslLoadSoundFile("Assets/Sounds/walking/gravel1.wav",OSL_FMT_NONE);
-	grawelSounds[1] = oslLoadSoundFile("Assets/Sounds/walking/gravel2.wav",OSL_FMT_NONE);
-	grawelSounds[2] = oslLoadSoundFile("Assets/Sounds/walking/gravel3.wav",OSL_FMT_NONE);
-	grawelSounds[3] = oslLoadSoundFile("Assets/Sounds/walking/gravel4.wav",OSL_FMT_NONE);
+	//gravel
+	grawelSounds[0] = pgeWavLoad("Assets/Sounds/walking/gravel/gravel1.wav");
+	grawelSounds[1] = pgeWavLoad("Assets/Sounds/walking/gravel/gravel2.wav");
+	grawelSounds[2] = pgeWavLoad("Assets/Sounds/walking/gravel/gravel3.wav");
+	grawelSounds[3] = pgeWavLoad("Assets/Sounds/walking/gravel/gravel4.wav");
 
 	//stone
-	stoneSounds[0] = oslLoadSoundFile("Assets/Sounds/walking/stone1.wav",OSL_FMT_NONE);
-	stoneSounds[1] = oslLoadSoundFile("Assets/Sounds/walking/stone2.wav",OSL_FMT_NONE);
-	stoneSounds[2] = oslLoadSoundFile("Assets/Sounds/walking/stone3.wav",OSL_FMT_NONE);
-	stoneSounds[3] = oslLoadSoundFile("Assets/Sounds/walking/stone4.wav",OSL_FMT_NONE);
+	stoneSounds[0] = pgeWavLoad("Assets/Sounds/walking/stone/stone1.wav");
+	stoneSounds[1] = pgeWavLoad("Assets/Sounds/walking/stone/stone2.wav");
+	stoneSounds[2] = pgeWavLoad("Assets/Sounds/walking/stone/stone3.wav");
+	stoneSounds[3] = pgeWavLoad("Assets/Sounds/walking/stone/stone4.wav");
 
 	//wood
-	woodSounds[0] = oslLoadSoundFile("Assets/Sounds/walking/wood1.wav",OSL_FMT_NONE);
-	woodSounds[1] = oslLoadSoundFile("Assets/Sounds/walking/wood2.wav",OSL_FMT_NONE);
-	woodSounds[2] = oslLoadSoundFile("Assets/Sounds/walking/wood3.wav",OSL_FMT_NONE);
-	woodSounds[3] = oslLoadSoundFile("Assets/Sounds/walking/wood4.wav",OSL_FMT_NONE);
-
-    //cloth
-    clothSounds[0] = oslLoadSoundFile("Assets/Sounds/walking/cloth1.wav",OSL_FMT_NONE);
-	clothSounds[1] = oslLoadSoundFile("Assets/Sounds/walking/cloth2.wav",OSL_FMT_NONE);
-	clothSounds[2] = oslLoadSoundFile("Assets/Sounds/walking/cloth3.wav",OSL_FMT_NONE);
-	clothSounds[3] = oslLoadSoundFile("Assets/Sounds/walking/cloth4.wav",OSL_FMT_NONE);
+	woodSounds[0] = pgeWavLoad("Assets/Sounds/walking/wood/wood1.wav");
+	woodSounds[1] = pgeWavLoad("Assets/Sounds/walking/wood/wood2.wav");
+	woodSounds[2] = pgeWavLoad("Assets/Sounds/walking/wood/wood3.wav");
+	woodSounds[3] = pgeWavLoad("Assets/Sounds/walking/wood/wood4.wav");
 
     //sand
-    sandSounds[0] = oslLoadSoundFile("Assets/Sounds/walking/sand1.wav",OSL_FMT_NONE);
-	sandSounds[1] = oslLoadSoundFile("Assets/Sounds/walking/sand2.wav",OSL_FMT_NONE);
-	sandSounds[2] = oslLoadSoundFile("Assets/Sounds/walking/sand3.wav",OSL_FMT_NONE);
-	sandSounds[3] = oslLoadSoundFile("Assets/Sounds/walking/sand4.wav",OSL_FMT_NONE);
+    sandSounds[0] = pgeWavLoad("Assets/Sounds/walking/sand/sand1.wav");
+	sandSounds[1] = pgeWavLoad("Assets/Sounds/walking/sand/sand2.wav");
+	sandSounds[2] = pgeWavLoad("Assets/Sounds/walking/sand/sand3.wav");
+	sandSounds[3] = pgeWavLoad("Assets/Sounds/walking/sand/sand4.wav");
 
     //snow
-    snowSounds[0] = oslLoadSoundFile("Assets/Sounds/walking/snow1.wav",OSL_FMT_NONE);
-	snowSounds[1] = oslLoadSoundFile("Assets/Sounds/walking/snow2.wav",OSL_FMT_NONE);
-	snowSounds[2] = oslLoadSoundFile("Assets/Sounds/walking/snow3.wav",OSL_FMT_NONE);
-	snowSounds[3] = oslLoadSoundFile("Assets/Sounds/walking/snow4.wav",OSL_FMT_NONE);
+    snowSounds[0] = pgeWavLoad("Assets/Sounds/walking/snow/snow1.wav");
+	snowSounds[1] = pgeWavLoad("Assets/Sounds/walking/snow/snow2.wav");
+	snowSounds[2] = pgeWavLoad("Assets/Sounds/walking/snow/snow3.wav");
+	snowSounds[3] = pgeWavLoad("Assets/Sounds/walking/snow/snow4.wav");
 
-	// Ambient
-	ambientSounds[0] = oslLoadSoundFile("Assets/Sounds/ambient/track1.bgm",OSL_FMT_STREAM);
+	//glass
+	glass = pgeWavLoad("Assets/Sounds/dig/glass1.wav");
+
+	digSounds[0] = pgeWavLoad("Assets/Sounds/dig/grass1.wav");
+	digSounds[1] = pgeWavLoad("Assets/Sounds/dig/gravel1.wav");
+	digSounds[2] = pgeWavLoad("Assets/Sounds/dig/stone1.wav");
+
+    // Eat sounds
+	eatSounds[0] = pgeWavLoad("Assets/Sounds/eat/eat1.wav");
+	eatSounds[1] = pgeWavLoad("Assets/Sounds/eat/eat2.wav");
+	eatSounds[2] = pgeWavLoad("Assets/Sounds/eat/eat3.wav");
+
+    // Hit sounds
+    hitSounds[0] = pgeWavLoad("Assets/Sounds/Damage/hit1.wav");
+    hitSounds[1] = pgeWavLoad("Assets/Sounds/Damage/hit2.wav");
+    hitSounds[2] = pgeWavLoad("Assets/Sounds/Damage/hit3.wav");
+
+    ambientSounds[0] = oslLoadSoundFile("Assets/Sounds/ambient/track1.bgm",OSL_FMT_STREAM);
 	ambientSounds[1] = oslLoadSoundFile("Assets/Sounds/ambient/track2.bgm",OSL_FMT_STREAM);
 	ambientSounds[2] = oslLoadSoundFile("Assets/Sounds/ambient/track3.bgm",OSL_FMT_STREAM);
-	ambientSounds[3] = oslLoadSoundFile("Assets/Sounds/ambient/track4.bgm",OSL_FMT_STREAM);
+    ambientSounds[3] = oslLoadSoundFile("Assets/Sounds/ambient/track4.bgm",OSL_FMT_STREAM);
 	ambientSounds[4] = oslLoadSoundFile("Assets/Sounds/ambient/track5.bgm",OSL_FMT_STREAM);
 	ambientSounds[5] = oslLoadSoundFile("Assets/Sounds/ambient/track6.bgm",OSL_FMT_STREAM);
 
-	eatSounds[0] = oslLoadSoundFile("Assets/Sounds/eat/eat1.wav",OSL_FMT_NONE);
-	eatSounds[1] = oslLoadSoundFile("Assets/Sounds/eat/eat2.wav",OSL_FMT_NONE);
-	eatSounds[2] = oslLoadSoundFile("Assets/Sounds/eat/eat3.wav",OSL_FMT_NONE);
-
-    hitSounds[0] = oslLoadSoundFile("Assets/Sounds/Damage/hit1.wav",OSL_FMT_NONE);
-    hitSounds[1] = oslLoadSoundFile("Assets/Sounds/Damage/hit2.wav",OSL_FMT_NONE);
-    hitSounds[2] = oslLoadSoundFile("Assets/Sounds/Damage/hit3.wav",OSL_FMT_NONE);
-
-
-	srand(time(NULL));
-
-	//set default values
-	currentWalkSound = 0;
-	lastWalkSound = 0;
-
-	playerSounds = true;
+    diskSounds[0] = oslLoadSoundFile("Assets/Sounds/music/13.wav",OSL_FMT_STREAM);
+	diskSounds[1] = oslLoadSoundFile("Assets/Sounds/music/cat.wav",OSL_FMT_STREAM);
+	diskSounds[2] = oslLoadSoundFile("Assets/Sounds/music/strad.wav",OSL_FMT_STREAM);
 }
 
 void SoundManager::PlayMenuSound()
 {
-	oslPlaySound(buttonSound, 1);
+	pgeWavPlay(buttonSound);
 }
 
 void SoundManager::PlayPlopSound()
 {
 	if(playerSounds)
-		oslPlaySound(plopSound,1);
+		pgeWavPlay(plopSound);
 }
 
 void SoundManager::TNTSound()
 {
 	if(playerSounds)
-		oslPlaySound(tnt,6);
+		pgeWavPlay(tnt);
 }
 
-void SoundManager::doorSound()
+void SoundManager::PlayFuseSound()
 {
 	if(playerSounds)
-		oslPlaySound(door,3);
+		pgeWavPlay(fuse);
+}
+
+void SoundManager::PlayShearSound()
+{
+	if(playerSounds)
+		pgeWavPlay(shear);
+}
+
+void SoundManager::PlaySplashSound()
+{
+	if(playerSounds)
+    {
+        int volume = 80+rand()%10;
+        pgeWavVolume(splash,volume,volume);
+		pgeWavPlay(splash);
+    }
+}
+
+void SoundManager::PlayNoteSound(unsigned int noteType, float pitch)
+{
+	if(playerSounds)
+    {
+        pgeWavPitch(noteSounds[noteType],pitch);
+        pgeWavPlay(noteSounds[noteType]);
+        pgeWavPitch(noteSounds[noteType],1.0f);
+    }
+}
+
+void SoundManager::PlayDoorSound(bool open)
+{
+	if(playerSounds)
+    {
+        open == true ? pgeWavPlay(doorOpen) : pgeWavPlay(doorClose);
+    }
+}
+
+void SoundManager::PlayGlassSound()
+{
+	if(playerSounds)
+		pgeWavPlay(glass);
+}
+
+void SoundManager::PlayRainSound(int volume)
+{
+	if(playerSounds)
+    {
+        pgeWavVolume(rainSound, volume, volume);
+        pgeWavPlay(rainSound);
+        pgeWavVolume(rainSound, 100, 100);
+    }
+}
+
+void SoundManager::PlayEndDigSound(int type)
+{
+	if(playerSounds)
+	{
+		switch(type)
+		{
+			case 0://grass
+			{
+				pgeWavPlay(digSounds[0]);
+			}
+			break;
+			case 1://gravel
+			{
+				pgeWavPlay(digSounds[1]);
+			}
+			break;
+			case 2://stone
+			{
+				pgeWavPlay(digSounds[2]);
+			}
+			break;
+			case 3://wood
+			{
+				pgeWavPlay(woodSounds[rand() % 4]);
+			}
+			break;
+            case 4://cloth
+			{
+			    pgeWavPlay(snowSounds[rand() % 4]);
+			}
+			break;
+            case 5://sand
+			{
+				pgeWavPlay(sandSounds[rand() % 4]);
+			}
+			break;
+            case 6://snow
+			{
+				pgeWavPlay(snowSounds[rand() % 4]);
+			}
+			break;
+		}
+	}
 }
 
 void SoundManager::PlayBreakSound()
 {
 	if(playerSounds)
-		oslPlaySound(breakSound,1);
+		pgeWavPlay(breakSound);
 }
 
 void SoundManager::PlayBowSound()
 {
 	if(playerSounds)
-		oslPlaySound(bow,1);
+		pgeWavPlay(bow);
+}
+
+void SoundManager::PlayZombieHurtSound(float distanceToPlayer)
+{
+	if(playerSounds)
+    {
+        int i = rand() % 2;
+        if(distanceToPlayer < 15.0f)
+        {
+            distanceToPlayer -= 2.0f;
+            if(distanceToPlayer < 0)
+            {
+                distanceToPlayer = 0.0f;
+            }
+            float volume = (15.0f-distanceToPlayer)/15.0f*100.0f;
+            pgeWavVolume(zombieHurtSounds[i],volume,volume);
+            pgeWavPlay(zombieHurtSounds[i]);
+        }
+    }
+}
+
+void SoundManager::PlayZombieDieSound(float distanceToPlayer)
+{
+	if(playerSounds)
+    {
+        if(distanceToPlayer < 15.0f)
+        {
+            distanceToPlayer -= 2.0f;
+            if(distanceToPlayer < 0)
+            {
+                distanceToPlayer = 0.0f;
+            }
+            float volume = (15.0f-distanceToPlayer)/15.0f*100.0f;
+            pgeWavVolume(zombieDieSound,volume,volume);
+            pgeWavPlay(zombieDieSound);
+        }
+    }
+}
+
+void SoundManager::PlayCowHurtSound(float distanceToPlayer)
+{
+	if(playerSounds)
+    {
+        int i = rand()%2;
+        if(distanceToPlayer < 15.0f)
+        {
+            distanceToPlayer -= 2.0f;
+            if(distanceToPlayer < 0)
+            {
+                distanceToPlayer = 0.0f;
+            }
+            float volume = (15.0f-distanceToPlayer)/15.0f*100.0f;
+            pgeWavVolume(cowHurtSounds[i],volume,volume);
+            pgeWavPlay(cowHurtSounds[i]);
+        }
+    }
+}
+
+void SoundManager::PlayCreeperHurtSound(float distanceToPlayer)
+{
+	if(playerSounds)
+    {
+        int i = rand()%2;
+        if(distanceToPlayer < 15.0f)
+        {
+            distanceToPlayer -= 2.0f;
+            if(distanceToPlayer < 0)
+            {
+                distanceToPlayer = 0.0f;
+            }
+            float volume = (15.0f-distanceToPlayer)/15.0f*100.0f;
+            pgeWavVolume(creeperHurtSounds[i],volume,volume);
+            pgeWavPlay(creeperHurtSounds[i]);
+        }
+    }
+}
+
+void SoundManager::PlaySheepHurtSound(float distanceToPlayer)
+{
+	if(playerSounds)
+    {
+        int i = rand()%2;
+        if(distanceToPlayer < 15.0f)
+        {
+            distanceToPlayer -= 2.0f;
+            if(distanceToPlayer < 0)
+            {
+                distanceToPlayer = 0.0f;
+            }
+            float volume = (15.0f-distanceToPlayer)/15.0f*100.0f;
+            pgeWavVolume(sheepHurtSounds[i],volume,volume);
+            pgeWavPlay(sheepHurtSounds[i]);
+        }
+    }
+}
+
+void SoundManager::PlayZombieSaySound(float distanceToPlayer)
+{
+	if(playerSounds)
+    {
+        if(distanceToPlayer < 22.0f)
+        {
+            distanceToPlayer -= 2.0f;
+            if(distanceToPlayer < 0)
+            {
+                distanceToPlayer = 0.0f;
+            }
+            float volume = (22.0f-distanceToPlayer)/22.0f*100.0f;
+            pgeWavVolume(zombieSaySound,volume,volume);
+            pgeWavPlay(zombieSaySound);
+        }
+    }
+}
+
+void SoundManager::PlayCowSaySound(float distanceToPlayer)
+{
+	if(playerSounds)
+    {
+        if(distanceToPlayer < 20.0f)
+        {
+            distanceToPlayer -= 2.0f;
+            if(distanceToPlayer < 0)
+            {
+                distanceToPlayer = 0.0f;
+            }
+            float volume = (20.0f-distanceToPlayer)/20.0f*100.0f;
+            pgeWavVolume(cowSaySound,volume,volume);
+            pgeWavPlay(cowSaySound);
+        }
+    }
 }
 
 void SoundManager::PlayHitSound()
 {
 	if(playerSounds)
     {
-		oslPlaySound(hitSounds[rand() % 3],3);
+		pgeWavPlay(hitSounds[rand() % 3]);
     }
 }
 
@@ -163,18 +464,10 @@ void SoundManager::PlayEatSound()
 {
 	if(playerSounds)
     {
-		oslPlaySound(eatSounds[rand() % 3],3);
+		pgeWavPlay(eatSounds[rand() % 3]);
     }
 }
 
-void SoundManager::PlayCaveSound()
-{
-	if(playerSounds)
-    {
-        short randSound = rand() % 5;
-        oslPlaySound(caveSounds[randSound],6);
-    }
-}
 
 void SoundManager::PlayFallSound(float i)
 {
@@ -182,11 +475,11 @@ void SoundManager::PlayFallSound(float i)
     {
         if (i < -9 && i > -21)
         {
-            oslPlaySound(fallSounds[1],6);
+            pgeWavPlay(fallSounds[1]);
         }
         if (i < -21)
         {
-            oslPlaySound(fallSounds[0],6);
+            pgeWavPlay(fallSounds[0]);
         }
     }
 }
@@ -202,10 +495,10 @@ void SoundManager::PlayWalkSound(int type)
 				currentWalkSound = rand() % 4;
 
 				//stop last sound
-				oslStopSound(grassSounds[lastWalkSound]);
+				pgeWavStop(grassSounds[lastWalkSound]);
 
 				//play new sound
-				oslPlaySound(grassSounds[currentWalkSound],1);
+				pgeWavPlay(grassSounds[currentWalkSound]);
 
 				//set last sound as current
 				lastWalkSound = currentWalkSound;
@@ -216,10 +509,10 @@ void SoundManager::PlayWalkSound(int type)
 				currentWalkSound = rand() % 4;
 
 				//stop last sound
-				oslStopSound(grawelSounds[lastWalkSound]);
+				pgeWavStop(grawelSounds[lastWalkSound]);
 
 				//play new sound
-				oslPlaySound(grawelSounds[currentWalkSound],1);
+				pgeWavPlay(grawelSounds[currentWalkSound]);
 
 				//set last sound as current
 				lastWalkSound = currentWalkSound;
@@ -230,10 +523,10 @@ void SoundManager::PlayWalkSound(int type)
 				currentWalkSound = rand() % 4;
 
 				//stop last sound
-				oslStopSound(stoneSounds[lastWalkSound]);
+				pgeWavStop(stoneSounds[lastWalkSound]);
 
 				//play new sound
-				oslPlaySound(stoneSounds[currentWalkSound],1);
+				pgeWavPlay(stoneSounds[currentWalkSound]);
 
 				//set last sound as current
 				lastWalkSound = currentWalkSound;
@@ -244,10 +537,10 @@ void SoundManager::PlayWalkSound(int type)
 				currentWalkSound = rand() % 4;
 
 				//stop last sound
-				oslStopSound(woodSounds[lastWalkSound]);
+				pgeWavStop(woodSounds[lastWalkSound]);
 
 				//play new sound
-				oslPlaySound(woodSounds[currentWalkSound],1);
+				pgeWavPlay(woodSounds[currentWalkSound]);
 
 				//set last sound as current
 				lastWalkSound = currentWalkSound;
@@ -258,10 +551,10 @@ void SoundManager::PlayWalkSound(int type)
 				currentWalkSound = rand() % 4;
 
 				//stop last sound
-				oslStopSound(clothSounds[lastWalkSound]);
+				pgeWavStop(snowSounds[lastWalkSound]);
 
 				//play new sound
-				oslPlaySound(clothSounds[currentWalkSound],1);
+				pgeWavPlay(snowSounds[currentWalkSound]);
 
 				//set last sound as current
 				lastWalkSound = currentWalkSound;
@@ -272,10 +565,10 @@ void SoundManager::PlayWalkSound(int type)
 				currentWalkSound = rand() % 4;
 
 				//stop last sound
-				oslStopSound(sandSounds[lastWalkSound]);
+				pgeWavStop(sandSounds[lastWalkSound]);
 
 				//play new sound
-				oslPlaySound(sandSounds[currentWalkSound],1);
+				pgeWavPlay(sandSounds[currentWalkSound]);
 
 				//set last sound as current
 				lastWalkSound = currentWalkSound;
@@ -286,10 +579,10 @@ void SoundManager::PlayWalkSound(int type)
 				currentWalkSound = rand() % 4;
 
 				//stop last sound
-				oslStopSound(snowSounds[lastWalkSound]);
+				pgeWavStop(snowSounds[lastWalkSound]);
 
 				//play new sound
-				oslPlaySound(snowSounds[currentWalkSound],1);
+				pgeWavPlay(snowSounds[currentWalkSound]);
 
 				//set last sound as current
 				lastWalkSound = currentWalkSound;
@@ -299,46 +592,200 @@ void SoundManager::PlayWalkSound(int type)
 	}
 }
 
+void SoundManager::PlayDigSound(int type)
+{
+	if(playerSounds)
+	{
+		switch(type)
+		{
+			case 0://grass
+			{
+				currentWalkSound = rand() % 4;
+
+				//stop last sound
+				pgeWavStop(grassSounds[lastWalkSound]);
+				pgeWavVolume(grassSounds[lastWalkSound],100,100);
+
+				//play new sound
+				pgeWavVolume(grassSounds[currentWalkSound],25,25);
+				pgeWavPlay(grassSounds[currentWalkSound]);
+				pgeWavVolume(grassSounds[currentWalkSound],100,100);
+
+				//set last sound as current
+				lastWalkSound = currentWalkSound;
+			}
+			break;
+			case 1://gravel
+			{
+				currentWalkSound = rand() % 4;
+
+				//stop last sound
+				pgeWavStop(grawelSounds[lastWalkSound]);
+				pgeWavVolume(grawelSounds[lastWalkSound],100,100);
+
+				//play new sound
+				pgeWavVolume(grawelSounds[currentWalkSound],25,25);
+				pgeWavPlay(grawelSounds[currentWalkSound]);
+				pgeWavVolume(grawelSounds[currentWalkSound],100,100);
+
+				//set last sound as current
+				lastWalkSound = currentWalkSound;
+			}
+			break;
+			case 2://stone
+			{
+				currentWalkSound = rand() % 4;
+
+				//stop last sound
+				pgeWavStop(stoneSounds[lastWalkSound]);
+				pgeWavVolume(stoneSounds[lastWalkSound],100,100);
+
+				//play new sound
+				pgeWavVolume(stoneSounds[currentWalkSound],25,25);
+				pgeWavPlay(stoneSounds[currentWalkSound]);
+				pgeWavVolume(stoneSounds[currentWalkSound],100,100);
+
+				//set last sound as current
+				lastWalkSound = currentWalkSound;
+			}
+			break;
+			case 3://wood
+			{
+				currentWalkSound = rand() % 4;
+
+				//stop last sound
+				pgeWavStop(woodSounds[lastWalkSound]);
+				pgeWavVolume(woodSounds[lastWalkSound],100,100);
+
+				//play new sound
+				pgeWavVolume(woodSounds[currentWalkSound],25,25);
+				pgeWavPlay(woodSounds[currentWalkSound]);
+				pgeWavVolume(woodSounds[currentWalkSound],100,100);
+
+				//set last sound as current
+				lastWalkSound = currentWalkSound;
+			}
+			break;
+            case 4://cloth
+			{
+				currentWalkSound = rand() % 4;
+
+				//stop last sound
+				pgeWavStop(snowSounds[lastWalkSound]);
+				pgeWavVolume(snowSounds[lastWalkSound],100,100);
+
+				//play new sound
+				pgeWavVolume(snowSounds[currentWalkSound],25,25);
+				pgeWavPlay(snowSounds[currentWalkSound]);
+				pgeWavVolume(snowSounds[currentWalkSound],100,100);
+
+				//set last sound as current
+				lastWalkSound = currentWalkSound;
+			}
+			break;
+            case 5://sand
+			{
+				currentWalkSound = rand() % 4;
+
+				//stop last sound
+				pgeWavStop(sandSounds[lastWalkSound]);
+				pgeWavVolume(sandSounds[lastWalkSound],100,100);
+
+				//play new sound
+				pgeWavVolume(sandSounds[currentWalkSound],25,25);
+				pgeWavPlay(sandSounds[currentWalkSound]);
+				pgeWavVolume(sandSounds[currentWalkSound],100,100);
+
+				//set last sound as current
+				lastWalkSound = currentWalkSound;
+			}
+			break;
+            case 6://snow
+			{
+				currentWalkSound = rand() % 4;
+
+				//stop last sound
+				pgeWavStop(snowSounds[lastWalkSound]);
+				pgeWavVolume(snowSounds[lastWalkSound],100,100);
+
+				//play new sound
+				pgeWavVolume(snowSounds[currentWalkSound],25,25);
+				pgeWavPlay(snowSounds[currentWalkSound]);
+				pgeWavVolume(snowSounds[currentWalkSound],100,100);
+
+				//set last sound as current
+				lastWalkSound = currentWalkSound;
+			}
+			break;
+		}
+	}
+}
+
+void SoundManager::StopAmbient()
+{
+    oslStopSound(ambientSounds[0]);
+	oslStopSound(ambientSounds[1]);
+	oslStopSound(ambientSounds[2]);
+	oslStopSound(ambientSounds[3]);
+	oslStopSound(ambientSounds[4]);
+	oslStopSound(ambientSounds[5]);
+}
+
+void SoundManager::StopDiskSounds()
+{
+    oslStopSound(diskSounds[0]);
+	oslStopSound(diskSounds[1]);
+	oslStopSound(diskSounds[2]);
+}
+
 int SoundManager::PlayRandomAmbient()
 {
  	currentAmbientSound = rand() % 6;
 
+	StopAmbient();
+	//play new sound
     oslPlaySound(ambientSounds[currentAmbientSound],2);
-
 
 	switch(currentAmbientSound)
 	{
 		case 0:
 			{
-				return 500;
+				return 400;
 			}
 			break;
 		case 1:
 			{
-				return 500;
+				return 400;
 			}
 			break;
 		case 2:
 			{
-				return 500;
+				return 400;
 			}
 			break;
-        case 3:
+		case 3:
 			{
-				return 500;
+				return 400;
 			}
 			break;
 		case 4:
 			{
-				return 500;
+				return 400;
 			}
 			break;
 		case 5:
 			{
-				return 500;
+				return 400;
 			}
 			break;
-
 	}
-	//return 1;
+	return 1;
+}
+
+void SoundManager::PlayDiskSound(int diskNumber)
+{
+	StopAmbient();
+	StopDiskSounds();
+	//play new sound
+    oslPlaySound(diskSounds[diskNumber],2);
 }

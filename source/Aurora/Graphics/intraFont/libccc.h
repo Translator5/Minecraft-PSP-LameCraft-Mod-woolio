@@ -15,8 +15,6 @@
 extern "C" {
 #endif
 
-#include <string.h>
-
 /** @defgroup character code conversion library
  *  @{
  */

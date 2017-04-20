@@ -2,11 +2,12 @@
 #define SIMPLEMESHCHUNK_H
 
 #include <vector>
-
+#include <string>
 //framework
 #include <Aurora/Math/BoundingBox.h>
 #include <Aurora/Math/Vector2.h>
 #include <Aurora/Graphics/Vertex.h>
+#include <cstdlib>
 
 using namespace Aurora::Math;
 using namespace Aurora::Graphics;
@@ -14,16 +15,20 @@ using namespace Aurora::Graphics;
 class SimpleMeshChunk
 {
 public:
-	
-	int id;
 
-	int chunkStartZ;
-	int chunkStartY;
-	int chunkStartX;
+	//unsigned short id;
+
+	unsigned char chunkStartZ;
+	unsigned char chunkStartY;
+	unsigned char chunkStartX;
+
+	bool periodicallyUpadted;
+	bool haveTransparentVerts;
 
 	BoundingBox bBox;
 
 	SimpleMeshChunk();
+	SimpleMeshChunk(int _chunkSize);
 	~SimpleMeshChunk();
 
 	int trienglesCount;
@@ -43,14 +48,14 @@ public:
 	void drawChunk();
 	void reset();
 
+	CraftPSPVertex * meshVertices;
+
 private:
 
 	std::vector<Vector3*> mPosition;
 	std::vector<Vector3*> mColour;
 	std::vector<Vector2*> mtextures;
 	std::vector<Vector3*> mTriangle;
-
-	CraftPSPVertex * meshVertices;
 };
 
 #endif

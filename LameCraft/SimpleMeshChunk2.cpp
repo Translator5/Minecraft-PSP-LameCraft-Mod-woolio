@@ -6,6 +6,19 @@ SimpleMeshChunk::SimpleMeshChunk()
 	trienglesCount = 0;
 	created = true;
 	needUpdate = false;
+	periodicallyUpadted = false;
+
+	meshVertices = NULL;
+}
+
+SimpleMeshChunk::SimpleMeshChunk(int _chunkSize)
+{
+	trienglesCount = 0;
+	created = true;
+	needUpdate = false;
+	periodicallyUpadted = false;
+
+	meshVertices = NULL;
 }
 
 SimpleMeshChunk::~SimpleMeshChunk()
@@ -52,8 +65,8 @@ void SimpleMeshChunk::end()
 
 		//vertices
 		int vert = 0;
-		unsigned int size =  mTriangle.size();
-		for(unsigned int i = 0;i < size;i++)
+		unsigned int size0 =  mTriangle.size();
+		for(unsigned int i = 0;i < size0;i++)
 		{
 			meshVertices[vert].u = mtextures[mTriangle[i]->x]->x;
 			meshVertices[vert].v = mtextures[mTriangle[i]->x]->y;
@@ -85,9 +98,9 @@ void SimpleMeshChunk::end()
 		//sceKernelDcacheWritebackInvalidateAll();
 
 		//indices
-		trienglesCount = size * 3;
+		trienglesCount = size0 * 3;
 
-		for(unsigned int aa = 0;aa < mPosition.size();aa++)
+		for(unsigned int aa = 0; aa < mPosition.size(); aa++)
 		{
 			delete mPosition[aa];
 			delete mtextures[aa];
@@ -97,8 +110,10 @@ void SimpleMeshChunk::end()
 		mtextures.clear();
 		mColour.clear();
 
-		for(unsigned int aa = 0;aa < mTriangle.size();aa++)
-			delete 		mTriangle[aa];
+		for(unsigned int aa = 0; aa < mTriangle.size(); aa++)
+        {
+			delete mTriangle[aa];
+        }
 		mTriangle.clear();
 	}else
 	{
@@ -111,13 +126,15 @@ void SimpleMeshChunk::end()
 
 void SimpleMeshChunk::drawChunk()
 {
-	if(trienglesCount > 0)
-		sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF |GU_COLOR_8888| GU_VERTEX_32BITF | GU_TRANSFORM_3D, trienglesCount, 0, meshVertices);
+	if(trienglesCount > 0 && meshVertices != NULL)
+    {
+		sceGumDrawArray(GU_TRIANGLES, GU_TEXTURE_32BITF |GU_COLOR_8888|GU_VERTEX_32BITF| GU_TRANSFORM_3D, trienglesCount, 0, meshVertices);
+    }
 }
 
 void SimpleMeshChunk::reset()
 {
-	if(trienglesCount > 0)
+	if(trienglesCount > 0 && meshVertices != NULL)
 	{
 		free(meshVertices);
 		trienglesCount = 0;

@@ -4,7 +4,7 @@ namespace Aurora
 {
 	namespace Graphics
 	{
-        float cubeSize = 0.5035f;
+        float cubeSize = 0.5075f;
         SimplePSPVertex2 __attribute__((aligned(16))) top[4] =
 		{
 			{-cubeSize,-cubeSize,cubeSize},	// Top
@@ -16,8 +16,8 @@ namespace Aurora
 		{
 			{-cubeSize, cubeSize, -cubeSize},	// Bottom
 			{ cubeSize, cubeSize, -cubeSize},
-			{ cubeSize, cubeSize,cubeSize},
-			{-cubeSize, cubeSize,cubeSize}
+			{ cubeSize, cubeSize, cubeSize},
+			{-cubeSize, cubeSize, cubeSize}
 		};
 		SimplePSPVertex2 __attribute__((aligned(16))) front[4] =
 		{
@@ -50,7 +50,7 @@ namespace Aurora
 
         void RenderManager::DrawCube(float x, float y, float z)
         {
-            sceGumPushMatrix();
+           /* sceGumPushMatrix();
 			ScePspFVector3 move = {x,y,z};
 			sceGumTranslate(&move);
 			sceGuColor(GU_COLOR(0,0,0,1));
@@ -63,16 +63,21 @@ namespace Aurora
 			sceGumDrawArray( GU_LINE_STRIP, GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, left);
 			sceGumDrawArray( GU_LINE_STRIP, GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, right);
 			sceGuShadeModel(GU_SMOOTH);
-			sceGumPopMatrix();
+			sceGumPopMatrix();*/
         }
 
 		void RenderManager::Init()
 		{
+		    fontVerticalShift = 0;
+		    fontType = 0;
+		    defaultFontType = 1;
+
+		    SetFont(1);
 			mVerticalSync = false;
 			listNum = 0;
 			cleanColor = 0xFF00FF00; //0xFFF5B783
-			fov = 100.0f;//54
-			fovv = 70.0f;
+			fov = 65.0f;//54
+			fovv = 65.0f;
 			aspect =  480.0f / 272.0f;
 			znear = 0.1f;
 			zfar = 200.0f;
@@ -82,6 +87,7 @@ namespace Aurora
 			sceGuInit();
 
 			sceGuStart(GU_DIRECT,list);
+
 
             sceGuDrawBuffer( GU_PSM_8888, SCEGU_VRAM_BP32_0, BUF_WIDTH );
 			sceGuDispBuffer( SCR_WIDTH, SCR_HEIGHT, SCEGU_VRAM_BP32_1, BUF_WIDTH);
@@ -97,9 +103,6 @@ namespace Aurora
 			sceGuEnable(GU_SCISSOR_TEST);
 			sceGuDepthFunc(GU_GEQUAL);
 			sceGuEnable(GU_DEPTH_TEST);
-			//sceGuEnable(GU_ALPHA_TEST);
-
-            //sceGuDisable(GU_ALPHA_TEST);
 
 			sceGuDisable(GU_TEXTURE_2D);
 			sceGuEnable(GU_CLIP_PLANES);
@@ -109,7 +112,7 @@ namespace Aurora
 
 			sceGuEnable(GU_BLEND);
             sceGuBlendFunc(GU_ADD, GU_SRC_ALPHA, GU_ONE_MINUS_SRC_ALPHA, 0, 0);
-			sceGuAlphaFunc( GU_GREATER, 0.0f, 0xff );
+			sceGuAlphaFunc(GU_GREATER, 0.0f, 0xff );
 
 			sceGuStencilFunc(GU_ALWAYS, 1, 1); // always set 1 bit in 1 bit mask
 			sceGuStencilOp(GU_KEEP, GU_KEEP, GU_REPLACE); // keep value on failed test (fail and zfail) and replace on pass
@@ -134,18 +137,63 @@ namespace Aurora
 			g_gpu_load = 0;
 			g_frame_count = 0;
 			performanceCounter = false;
+			sceGuShadeModel(GU_SMOOTH);
 		}
 
 		void RenderManager::InitDebugFont()
 		{
 			intraFontInit();
-			debugFont = intraFontLoad("Assets/Lamecraft/lamecraft.pgf",INTRAFONT_CACHE_ASCII);
-			intraFontSetStyle(debugFont, 0.5f,WHITE,BLACK,0,INTRAFONT_ALIGN_CENTER);
+
+			numFont = intraFontLoad("Assets/Fonts/numerals.pgf",INTRAFONT_CACHE_ASCII);
+			engFont = intraFontLoad("Assets/Fonts/eng_letters.pgf",INTRAFONT_CACHE_ASCII);
+			rusFont = intraFontLoad("Assets/Fonts/rus_letters.pgf",INTRAFONT_CACHE_ASCII);
+
+			intraFontSetStyle(numFont,0.5f,WHITE,BLACK,INTRAFONT_ALIGN_CENTER);
+			intraFontSetStyle(engFont,0.5f,WHITE,BLACK,INTRAFONT_ALIGN_CENTER);
+			intraFontSetStyle(rusFont,0.5f,WHITE,BLACK,INTRAFONT_ALIGN_CENTER);
+
+			debugFont = engFont;
 		}
 
-		void RenderManager::SetFontStyle(float size, unsigned int color, unsigned int shadowColor, float angle, unsigned int options)
+		void RenderManager::SetFontStyle(float size, unsigned int color, unsigned int shadowColor, unsigned int options)
 		{
-			intraFontSetStyle(debugFont, size,color,shadowColor, angle, options);
+		    if(fontType != 0)
+		    {
+		        if(shadowColor == 999)
+                {
+                    intraFontSetStyle(debugFont, size, color, 0, options);
+                }
+                else
+                {
+                    intraFontSetStyle(debugFont, size, color, BLACK, options);
+                }
+		    }
+		    else
+            {
+                intraFontSetStyle(debugFont, size, color, shadowColor, options);
+            }
+		}
+
+        void RenderManager::SetFont(int type)
+		{
+		    fontType = type;
+			switch(type)
+			{
+			    case 0: debugFont = numFont; fontVerticalShift = 0; break;
+			    case 1: debugFont = engFont; fontVerticalShift = -4; break;
+			    case 2: debugFont = rusFont; fontVerticalShift = -4; break;
+			}
+		}
+
+        void RenderManager::SetDefaultFont()
+		{
+		    SetFont(defaultFontType);
+		}
+
+
+        int RenderManager::GetFontLanguage()
+		{
+		    return fontType;
 		}
 
 		void RenderManager::DebugPrint(int x,int y, const char *message, ...)
@@ -159,7 +207,7 @@ namespace Aurora
 			sceGuEnable(GU_BLEND);
 			sceGuEnable(GU_TEXTURE_2D);
 
-			intraFontPrint(debugFont, x, y, cbuffer);
+			intraFontPrint(debugFont, x, y+fontVerticalShift, cbuffer);
 			sceGuDisable(GU_BLEND);
 			sceGuDisable(GU_TEXTURE_2D);
 		}
@@ -175,7 +223,6 @@ namespace Aurora
 			sceGuClearStencil(0);
 			sceGuClearDepth(0);
 			sceGuClear(GU_COLOR_BUFFER_BIT | GU_STENCIL_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
-
 			//reset textures
 			TextureManager::Instance()->currentTexture = -1;
 		}
@@ -184,7 +231,20 @@ namespace Aurora
 		{
 			sceGuStart(GU_DIRECT,list);
 
-			sceGuClearColor(GU_COLOR(a, b, c, 1));
+            if(a > 1.0f)
+            {
+                a = 1.0f;
+            }
+            if(b > 1.0f)
+            {
+                b = 1.0f;
+            }
+            if(c > 1.0f)
+            {
+                c = 1.0f;
+            }
+
+            sceGuClearColor(GU_COLOR(a,b,c,1.0));
 			sceGuClearStencil(0);
 			sceGuClearDepth(0);
 			sceGuClear(GU_COLOR_BUFFER_BIT | GU_STENCIL_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
@@ -219,6 +279,7 @@ namespace Aurora
 			}
 
 			TextureManager::Instance()->currentTexture = -1;
+			sceGuShadeModel(GU_SMOOTH);
 		}
 
 		void RenderManager::LookAt()
@@ -452,7 +513,7 @@ namespace Aurora
 		void RenderManager::TakeNextScreenshot()
 		{
 			char name[20];
-			sprintf(name,"screen%d.png",screenNumber);
+			sprintf(name,"Screenshots/screen%d.png",screenNumber);
 			TakeScreenshot(name);
 			screenNumber++;
 		}
@@ -539,8 +600,5 @@ namespace Aurora
 		{
 			return &m_RenderManager;
 		}
-
-
-
 	}
 }

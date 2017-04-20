@@ -87,7 +87,11 @@ namespace Aurora
 			void Init();
 
 			void InitDebugFont();
-			void SetFontStyle(float size, unsigned int color, unsigned int shadowColor, float angle, unsigned int options);
+			void SetFontStyle(float size, unsigned int color, unsigned int shadowColor, unsigned int options);
+			void SetFont(int type);
+			void SetDefaultFont();
+			int GetFontLanguage();
+
 			void DebugPrint(int x,int y, const char *message, ...);
 			void Start();
 			void CleanBuffers();
@@ -128,6 +132,7 @@ namespace Aurora
 
 
 			static RenderManager * InstancePtr();
+			int defaultFontType;
 
 			Camera *mCam;
 
@@ -156,6 +161,12 @@ namespace Aurora
 
 			//debug font
 			intraFont* debugFont;
+			intraFont* numFont;
+			intraFont* engFont;
+			intraFont* rusFont;
+			float fontVerticalShift;
+			int fontType;
+
 			float fov,aspect,znear,zfar;
 
 			int screenNumber;

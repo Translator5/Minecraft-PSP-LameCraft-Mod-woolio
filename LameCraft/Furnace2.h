@@ -5,6 +5,10 @@ class Furnace
 {
 public:
 	Furnace(int x, int y, int z);
+
+	void SetSide(char side2);
+	char GetSide();
+
 	virtual ~Furnace();
 
 	int furnaceSlotId[3];
@@ -22,6 +26,7 @@ public:
 	int furnaceZ;
 
 	short id;
+	char side;
 };
 
 #endif

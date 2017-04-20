@@ -63,6 +63,13 @@ namespace Aurora
 		typedef struct
 		{
 			float u,v;
+			unsigned int color;
+			unsigned char x,y,z;
+		}__attribute__((packed)) CraftPSPVertex2;
+
+		typedef struct
+		{
+			float u,v;
 			float x,y,z;
 		}__attribute__((packed)) TexturesPSPVertex;
 
