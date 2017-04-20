@@ -1,7 +1,9 @@
 Info:
 
 author: Marcin Ploska(drakon)
+
 contact: marcin.ploska@gmail.com
+
 modified by: Joel16 (https://github.com/joel16) & woolio
 
 authors of the source code that i have used/modified/inspired by:
