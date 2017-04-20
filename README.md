@@ -1,10 +1,15 @@
 Info:
 
+Minecraft PSP is a new Lamecraft mod based on s4inexcraft 1.2. 
+Only this mod has a normal survival mode without serious freezes, bugs and lags. 
+I am trying to make this mod more "minecrafty", so may be one day this mod will be like Minecraft PE 0.7-!
+THIS IS NOT MCPSPE
+
 author: Marcin Ploska(drakon)
 
 contact: marcin.ploska@gmail.com
 
-modified by: Joel16 (https://github.com/joel16) & woolio
+modified by: Joel16 (Minecraft PSP - [LC Mod]) (https://github.com/joel16) & woolio (Minecraft PSP) 
 
 authors of the source code that i have used/modified/inspired by:
 - intraFont by BenHur
