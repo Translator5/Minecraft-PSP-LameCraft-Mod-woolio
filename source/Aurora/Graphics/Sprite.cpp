@@ -137,6 +137,35 @@ namespace Aurora
 			sceKernelDcacheWritebackInvalidateRange(vertices, 4 * sizeof(TexturesPSPVertex));
 		}
 
+        void Sprite::SetMapPos(int textureNumer,int startW,int startH,int endW,int endH)
+		{
+			imageNumber = textureNumer;
+            free(vertices);
+			//generate wertices
+			vertices = (TexturesPSPVertex*)memalign(16, 4 * sizeof(TexturesPSPVertex) );
+
+			Image *img = TextureManager::Instance()->Images[imageNumber];
+
+			width = endW;
+			height = endH;
+
+			float hstart = (float)startH / (float)img->power2Height;
+			float wstart = (float)startW / (float)img->power2Width;
+			float hPercent = (float)(startH + endH) / (float)img->power2Height;
+			float wPercent = (float)(startW + endW) / (float)img->power2Width;
+
+			if( vertices )
+			{
+				vertices[0] = getVertex(wstart,hstart,-width/2,-height/2,0.0f);
+				vertices[1] = getVertex(wstart,hPercent,-width/2, height/2,0.0f);
+				vertices[2] = getVertex(wPercent,hstart,width/2,-height/2,0.0f);
+				vertices[3] = getVertex(wPercent,hPercent,width/2, height/2,0.0f);
+			}
+
+			//sceKernelDcacheWritebackInvalidateAll();
+			sceKernelDcacheWritebackInvalidateRange(vertices, 4 * sizeof(TexturesPSPVertex));
+		}
+
 		Sprite::~Sprite()
 		{
 			free(vertices);
@@ -170,12 +199,13 @@ namespace Aurora
 
 		}
 
-		void Sprite::Draw()
+		void Sprite::Draw(float yAngle)
 		{
 			sceGumPushMatrix();
 
 			ScePspFVector3 loc = {posX,posY,0.0f};
 			sceGumTranslate(&loc);
+			sceGumRotateX(yAngle);
 
 			sceGuEnable(GU_TEXTURE_2D);
 			TextureManager::Instance()->SetTexture(imageNumber,GU_NEAREST,GU_NEAREST);

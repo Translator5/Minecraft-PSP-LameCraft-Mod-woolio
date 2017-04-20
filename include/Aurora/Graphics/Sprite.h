@@ -18,10 +18,12 @@ namespace Aurora
 			Sprite(int textureNumer,int startW,int startH,int endW,int endH);
 			~Sprite();
 
+
+            void SetMapPos(int textureNumer,int startW,int startH,int endW,int endH);
             void SetNaklon(float x);
 			void SetPosition(float x,float y);
 			void Scale(float x,float y);
-			void Draw();
+			void Draw(float yAngle = 0);
 			void RemoveImage();
 
 		private:

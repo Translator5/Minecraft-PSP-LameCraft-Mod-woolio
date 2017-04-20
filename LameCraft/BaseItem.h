@@ -14,6 +14,7 @@ public:
 	int textureRow;
 	float plane;
 	//vertices to show in bar or in hand
+	int furnItem;
 	CraftPSPVertex *vertices;
 
 	BaseItem();

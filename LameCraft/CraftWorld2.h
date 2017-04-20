@@ -8,12 +8,9 @@
 #include "Blocks.h"
 #include "Items.h"
 #include "SimpleMeshChunk2.h"
-
-typedef struct
-{
-	int distance;
-	int chunk;
-}TransparentOrder;
+#include "Furnace2.h"
+#include "Chest2.h"
+#include "DirectionBlock.h"
 
 class CraftWorld
 {
@@ -21,7 +18,7 @@ public:
 
 	enum BlockSettings
 	{
-		 OpLighSource = 0x10,
+		 OpLighSource = 0x10, //16
 		 OpSideRender = 0x20,
 		 OpActAsLadder = 0x40,
 		 OpLightTraveled = 0x80
@@ -30,6 +27,49 @@ public:
 	CraftWorld();
 	~CraftWorld();
 
+    typedef struct Statistics
+    {
+        unsigned int blockPlaced;
+        unsigned int blockDestroyed;
+        unsigned int daysInGame;
+        unsigned int minutesPlayed;
+        unsigned int itemsCrafted;
+        unsigned int itemsSmelted;
+        unsigned int jumps;
+        unsigned int dies;
+        unsigned int foodEaten;
+        unsigned int badlyFalls;
+        unsigned int blocksWalked;
+        unsigned int treesGrowned;
+        unsigned int cropsGrowned;
+        unsigned int soilPlowed;
+        unsigned int timeInWater;
+        unsigned int timeInAir;
+        unsigned int damageRecieved;
+    } st;
+
+    typedef struct Options
+    {
+        bool cloudsRender;
+        bool fastRendering;
+        bool sunMoodRendering;
+        bool sounds;
+        bool music;
+        bool headBob;
+        bool worldBlockAnimation;
+        bool fogRendering;
+        bool fakeShadowsRendering;
+        bool particles;
+        bool guiDrawing;
+
+        float fov;
+        int horizontalViewDistance;
+        int verticalViewDistance;
+        int fogDistance;
+    } opt;
+
+    st mainStatistics;
+    opt mainOptions;
 
 	block_t& GetBlock (const int x, const int y, const int z) ;
 	block_t& GetBlockLight (const int x, const int y, const int z);
@@ -39,13 +79,18 @@ public:
 	//map creation
 	void initWorld(int worldSize,int chunkSize);
 	void initWorldBlocksLight();
-	void setTextureSize(int texture,int chunk);
-
+	void initPutBlocksLight(const int x, const int z);
 
 	void GetSpecialBlockVerts(int i,BaseBlock *blockType);
 	void GetNormalBlockVerts(int i,BaseBlock *blockType);
 	void GetItemVerts(int i,BaseItem *itemType);
+	void GetCloudsVerts(BaseBlock *blockType);
 	void buildblocksVerts();
+	void buildcloudsVerts();
+	void buildskyVerts();
+    void setTextureSize(int texture,int chunk);
+
+    void PutInInventory(int id, int num, bool st);
 
 	//chunks handling
 	void createChunks(const int StartX, const int StartY, const int StartZ);
@@ -76,11 +121,13 @@ public:
 	//rendering
 	void drawWorld(Frustum &camFrustum,bool camUpdate);
 	void drawCubes(int i);
+	void drawClouds();
 	void drawItems(int i);
 
 	//pickin,collision etc
-	void SetBlock (const int x, const int y, const int z, block_t bl);
 	int groundHeight (const int x, const int z);
+	int groundHeightWater (const int x, const int z);
+	int groundHeightExcept (const int x, const int z, int bl);
 	int getChunkId(Vector3 pos);
 	int BlockSoundAtPos(Vector3 pos);
 
@@ -97,6 +144,8 @@ public:
 	bool BlockEditable(const int x, const int y, const int z);
 	short BlockLoot(const int x, const int y, const int z);
 	short BlockMaterial(const int x, const int y, const int z);
+	bool BlockUpdate2(const int x, const int y, const int z);
+	bool BlockSolid(const int x, const int y, const int z);
 
 	bool LightSourceBlock(int id);
 	bool CanPutBlockHere(const int x, const int y, const int z,int blockID);
@@ -116,6 +165,8 @@ public:
 	int GetBlockTypesCount();
 	int GetItemTypesCount();
 	void UpdateChunkBlocks(int id);
+	void UpdateChunkBlocks2(int id); //for chunk updater
+	int FindDirId(int x, int y, int z);
 
     int invId[36];
     int invAm[36];
@@ -124,17 +175,16 @@ public:
     int mAm;
     bool mSt;
 
-    int chestX[32];
-    int chestY[32];
-    int chestZ[32];
+    std::vector<BaseBlock> blockTypes;
+	std::vector<BaseItem> itemTypes;
 
-    int chestSlotId[576];
-    int chestSlotAm[576];
-    bool chestSlotSt[576];
+    float bright;
 
-
-    int HP;
-    int HG;
+    int worldSeed;
+    float HP; //health
+    float HG; //hunger
+    char OS; //oxygen supply
+    char waterY;
 
 	char worldName[50];
 	int createdChunksCount;
@@ -145,11 +195,26 @@ public:
 	bool freezeDayTime;
 	bool skyRender;
 	unsigned short fogLevel;
-	unsigned int blockPlaced;
-    unsigned int blockDestroyed;
 
 	float sunTime;
 	int worldVersion;
+	float lightAngle;
+
+	Vector3 playerZoneSize;
+
+    std::vector<Chest*> mChests;
+    std::vector<Furnace*> mFurnaces;
+    std::vector<DirectionBlock*> mDirects;
+
+    char mChestsize;
+    char mFurnacesize;
+    int mDirectsize;
+
+    Vector3 lightColor;
+    float skyTime;
+
+    void BuildBlockSphere(int radius, block_t block, char X, char Y, char Z);
+    void BuildBlockSphere(int radius, block_t block, char X, char Y, char Z, block_t blockToChange);
 
 private:
 
@@ -168,14 +233,10 @@ private:
 
 	block_t* m_BlockSettings;
 
-	std::vector<BaseBlock> blockTypes;
-	std::vector<BaseItem> itemTypes;
-
 	float *data;
 
 	//player zone aabb
 	BoundingBox playerZoneBB;
-	Vector3 playerZoneSize;
 	Vector3 playerPos;
 	int chunksCreatedInFrameCount;
 	int transparentchunksCreatedInFrameCount;
@@ -190,24 +251,14 @@ private:
 	int drawnTriangles;
 
 	//transparent order rendering
-	TransparentOrder transOrder[512];
-	int transOrderCont;
 	float lightShadowFactor;
-	Vector3 lightFactor;
-	//all about signs
-	/*
-    short signMessageX[64];
-    short signMessageY[64];
-    short signMessageZ[64];
-    std::string signMessage[64];*/
+
+	char cloudTexX;
+	char cloudTexY;
+	float timee;
 
 	//lightining
-	Vector3 lightColor;
 	Vector3	ambientColor;
-	float lightAngle;
-	float factor1;
-	float factor2;
-	float factor3;
 };
 
 

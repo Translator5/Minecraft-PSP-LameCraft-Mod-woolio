@@ -64,6 +64,8 @@ namespace Aurora
 
 			Vector3 vVector;
 
+			float horAngle;
+
 			float upDownAngle;
 		};
 	}

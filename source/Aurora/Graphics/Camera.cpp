@@ -1,4 +1,5 @@
 #include <Aurora/Graphics/Camera.h>
+#define PI 3.1415926535897f
 
 namespace Aurora
 {
@@ -188,6 +189,7 @@ namespace Aurora
 			// Now we just add the newly rotated vector to our position to set
 			// our new rotated view of our camera.
 			m_vView = m_vPosition + m_vOffset + vNewView;
+            horAngle = (PI+(atan2f(m_vPosition.z-m_vView.z,m_vPosition.x-m_vView.x)))/PI*180;
 
 			vVector = vNewView;
 			needUpdate = true;

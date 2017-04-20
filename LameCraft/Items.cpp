@@ -303,6 +303,8 @@ Clay::Clay():BaseItem()
 	textureRow = 14;
 
 	plane = 6;
+
+	furnItem = 289;
 }
 
 item_t Clay::getID(){ return 283;}
@@ -363,4 +365,168 @@ Brick::Brick():BaseItem()
 }
 
 item_t Brick::getID(){ return 289;}
+
+Busket::Busket():BaseItem()
+{
+	textureRow = 14;
+
+	plane = 14;
+}
+
+item_t Busket::getID(){ return 290;}
+
+WaterBusket::WaterBusket():BaseItem()
+{
+	textureRow = 14;
+
+	plane = 15;
+}
+
+item_t WaterBusket::getID(){ return 291;}
+
+LavaBusket::LavaBusket():BaseItem()
+{
+	textureRow = 13;
+
+	plane = 14;
+}
+
+item_t LavaBusket::getID(){ return 292;}
+
+CaneItem::CaneItem():BaseItem()
+{
+	textureRow = 15;
+
+	plane = 7;
+
+}
+
+item_t CaneItem::getID(){ return 293;}
+
+Flower1Item::Flower1Item():BaseItem()
+{
+	textureRow = 13;
+
+	plane = 5;
+}
+
+item_t Flower1Item::getID(){ return 294;}
+
+Flower2Item::Flower2Item():BaseItem()
+{
+	textureRow = 13;
+
+	plane = 6;
+}
+
+item_t Flower2Item::getID(){ return 295;}
+
+SaplingItem::SaplingItem():BaseItem()
+{
+	textureRow = 13;
+
+	plane = 7;
+}
+
+item_t SaplingItem::getID(){ return 296;}
+
+Paper::Paper():BaseItem()
+{
+	textureRow = 13;
+
+	plane = 10;
+}
+
+item_t Paper::getID(){ return 297;}
+
+Book::Book():BaseItem()
+{
+	textureRow = 13;
+
+	plane = 9;
+}
+
+item_t Book::getID(){ return 298;}
+
+SnowBallItem::SnowBallItem():BaseItem()
+{
+	textureRow = 12;
+
+	plane = 10;
+}
+
+item_t SnowBallItem::getID(){ return 299;}
+
+MooshroomItem1::MooshroomItem1():BaseItem()
+{
+	textureRow = 12;
+
+	plane = 11;
+}
+
+item_t MooshroomItem1::getID(){ return 300;}
+
+
+MooshroomItem2::MooshroomItem2():BaseItem()
+{
+	textureRow = 12;
+
+	plane = 12;
+}
+
+item_t MooshroomItem2::getID(){ return 301;}
+
+Bowl::Bowl():BaseItem()
+{
+	textureRow = 14;
+
+	plane = 11;
+}
+
+item_t Bowl::getID(){ return 302;}
+
+MooshroomBowl::MooshroomBowl():BaseItem()
+{
+	textureRow = 14;
+
+	plane = 10;
+}
+
+item_t MooshroomBowl::getID(){ return 303;}
+
+IronWateringCan::IronWateringCan():BaseItem()
+{
+	textureRow = 12;
+
+	plane = 13;
+}
+
+item_t IronWateringCan::getID(){ return 304;}
+
+DiamondWateringCan::DiamondWateringCan():BaseItem()
+{
+	textureRow = 12;
+
+	plane = 14;
+}
+
+item_t DiamondWateringCan::getID(){ return 305;}
+
+DoorItem::DoorItem():BaseItem()
+{
+	textureRow = 13;
+
+	plane = 11;
+}
+
+item_t DoorItem::getID(){ return 306;}
+
+
+
+
+
+
+
+
+
 

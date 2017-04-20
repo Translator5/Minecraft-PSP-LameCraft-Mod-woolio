@@ -22,20 +22,27 @@ public:
 		Utils,
 		Dirt,
 		Glass,
-		Terrain,
+		Terrain1,Terrain2,Terrain3,Terrain4,Terrain5,Terrain6,Terrain7,Terrain8,Terrain9,Terrain10,Terrain11,Terrain12,Terrain13,Terrain14,Terrain15,Terrain16,
 		Blue,
-		Sky,
 		Sun,
+		SnowBall3,
 		Moon,
 		lameCraft,
 		Red,
-		NetherSky,
+		Black,
 		screen1,
 		screen2,
 		screen3,
 		screen4,
 		clouds1,
 		inv,
+		crt, // craft
+		cht, // chest
+		fur, // furnace
+		cursor,
+		furArrow,
+		furFire,
+		Vignet,
 	};
 
 	static TextureHelper m_TextureHelper;

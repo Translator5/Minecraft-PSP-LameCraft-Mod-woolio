@@ -37,17 +37,17 @@ public:
 	void HandleEvents(StateManager* sManager);
 	void Update(StateManager* sManager);
 	void Draw(StateManager* sManager);
+	void DrawText(int x,int y, unsigned int color, float size, const char *message, ...);
 
 private:
-	Sprite *logoSprite;
 	Sprite *buttonSprite;
 	Sprite *sbuttonSprite;
+	Sprite *nbuttonSprite;
 	Sprite *halfbuttonSprite;
 	Sprite *halfsbuttonSprite;
 	Sprite *moverSprite;
 	Sprite *smoverSprite;
 	Sprite *backSprite;
-	Sprite *lamecraftSprite;
 
 	RenderManager *mRender;
 	SystemManager *mSystemMgr;

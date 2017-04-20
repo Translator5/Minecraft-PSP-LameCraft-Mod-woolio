@@ -20,6 +20,11 @@ public:
 
 	void Init();
 
+    void PlayBreakSound();
+    void PlayHitSound();
+    void PlayEatSound();
+
+    void PlayBowSound();
 	void PlayMenuSound();
 	void PlayPlopSound();
 	void PlayWalkSound(int type);
@@ -34,7 +39,6 @@ public:
 	bool playerSounds;
 	bool ambientSoundsEnabled;
 
-	int lastAmbientSound;
 	int currentAmbientSound;
 
 private:
@@ -54,16 +58,20 @@ private:
 	OSL_SOUND *grawelSounds[4];
 	OSL_SOUND *stoneSounds[4];
 	OSL_SOUND *woodSounds[4];
+	OSL_SOUND *clothSounds[4];
+	OSL_SOUND *sandSounds[4];
+	OSL_SOUND *snowSounds[4];
     OSL_SOUND *ambientSounds[6];
+
+	OSL_SOUND *eatSounds[3];
+
+	OSL_SOUND *hitSounds[3];
     OSL_SOUND *fallSounds[2];
 
-	//TNT
-	OSL_SOUND *tnt;
-
 	OSL_SOUND *door;
-
-
-
+	OSL_SOUND *tnt;
+	OSL_SOUND *bow;
+	OSL_SOUND *breakSound;
 
 };
 

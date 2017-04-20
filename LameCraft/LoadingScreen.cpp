@@ -31,34 +31,37 @@ void LoadingScreen::KillLoadingScreen()
 int LoadingScreen::RunLoadingScreen(SceSize args, void *argp)
 {
 	// load up the images
-	backSprite = new Sprite("Assets/Lamecraft/dirt.png",0,0,16,16);
-	backSprite->Scale(2,2);
-
+	backSprite = new Sprite("Assets/Lamecraft/title/dirt.png",0,0,16,16);
+	backSprite->Scale(4,4);
 
 	// start the render loop
 	while(1)
 	{
-		RenderManager::InstancePtr()->StartFrame();
+		RenderManager::InstancePtr()->StartFrame(1,1,1);
 
 		sceGuDisable(GU_DEPTH_TEST);
 		sceGuEnable(GU_BLEND);
 		sceGuColor(GU_COLOR(1,1,1,1.0f));
 
-		for(int x = 0;x < 16;x++)
-		{
-			for(int y = 0;y < 9;y++)
-			{
-				backSprite->SetPosition(x*32,y*32);
-				backSprite->Draw();
-			}
-		}
+        for(int x = 0; x < 8; x++)
+        {
+            for(int y = 0; y < 5; y++)
+            {
+                backSprite->SetPosition(x*64,y*64);
+                backSprite->Draw();
+            }
+        }
+
 
 		sceGuDisable(GU_BLEND);
 		sceGuEnable(GU_DEPTH_TEST);
 
 		//draw subtitles on buttons
+        RenderManager::InstancePtr()->SetFontStyle(0.345f * 2,GU_COLOR(0.15,0.15,0.15,1),0,0,0x00000200|0x00000000);
+		RenderManager::InstancePtr()->DebugPrint(242,136-13,"Loading world");
 
-		RenderManager::InstancePtr()->DebugPrint(240,136,"GENERATING WORLD");
+        RenderManager::InstancePtr()->SetFontStyle(0.345f * 2,0xFFFFFFFF,0,0,0x00000200|0x00000000);
+		RenderManager::InstancePtr()->DebugPrint(240,136-15,"Loading world");
 
 		RenderManager::InstancePtr()->EndFrame();
 	}

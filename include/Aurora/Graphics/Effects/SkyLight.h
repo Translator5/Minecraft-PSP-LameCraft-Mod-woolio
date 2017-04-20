@@ -15,21 +15,14 @@ namespace Aurora
 			SkyLight();
 			~SkyLight();
 
-			float TimeToAngle(int seconds);
-			void SetTexture(int texture);
-			void UpdateLightSource(float angle);
-
+			void UpdateLightSource(float sun_angle);
 			void Render();
 
 		private:
 
 			TexturesPSPVertex *skyVertices;
-			int textureNumber;
 
-			int time_sunrise, time_sunset;
-			float sun_x, sun_y, sun_z;
-			float sun_angle, sun_tilt;
-			float dis, stepScale, lightHScale, lightVScale;
+			float sun_angle;
 		};
 	}
 }

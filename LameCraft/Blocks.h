@@ -365,11 +365,11 @@ public:
 	static block_t getID();
 };
 
-class WaterRockBlock : public BaseBlock
+class Obsidian : public BaseBlock
 {
 public:
 
-	WaterRockBlock();
+	Obsidian();
 	static block_t getID();
 };
 
@@ -405,107 +405,107 @@ public:
 	static block_t getID();
 };
 
-class HalfBlocks : public BaseBlock
+class Door3 : public BaseBlock
 {
 public:
 
-	HalfBlocks();
+	Door3();
 	static block_t getID();
 };
 
-class SandStone1 : public BaseBlock
+class Door4 : public BaseBlock
 {
 public:
 
-	SandStone1();
+	Door4();
 	static block_t getID();
 };
 
-class SandStone2 : public BaseBlock
+class Door5 : public BaseBlock
 {
 public:
 
-	SandStone2();
+	Door5();
 	static block_t getID();
 };
 
-class SandStone3 : public BaseBlock
+class Door6 : public BaseBlock
 {
 public:
 
-	SandStone3();
+	Door6();
 	static block_t getID();
 };
 
-class StoneBrick1 : public BaseBlock
+class Door7 : public BaseBlock
 {
 public:
 
-	StoneBrick1();
+	Door7();
 	static block_t getID();
 };
 
-class StoneBrick2 : public BaseBlock
+class Door8 : public BaseBlock
 {
 public:
 
-    StoneBrick2();
+    Door8();
     static block_t getID();
 };
 
-class StoneBrick3 : public BaseBlock
+class Door9 : public BaseBlock
 {
 public:
 
-    StoneBrick3();
+    Door9();
     static block_t getID();
 };
 
-class StoneBrick4 : public BaseBlock
+class Door10 : public BaseBlock
 {
 public:
 
-    StoneBrick4();
+    Door10();
     static block_t getID();
 };
 
-class JungleWood : public BaseBlock
+class WoodenFence : public BaseBlock
 {
 public:
 
-    JungleWood();
+    WoodenFence();
     static block_t getID();
 };
 
-class Planks1 : public BaseBlock
+class CobbleStair1 : public BaseBlock
 {
 public:
 
-    Planks1();
+    CobbleStair1();
     static block_t getID();
 };
 
-class Planks2 : public BaseBlock
+class CobbleStair2 : public BaseBlock
 {
 public:
 
-    Planks2();
+    CobbleStair2();
     static block_t getID();
 };
 
-class Planks3 : public BaseBlock
+class CobbleStair3 : public BaseBlock
 {
 public:
 
-    Planks3();
+    CobbleStair3();
     static block_t getID();
 };
 
-class Mycelium : public BaseBlock
+class CobbleStair4 : public BaseBlock
 {
 public:
 
-    Mycelium();
+    CobbleStair4();
     static block_t getID();
 };
 
@@ -533,27 +533,35 @@ public:
     static block_t getID();
 };
 
-class NetherBrick : public BaseBlock
+class BrickStair1 : public BaseBlock
 {
 public:
 
-    NetherBrick();
+    BrickStair1();
     static block_t getID();
 };
 
-class Netherrack : public BaseBlock
+class BrickStair2 : public BaseBlock
 {
 public:
 
-    Netherrack();
+    BrickStair2();
     static block_t getID();
 };
 
-class SoulSand : public BaseBlock
+class BrickStair3 : public BaseBlock
 {
 public:
 
-    SoulSand();
+    BrickStair3();
+    static block_t getID();
+};
+
+class BrickStair4 : public BaseBlock
+{
+public:
+
+    BrickStair4();
     static block_t getID();
 };
 
@@ -605,27 +613,27 @@ public:
     static block_t getID();
 };
 
-class Basalt : public BaseBlock
+class HayBale : public BaseBlock
 {
 public:
 
-    Basalt();
+    HayBale();
     static block_t getID();
 };
 
-class Gabbro : public BaseBlock
+class Mooshroom1 : public BaseBlock
 {
 public:
 
-    Gabbro();
+    Mooshroom1();
     static block_t getID();
 };
 
-class Dacite : public BaseBlock
+class Mooshroom2 : public BaseBlock
 {
 public:
 
-    Dacite();
+    Mooshroom2();
     static block_t getID();
 };
 
@@ -637,11 +645,11 @@ public:
     static block_t getID();
 };
 
-class MooshroomLeaves : public BaseBlock
+class WateredSoil : public BaseBlock
 {
 public:
 
-    MooshroomLeaves();
+    WateredSoil();
     static block_t getID();
 };
 
@@ -797,11 +805,11 @@ public:
     static block_t getID();
 };
 
-class Chest : public BaseBlock
+class Chest5 : public BaseBlock
 {
 public:
 
-    Chest();
+    Chest5();
     static block_t getID();
 };
 
@@ -829,11 +837,11 @@ public:
     static block_t getID();
 };
 
-class Furnace : public BaseBlock
+class Furnace2 : public BaseBlock
 {
 public:
 
-    Furnace();
+    Furnace2();
     static block_t getID();
 };
 
@@ -845,35 +853,35 @@ public:
     static block_t getID();
 };
 
-class JungleLeaves : public BaseBlock
+class FurnaceOff : public BaseBlock
 {
 public:
 
-    JungleLeaves();
+    FurnaceOff();
     static block_t getID();
 };
 
-class Granite : public BaseBlock
+class FurnaceOn : public BaseBlock
 {
 public:
 
-    Granite();
+    FurnaceOn();
     static block_t getID();
 };
 
-class Rhyolite : public BaseBlock
+class Furnace5 : public BaseBlock
 {
 public:
 
-    Rhyolite();
+    Furnace5();
     static block_t getID();
 };
 
-class Komatiite : public BaseBlock
+class Furnace6 : public BaseBlock
 {
 public:
 
-    Komatiite();
+    Furnace6();
     static block_t getID();
 };
 
@@ -998,35 +1006,35 @@ public:
     static block_t getID();
 };
 
-class GranitCobble : public BaseBlock
+class WoodenStair1 : public BaseBlock
 {
 public:
 
-    GranitCobble();
+    WoodenStair1();
     static block_t getID();
 };
 
-class RhyoliteCobble : public BaseBlock
+class WoodenStair2 : public BaseBlock
 {
 public:
 
-    RhyoliteCobble();
+    WoodenStair2();
     static block_t getID();
 };
 
-class KomatiiteCobble : public BaseBlock
+class WoodenStair3 : public BaseBlock
 {
 public:
 
-    KomatiiteCobble();
+    WoodenStair3();
     static block_t getID();
 };
 
-class MarbleCobble : public BaseBlock
+class WoodenStair4 : public BaseBlock
 {
 public:
 
-    MarbleCobble();
+    WoodenStair4();
     static block_t getID();
 };
 
@@ -1038,11 +1046,11 @@ public:
     static block_t getID();
 };
 
-class Lignite : public BaseBlock
+class Cube : public BaseBlock
 {
 public:
 
-    Lignite();
+    Cube();
     static block_t getID();
 };
 
@@ -1094,36 +1102,35 @@ public:
     static block_t getID();
 };
 
-//mush be last
-class TrapDoor2 : public BaseBlock
+class WheatBlock4 : public BaseBlock
 {
 public:
 
-    TrapDoor2();
+    WheatBlock4();
     static block_t getID();
 };
 
-class Door3 : public BaseBlock
+class FreeBlock3 : public BaseBlock
 {
 public:
 
-    Door3();
-    static block_t getID();
+	FreeBlock3();
+	static block_t getID();
 };
 
-class Door4 : public BaseBlock
+class FreeBlock4 : public BaseBlock
 {
 public:
 
-    Door4();
-    static block_t getID();
+	FreeBlock4();
+	static block_t getID();
 };
 
-class Furnace2 : public BaseBlock
+class WorldSky : public BaseBlock
 {
 public:
 
-    Furnace2();
+    WorldSky();
     static block_t getID();
 };
 

@@ -6,6 +6,8 @@ BaseItem::BaseItem()
 	textureRow = 0;
 	plane = 0;
 
+	furnItem = -1;
+
 	vertices = NULL;
 }
 

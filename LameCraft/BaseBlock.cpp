@@ -15,6 +15,7 @@ BaseBlock::BaseBlock()
     loot = -1;
 
 	vertices = NULL;
+    points = 36;
 
 	soundType = -1;
 
@@ -22,6 +23,10 @@ BaseBlock::BaseBlock()
 	transparent = true;
 	lightSource = false;
 	blockSpecial = false;
+	solid = false;
+	update = false;
+
+	furnItem = -1;
 }
 
 BaseBlock::~BaseBlock()

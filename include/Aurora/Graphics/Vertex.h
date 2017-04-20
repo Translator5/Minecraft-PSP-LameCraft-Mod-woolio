@@ -6,7 +6,7 @@
 namespace Aurora
 {
 	namespace Graphics
-	{	
+	{
 		class Color
 		{
 		public:
@@ -47,6 +47,11 @@ namespace Aurora
 			unsigned int color;
 			float x,y,z;
 		}__attribute__((packed)) SimplePSPVertex;
+
+        typedef struct
+		{
+			float x,y,z;
+		}__attribute__((packed)) SimplePSPVertex2;
 
 		typedef struct
 		{

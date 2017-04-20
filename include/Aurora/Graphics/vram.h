@@ -1,6 +1,7 @@
 #ifndef common_vram_h
 #define common_vram_h
 
+#include <stddef.h>
 #ifdef __cplusplus
 extern "C" {
 #endif

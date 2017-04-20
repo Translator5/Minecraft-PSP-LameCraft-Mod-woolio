@@ -363,5 +363,157 @@ public:
 	static item_t getID();
 };
 
+class Busket : public BaseItem
+{
+public:
+
+	Busket();
+
+	static item_t getID();
+};
+
+class WaterBusket : public BaseItem
+{
+public:
+
+	WaterBusket();
+
+	static item_t getID();
+};
+
+class LavaBusket : public BaseItem
+{
+public:
+
+	LavaBusket();
+
+	static item_t getID();
+};
+
+class CaneItem : public BaseItem
+{
+public:
+
+	CaneItem();
+
+	static item_t getID();
+};
+
+class Flower1Item : public BaseItem
+{
+public:
+
+	Flower1Item();
+
+	static item_t getID();
+};
+
+class Flower2Item : public BaseItem
+{
+public:
+
+	Flower2Item();
+
+	static item_t getID();
+};
+
+class SaplingItem : public BaseItem
+{
+public:
+
+	SaplingItem();
+
+	static item_t getID();
+};
+
+class Paper : public BaseItem
+{
+public:
+
+	Paper();
+
+	static item_t getID();
+};
+
+class Book : public BaseItem
+{
+public:
+
+	Book();
+
+	static item_t getID();
+};
+
+class SnowBallItem : public BaseItem
+{
+public:
+
+	SnowBallItem();
+
+	static item_t getID();
+};
+
+class MooshroomItem1 : public BaseItem
+{
+public:
+
+	MooshroomItem1();
+
+	static item_t getID();
+};
+
+class MooshroomItem2 : public BaseItem
+{
+public:
+
+	MooshroomItem2();
+
+	static item_t getID();
+};
+
+class Bowl : public BaseItem
+{
+public:
+
+	Bowl();
+
+	static item_t getID();
+};
+
+class MooshroomBowl : public BaseItem
+{
+public:
+
+	MooshroomBowl();
+
+	static item_t getID();
+};
+
+class IronWateringCan : public BaseItem
+{
+public:
+
+	IronWateringCan();
+
+	static item_t getID();
+};
+
+class DiamondWateringCan : public BaseItem
+{
+public:
+
+	DiamondWateringCan();
+
+	static item_t getID();
+};
+
+class DoorItem : public BaseItem
+{
+public:
+
+	DoorItem();
+
+	static item_t getID();
+};
 
 #endif

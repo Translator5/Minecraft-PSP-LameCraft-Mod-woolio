@@ -4,14 +4,75 @@ namespace Aurora
 {
 	namespace Graphics
 	{
+        float cubeSize = 0.5035f;
+        SimplePSPVertex2 __attribute__((aligned(16))) top[4] =
+		{
+			{-cubeSize,-cubeSize,cubeSize},	// Top
+			{cubeSize,-cubeSize,cubeSize},
+			{ cubeSize,-cubeSize,-cubeSize},
+			{ -cubeSize,-cubeSize, -cubeSize}
+		};
+		SimplePSPVertex2 __attribute__((aligned(16))) bottom[4] =
+		{
+			{-cubeSize, cubeSize, -cubeSize},	// Bottom
+			{ cubeSize, cubeSize, -cubeSize},
+			{ cubeSize, cubeSize,cubeSize},
+			{-cubeSize, cubeSize,cubeSize}
+		};
+		SimplePSPVertex2 __attribute__((aligned(16))) front[4] =
+		{
+			{-cubeSize,-cubeSize, cubeSize},	// Front
+			{ cubeSize,-cubeSize, cubeSize},
+			{ cubeSize, cubeSize, cubeSize},
+			{-cubeSize, cubeSize, cubeSize}
+		};
+		SimplePSPVertex2 __attribute__((aligned(16))) back[4] =
+		{
+			{- cubeSize,cubeSize, -cubeSize},	// Back
+			{ cubeSize,cubeSize,-cubeSize},
+			{ cubeSize, -cubeSize,-cubeSize},
+			{ -cubeSize, -cubeSize, -cubeSize}
+		};
+		SimplePSPVertex2 __attribute__((aligned(16))) left[4] =
+		{
+			{ -cubeSize,-cubeSize,cubeSize},	// Left
+			{-cubeSize,cubeSize,cubeSize},
+			{-cubeSize, cubeSize,-cubeSize},
+			{ -cubeSize, -cubeSize,-cubeSize}
+		};
+		SimplePSPVertex2 __attribute__((aligned(16))) right[4] =
+		{
+			{cubeSize,-cubeSize,-cubeSize},	// Right
+			{cubeSize,cubeSize, -cubeSize},
+			{cubeSize, cubeSize, cubeSize},
+			{cubeSize, -cubeSize,cubeSize}
+		};
 
+        void RenderManager::DrawCube(float x, float y, float z)
+        {
+            sceGumPushMatrix();
+			ScePspFVector3 move = {x,y,z};
+			sceGumTranslate(&move);
+			sceGuColor(GU_COLOR(0,0,0,1));
+			sceGuDisable(GU_TEXTURE_2D);
+			sceGuShadeModel(GU_FLAT);
+			sceGumDrawArray( GU_LINE_STRIP, GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, top);
+			sceGumDrawArray( GU_LINE_STRIP, GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, bottom);
+			sceGumDrawArray( GU_LINE_STRIP, GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, front);
+			sceGumDrawArray( GU_LINE_STRIP, GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, back);
+			sceGumDrawArray( GU_LINE_STRIP, GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, left);
+			sceGumDrawArray( GU_LINE_STRIP, GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, right);
+			sceGuShadeModel(GU_SMOOTH);
+			sceGumPopMatrix();
+        }
 
 		void RenderManager::Init()
 		{
 			mVerticalSync = false;
 			listNum = 0;
-			cleanColor = 0xFFF5B783;
-			fov = 54.0f;
+			cleanColor = 0xFF00FF00; //0xFFF5B783
+			fov = 100.0f;//54
+			fovv = 70.0f;
 			aspect =  480.0f / 272.0f;
 			znear = 0.1f;
 			zfar = 200.0f;
@@ -19,33 +80,41 @@ namespace Aurora
 
 			//initialize GU engine
 			sceGuInit();
+
 			sceGuStart(GU_DIRECT,list);
 
-			sceGuDrawBuffer( GU_PSM_8888, SCEGU_VRAM_BP32_0, BUF_WIDTH );
+            sceGuDrawBuffer( GU_PSM_8888, SCEGU_VRAM_BP32_0, BUF_WIDTH );
 			sceGuDispBuffer( SCR_WIDTH, SCR_HEIGHT, SCEGU_VRAM_BP32_1, BUF_WIDTH);
 			sceGuDepthBuffer( SCEGU_VRAM_BP32_2, BUF_WIDTH);
 
 			sceGuOffset(2048 - (SCR_WIDTH/2),2048 - (SCR_HEIGHT/2));
 			sceGuViewport(2048,2048,SCR_WIDTH,SCR_HEIGHT);
 
+            sceGuDepthRange(50000, 10000);
+
 			sceGuEnable(GU_SCISSOR_TEST);
 			sceGuScissor(0,0,SCR_WIDTH,SCR_HEIGHT);
-			sceGuDepthRange(50000, 10000);
+			sceGuEnable(GU_SCISSOR_TEST);
 			sceGuDepthFunc(GU_GEQUAL);
 			sceGuEnable(GU_DEPTH_TEST);
-			sceGuShadeModel(GU_SMOOTH);
+			//sceGuEnable(GU_ALPHA_TEST);
+
+            //sceGuDisable(GU_ALPHA_TEST);
+
+			sceGuDisable(GU_TEXTURE_2D);
 			sceGuEnable(GU_CLIP_PLANES);
+
 			sceGuEnable(GU_CULL_FACE);
-			sceGuFrontFace(GU_CCW);
+            sceGuFrontFace(GU_CCW);
 
 			sceGuEnable(GU_BLEND);
-			sceGuBlendFunc(GU_ADD, GU_SRC_ALPHA, GU_ONE_MINUS_SRC_ALPHA, 0, 0);
+            sceGuBlendFunc(GU_ADD, GU_SRC_ALPHA, GU_ONE_MINUS_SRC_ALPHA, 0, 0);
+			sceGuAlphaFunc( GU_GREATER, 0.0f, 0xff );
 
 			sceGuStencilFunc(GU_ALWAYS, 1, 1); // always set 1 bit in 1 bit mask
 			sceGuStencilOp(GU_KEEP, GU_KEEP, GU_REPLACE); // keep value on failed test (fail and zfail) and replace on pass
 
 			sceGuTexFilter(GU_LINEAR,GU_LINEAR);
-
 			sceGuFinish();
 			sceGuSync(0,0);
 
@@ -71,15 +140,15 @@ namespace Aurora
 		{
 			intraFontInit();
 			debugFont = intraFontLoad("Assets/Lamecraft/lamecraft.pgf",INTRAFONT_CACHE_ASCII);
-			intraFontSetStyle(debugFont, 0.5f,WHITE,BLACK,INTRAFONT_ALIGN_CENTER);
+			intraFontSetStyle(debugFont, 0.5f,WHITE,BLACK,0,INTRAFONT_ALIGN_CENTER);
 		}
 
-		void RenderManager::SetFontStyle(float size, unsigned int color, unsigned int shadowColor, unsigned int options)
+		void RenderManager::SetFontStyle(float size, unsigned int color, unsigned int shadowColor, float angle, unsigned int options)
 		{
-			intraFontSetStyle(debugFont, size,color,shadowColor,options);
+			intraFontSetStyle(debugFont, size,color,shadowColor, angle, options);
 		}
 
-		void RenderManager::DebugPrint(int x,int y,const char *message, ...)
+		void RenderManager::DebugPrint(int x,int y, const char *message, ...)
 		{
 			va_list argList;
 			char cbuffer[512];
@@ -89,6 +158,7 @@ namespace Aurora
 
 			sceGuEnable(GU_BLEND);
 			sceGuEnable(GU_TEXTURE_2D);
+
 			intraFontPrint(debugFont, x, y, cbuffer);
 			sceGuDisable(GU_BLEND);
 			sceGuDisable(GU_TEXTURE_2D);
@@ -110,11 +180,11 @@ namespace Aurora
 			TextureManager::Instance()->currentTexture = -1;
 		}
 
-		void RenderManager::StartFrame()
+		void RenderManager::StartFrame(float a, float b, float c)
 		{
 			sceGuStart(GU_DIRECT,list);
-		
-			sceGuClearColor(cleanColor);
+
+			sceGuClearColor(GU_COLOR(a, b, c, 1));
 			sceGuClearStencil(0);
 			sceGuClearDepth(0);
 			sceGuClear(GU_COLOR_BUFFER_BIT | GU_STENCIL_BUFFER_BIT | GU_DEPTH_BUFFER_BIT);
@@ -243,7 +313,8 @@ namespace Aurora
 
 		void RenderManager::SetClearColor(float r,float g,float b,float a)
 		{
-			cleanColor = GU_RGBA((int)r * 255,(int)g * 255,(int)b * 255,(int)a * 255);
+			cleanColor = GU_COLOR(r,g,b,a);
+			//GU_RGBA();
 		}
 
 		void RenderManager::SetOrtho(float left, float right, float bottom, float top, float zNear, float zFar)
@@ -252,6 +323,20 @@ namespace Aurora
 			sceGumMatrixMode(GU_PROJECTION);
 			sceGumLoadIdentity();
 			sceGumOrtho(0, 480, 272, 0, -30, 30);
+
+			sceGumMatrixMode(GU_VIEW);
+			sceGumLoadIdentity();
+
+			sceGumMatrixMode(GU_MODEL);
+			sceGumLoadIdentity();
+		}
+
+        void RenderManager::SetOrtho2(float left, float right, float bottom, float top, float zNear, float zFar)
+		{
+			//some lame stuff XD
+			sceGumMatrixMode(GU_PROJECTION);
+			sceGumLoadIdentity();
+			sceGumOrtho(-1024, 1024, -1024, 1024, -1024, 1024);
 
 			sceGumMatrixMode(GU_VIEW);
 			sceGumLoadIdentity();
@@ -270,7 +355,7 @@ namespace Aurora
 			sceGumMatrixMode(GU_PROJECTION);
 			sceGumLoadIdentity();
 
-			sceGumPerspective(fov,aspect,znear,zfar);
+			sceGumPerspective(fovv,aspect,znear,zfar);
 			sceGumStoreMatrix(&proj);
 
 			sceGumMatrixMode(GU_VIEW);
@@ -339,6 +424,7 @@ namespace Aurora
 				}
 
 				if(mesh->triangles)
+
 					sceGumDrawArray(GU_TRIANGLES,GU_TEXTURE_32BITF|GU_VERTEX_32BITF|GU_TRANSFORM_3D,mesh->vertexCount,0,mesh->meshVertices);
 				else
 					sceGumDrawArray(GU_TRIANGLE_STRIP,GU_TEXTURE_32BITF|GU_VERTEX_32BITF|GU_TRANSFORM_3D,mesh->indicesCount,0,mesh->meshVertices);
@@ -454,7 +540,7 @@ namespace Aurora
 			return &m_RenderManager;
 		}
 
-		
+
 
 	}
 }

@@ -1,295 +1,69 @@
 #include "WorldGenerator.h"
 #include "CraftWorld2.h"
+#include "LoadingScreen.h"
 
-#include <noisepp/Noise.h>
-#include <noisepp/NoiseUtils.h>
-#include <noisepp/NoiseBuilders.h>
+#define PI 3.1415926535897f
+using namespace noisepp;
 
-void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *world)
+void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *world,bool makeTrees,bool makePumpkins,bool makeTypes,bool makeWater,bool makeIron,bool makeCaves,bool makeCoal,bool makeGold,bool makeRedStone,bool makeDiamond,bool makeDirt,bool makeCanes,int seedII, int terrainBuilderI)
 {
+    LoadingScreen* loading = new LoadingScreen();
     //inicjuj mape
     int WORLD_SIZE = worldSize;
     int CHUNK_SIZE = chunkSize;
 
-    //srand(time(NULL));
-    int seed = rand() % 10000;
 
-    //terrain settings for default terrain
-    unsigned char grass = 1;
-    unsigned char rock = 3;
-    unsigned char dirt = 2;
-    unsigned char water = 4;
-    unsigned char sandUnderWater = 7;
-
-    int terrainType = 0;//rand() % 3;//0-2
-
-    int testterrain = rand() % 10;
-
-    if(testterrain < 4)
-        terrainType = 0;
-    if(testterrain >= 4 && testterrain < 7)
-        terrainType = 1;
-    if(testterrain >=7)
-        terrainType = 2;
-
-    noisepp::PerlinModule perlin;
-    perlin.setSeed(seed);
-    perlin.setOctaveCount(4);
-    perlin.setQuality(noisepp::NOISE_QUALITY_FAST_STD);
-
-    float *data = new float[worldSize * worldSize];
-
-    noisepp::utils::PlaneBuilder2D builder;
-    builder.setModule(perlin);
-    builder.setSize(worldSize, worldSize);
-    if(terrainType == 2)
-        builder.setBounds(0.0, 0.0, 2.0, 3.0);
-    else if(terrainType == 2)
-        builder.setBounds(0.0, 0.0, 0.5, 1.0);
-    else if(terrainType == 9)
-        builder.setBounds(0.0, 0.0, 1.0, 0.5);
-    else
-        builder.setBounds(0.0, 0.0, 4.0, 4.0);
-    builder.setDestination(data);
-    builder.build ();
-
-    //build map
-    for (int z = 0; z < WORLD_SIZE; ++z)
+    if (seedII == 0)
     {
-        for (int x = 0; x < WORLD_SIZE; ++x)
-        {
-            int Height  = data[x + z*WORLD_SIZE]* WORLD_SIZE/12 + WORLD_SIZE/2;
-            //int Height = m_HeightMap.GetValue(x, z) * WORLD_SIZE/12 + WORLD_SIZE/2;
-
-            for (int y = 0; y < Height; ++y)
-            {
-                if(y == Height-1)
-                    world->GetBlock(x, y, z) = grass;//grass
-                else if(y < Height-3)
-                    world->GetBlock(x, y, z) = rock;
-                else
-                    world->GetBlock(x, y, z) = dirt;
-            }
-        }
+        seedII = rand() % 100000;
     }
-
-
-    //carve terrain
-    /*
-    float *data2 = new float[worldSize * worldSize];
-    float *data3 = new float[worldSize * worldSize];
-
-    perlin.setSeed(seed+1);
-    noisepp::utils::PlaneBuilder2D builder2;
-    builder2.setModule(perlin);
-    builder2.setSize(worldSize, worldSize);
-    builder2.setBounds(0.0, 0.0, 4.0, 4.0);
-    builder2.setDestination(data2);
-    builder2.build ();
-
-    perlin.setSeed(seed+2);
-    noisepp::utils::PlaneBuilder2D builder3;
-    builder3.setModule(perlin);
-    builder3.setSize(worldSize, worldSize);
-    builder3.setBounds(0.0, 0.0, 4.0, 4.0);
-    builder3.setDestination(data3);
-    builder3.build ();
-
-    int height1= 0;
-    int height2= 0;
-
-    for (int z = 0; z < WORLD_SIZE; ++z)
-    {
-        for (int x = 0; x < WORLD_SIZE; ++x)
-        {
-            height1 = data2[x + z*WORLD_SIZE]* 10 + WORLD_SIZE/2;
-            height2 = data3[x + z*WORLD_SIZE]* 12 + WORLD_SIZE/2;
-
-            if (height2 > height1)
-            {
-                //put at height1 grass
-                if(world->GetBlock(x, height1, z) != 0)
-                    world->GetBlock(x, height1, z) = grass;
-
-                //delete blocks
-                for (int y = height1+1; y < height2; y++)
-                {
-                    world->GetBlock(x, y, z) = 0;
-                }
-            }
-        }
-    }
-
-
-    //delete tempdata
-    delete []data2;
-    delete []data3;*/
-
-    //caves?
-   	noisepp::RidgedMultiModule NoiseSource;
-	NoiseSource.setSeed(seed);//da looks interesting
-	NoiseSource.setQuality(noisepp::NOISE_QUALITY_FAST_STD);
-	NoiseSource.setOctaveCount(4);
-	NoiseSource.setFrequency(1.5f);//the smaller the more dense and bigger 1.9
-	NoiseSource.setLacunarity(2.5f);//the larger the number of the rarer objects 2.2
-
-	noisepp::Pipeline3D *pipeline = new noisepp::Pipeline3D;
-	noisepp::ElementID id = NoiseSource.addToPipeline(pipeline);
-	noisepp::PipelineElement3D *element = pipeline->getElement(id);
-	noisepp::Cache *cache = pipeline->createCache ();
-
-	float nx, ny, nz;
-	float max = 0.0f;
-
-	for (int z = 2; z < WORLD_SIZE - 4; ++z)
-	{
-		for (int x = 2; x < WORLD_SIZE - 4; ++x)
-		{
-			for (int y = 2; y < WORLD_SIZE/2; ++y)
-			{
-				nx = (float)x / WORLD_SIZE;
-				ny = (float)y / WORLD_SIZE;
-				nz = (float)z / WORLD_SIZE;
-
-				float test = element->getValue(nx,ny,nz,cache);
-
-				if(test > max)
-					max = test;
-
-				if(test > 0.8f)
-					if(world->GetBlock(x, y, z) != 0)
-					{
-						world->GetBlock(x, y, z) = 0;
-
-					}
-
-			}
-
-		}
-	}
-
-
-
-    pipeline->freeCache (cache);
-    cache = 0;
-    delete pipeline;
-    pipeline = 0;
-
-
-    //watering
-
-    int waterLevel = 62;
-
-    for (int z = 0; z < WORLD_SIZE; ++z)
-    {
-        for (int x = 0; x < WORLD_SIZE; ++x)
-        {
-            int Height = data[x + z*WORLD_SIZE]* WORLD_SIZE/12 + WORLD_SIZE/2;
-            //int Height = m_HeightMap.GetValue(x, z) * WORLD_SIZE/12 + WORLD_SIZE/2;
-
-            if(Height < waterLevel)
-            {
-                world->GetBlock(x, Height-1, z) = sandUnderWater;//sand under water
-                world->GetBlock(x, Height-2, z) = sandUnderWater;
-
-                for (int y = Height; y < waterLevel; y++)
-                {
-                    world->GetBlock(x, y, z) = water;//water
-                }
-
-            }
-            else if(Height == waterLevel)
-            {
-                world->GetBlock(x, Height-1, z) = sandUnderWater;//beach sand
-                world->GetBlock(x, Height-2, z) = sandUnderWater;
-            }
-        }
-    }
-
-
-    //make the most bottom layer of cube not destroyable
-    for (int z = 0; z < WORLD_SIZE; ++z)
-    {
-        for (int x = 0; x < WORLD_SIZE; ++x)
-        {
-            world->GetBlock(x, 0, z) = IronBlock::getID();
-        }
-    }
-
-    delete []data;
-
-    //init trees
-    initTrees(WORLD_SIZE, terrainType, world);
-
-    initPumpkins(WORLD_SIZE, terrainType, world);
-
-    initTypes(WORLD_SIZE, terrainType, world);
-
-    initIron(WORLD_SIZE, world);
-
-    initCoal(WORLD_SIZE, world);
-
-    initGold(WORLD_SIZE, world);
-
-    initRedStone(WORLD_SIZE, world);
-
-    initDiamond(WORLD_SIZE, world);
-
-    initDirt(WORLD_SIZE, world);
-
-    initCanes(WORLD_SIZE, world);
-}
-
-void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *world, int terrainType,bool makeFlat,bool makeTrees,bool makePumpkins,bool makeTypes,bool makeIron,bool makeWater,bool makeCaves,bool makeCoal,bool makeGold,bool makeRedStone,bool makeDiamond,bool makeDirt,bool makeCanes,int seedII)
-{
-    //inicjuj mape
-    int WORLD_SIZE = worldSize;
-    int CHUNK_SIZE = chunkSize;
 
     int seed = seedII;
 
+    srand(seedII);
+
+    world->worldSeed = seedII;
+
+
     //terrain settings for default terrain
     unsigned char grass = 1;
     unsigned char rock = 3;
     unsigned char dirt = 2;
-    unsigned char water = 4;
-    unsigned char sandUnderWater = 7;
 
+    float x3 = 1 + (rand() % 28)*0.1f;
+    float x4 = 0 + (rand() % 35)*0.1f;
 
-
-
-        float x3 = rand() % 4;
-        float x4 = rand() % 8;
-
-    float *data = new float[worldSize * worldSize];
-
-    //
-    if(!makeFlat)
+    while (x3 == x4)
     {
-        srand(seedII);
-        noisepp::PerlinModule perlin;
-        perlin.setSeed(seed);
-        perlin.setQuality(noisepp::NOISE_QUALITY_FAST_STD);
+        x3 = 0 + rand() % 3;
+    }
+    int Height = 64;
 
-        //data = new float[worldSize * worldSize];
+    PerlinModule* perlin = new PerlinModule();
+    perlin->setSeed(seed);
+    perlin->setQuality(noisepp::NOISE_QUALITY_FAST_STD);
+    perlin->setOctaveCount(4);
 
+    if(terrainBuilderI != 0)
+    {
+        float *data = new float[worldSize * worldSize];
 
         noisepp::utils::PlaneBuilder2D builder;
         builder.setModule(perlin);
         builder.setSize(worldSize, worldSize);
 
-        builder.setBounds(0, 0, 2.0+x3, 3.0+x3);
+
+        builder.setBounds(0, 0, 1.5f-((rand() % 9)*0.1f), 1-((rand() % 4)*0.1f));
+
         builder.setDestination(data);
         builder.build ();
-
-        int Height = 64;
 
         //build map
         for (int z = 0; z < WORLD_SIZE; ++z)
         {
             for (int x = 0; x < WORLD_SIZE; ++x)
             {
-                Height = data[x + z*WORLD_SIZE]* WORLD_SIZE/12 + WORLD_SIZE/2;
+                Height = data[x + z*WORLD_SIZE]* WORLD_SIZE/13 + WORLD_SIZE/2;
                 //int Height = m_HeightMap.GetValue(x, z) * WORLD_SIZE/12 + WORLD_SIZE/2;
 
                 for (int y = 0; y < Height; ++y)
@@ -305,9 +79,66 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
             }
         }
 
+        delete []data;
+
+        if(terrainBuilderI == 2) // new ter builder
+        {
+        srand(seedII);
+
+        float *data3 = new float[worldSize * worldSize];
+
+        perlin->setSeed(seed + 1);
+        perlin->setOctaveCount(2+rand() % 2);
+        perlin->setPersistence(0.5 + (rand() % 60)*0.01f);
+        //perlin.setLacunarity(3.5f);
+        noisepp::utils::PlaneBuilder2D builder3;
+        builder3.setModule(perlin);
+        builder3.setSize(worldSize, worldSize);
+        builder3.setBounds(0,0, x3, x3-0.5f);
+        builder3.setDestination(data3);
+        builder3.build ();
+
+        int height1= 0;
+        int heightDif = 0;
+
+        for (int z = 0; z < WORLD_SIZE; ++z)
+        {
+            for (int x = 0; x < WORLD_SIZE; ++x)
+            {
+                height1 = data3[x + z*WORLD_SIZE]* 12 + WORLD_SIZE/2;
+                heightDif = world->groundHeight(x,z) - height1;
+
+                if (heightDif >= 0)
+                    continue;
+
+                //if (heightDif <= -4)
+                    //continue;
+
+                for (int y = height1; y > 0; --y)
+                {
+                    if(world->GetBlock(x, y-1, z) == rock)
+                        break;
+
+
+                    if(y == height1)
+                        world->GetBlock(x, y, z) = grass;//grass
+                    else if(y < height1-3)
+                        world->GetBlock(x, y, z) = rock;
+                    else
+                        world->GetBlock(x, y, z) = dirt;
+                }
+            }
+        }
+
+
+        //delete tempdata
+        delete []data3;
+        }
+
     }
     else
     {
+        float *data = new float[worldSize * worldSize];
         noisepp::PerlinModule perlin;
         perlin.setSeed(seed);
         perlin.setQuality(noisepp::NOISE_QUALITY_FAST_STD);
@@ -345,96 +176,402 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
                 }
             }
         }
+
+        delete []data;
     }
 
-    //caves?
-    if(makeCaves)
+	initBedrock(WORLD_SIZE, world);
+	initBeachSand(WORLD_SIZE, world);
+
+    if(terrainBuilderI != 0)
+    {
+        initWaterAndCanes(WORLD_SIZE, world);
+    }
+
+    if(makeTrees)
+    {
+        initGreatTrees(WORLD_SIZE, world);
+        initTrees(WORLD_SIZE, world, perlin, seed);
+    }
+
+    initBiome(WORLD_SIZE, world, perlin, seed);
+
+    initPumpkins(WORLD_SIZE, world);
+    initIron(WORLD_SIZE, world);
+    initCoal(WORLD_SIZE, world);
+    initGold(WORLD_SIZE, world);
+    initRedStone(WORLD_SIZE, world);
+    initDiamond(WORLD_SIZE, world);
+    initClay(WORLD_SIZE, world);
+    initTypes(WORLD_SIZE, world);
+
+    if(makeCaves) //worm cave generator
 	{
-		noisepp::RidgedMultiModule NoiseSource;
-		NoiseSource.setSeed(seed);//wygl¹da ciekawie
-		NoiseSource.setQuality(noisepp::NOISE_QUALITY_FAST_STD);
-		NoiseSource.setOctaveCount(4);
-		NoiseSource.setFrequency(1.5f);//im mniejsza tym bardziej gêste i wiêksze 1.9
-		NoiseSource.setLacunarity(2.5f);//im wiêksza liczba tym rzadsze obiekty 2.2
+        int x = 10 + rand() % 117;
+        int z = 10 + rand() % 117;
+        int y = world->groundHeight(x,z);
 
-		noisepp::Pipeline3D *pipeline = new noisepp::Pipeline3D;
-		noisepp::ElementID id = NoiseSource.addToPipeline(pipeline);
-		noisepp::PipelineElement3D *element = pipeline->getElement(id);
-		noisepp::Cache *cache = pipeline->createCache ();
+        int direct = rand() % 4;
+        bool verDirect = 1;
 
-		float nx, ny, nz;
+        int numCaves = 4 + rand() % 3;
+        int numSphere = 64 + rand() % 32;
 
-		for (int z = 2; z < WORLD_SIZE - 4; ++z)
-		{
-			for (int x = 2; x < WORLD_SIZE - 4; ++x)
-			{
-				for (int y = 2; y < WORLD_SIZE/2; ++y)
-				{
-					nx = (float)x / WORLD_SIZE;
-					ny = (float)y / WORLD_SIZE;
-					nz = (float)z / WORLD_SIZE;
+        int rFactor;
 
-					if(element->getValue(nx,ny,nz,cache) > 0.9f)
-					{
-						world->GetBlock(x, y, z) = 0;
-					}
-				}
-			}
-		}
+        for(int i = 0; i <= numCaves; i++)
+        {
+            x = 10 + rand() % 117;
+            z = 10 + rand() % 117;
+            y = world->groundHeight(x,z);
+            rFactor = 3 + rand() % 5;
+            verDirect = 1;
+            numSphere = 64 + rand() % 32;
 
-		 pipeline->freeCache (cache);
-		 cache = 0;
-		 delete pipeline;
-		 pipeline = 0;
+            for(int j = 0; j <= numSphere; j++)
+            {
+                if(j % 10 == 0)
+                {
+                    rFactor = 2 + rand() % 5;
+                }
+                world->BuildBlockSphere(2,0,x,y,z);
+
+                if (j == numSphere)
+                {
+                    int radius = 3+rand()%2;
+                    world->BuildBlockSphere(radius, 0, x ,y, z);
+                }
+
+                if(rand() % rFactor == 0)
+                {
+                    direct = rand() % 4;
+                }
+
+                if(j > numSphere / 2)
+                {
+                    if(rand() % numSphere/20)
+                    {
+                        verDirect = rand() % 2;
+                    }
+                }
+
+                if(y < 6)
+                {
+                    verDirect = 0;
+                }
+
+                if(verDirect == 1)
+                {
+                    y -= 2;
+                }
+                else
+                {
+                    y += 2;
+                }
+
+                switch(direct)
+                {
+                    case 0: x += 2; z += 2; break;
+                    case 1: x -= 2; z -= 2; break;
+                    case 2: z += 2; x -= 2; break;
+                    case 3: z -= 2; x += 2; break;
+                }
+            }
+        }
 	}
 
+    initLava(WORLD_SIZE, world);
+    initDirt(WORLD_SIZE, world);
+
+    loading->KillLoadingScreen();
+
+        //caves?
+    delete loading;
+    delete perlin;
+
+}
+
+void WorldGenerator::initLava(int WORLD_SIZE, CraftWorld *world)
+{
+    char Num = 10 + rand() % 8;
+
+    for(int i = 0; i <= Num; i++)
+    {
+        int x = 16 + rand() % 110;
+        int z = 16 + rand() % 110;
+        int y = 32 - rand() % 16;
+
+        int w;
 
 
-    int waterLevel = 63;
+        w = 2 + rand() % 2;
+
+        for(int X = x - w; X < x + w; X++)
+        {
+            for(int Z = z - w; Z < z + w; Z++)
+            {
+
+                    if(X > 0 && X < 127 && Z > 0 && Z < 127 && y > 0 && y < 127)
+                     world->GetBlock(X,y,Z) = 112;
+
+            }
+        }
+        for(int X = x - w-1; X < x + w+1; X++)
+        {
+            for(int Z = z - w-1; Z < z + w+1; Z++)
+            {
+                    if(X > 0 && X < 127 && Z > 0 && Z < 127 && y+1 > 0 && y+1 < 127)
+                     world->GetBlock(X,y+1,Z) = 0;
+            }
+        }
+        for(int X = x - w; X < x + w; X++)
+        {
+            for(int Z = z - w; Z < z + w; Z++)
+            {
+                    if(X > 0 && X < 127 && Z > 0 && Z < 127 && y+2 > 0 && y+2 < 127)
+                     world->GetBlock(X,y+2,Z) = 0;
+            }
+        }
+    }
+}
+
+
+void WorldGenerator::initGreatTrees(int WORLD_SIZE, CraftWorld *world)
+{
+    int NumTrees = 3 + rand() % 4;
+    bool flag = 1;
+
+    for(int i = 0; i <= NumTrees; i++)
+    {
+        flag = 1;
+
+        int x = 10 + rand() % 108;
+        int z = 10 + rand() % 108;
+        int y = world->groundHeight(x,z) + 1;
+
+        int treeHeight = 8;
+
+        for(int X = x-1; X <= x+1; X++)
+        {
+            for(int Z = z-1; Z <= z+1; Z++)
+            {
+                for(int Y = y; Y < y + treeHeight; Y++)
+                {
+                    if(world->GetBlock(X,Y,Z) != 0)
+                    {
+                        flag = 0;
+                        break;
+                    }
+                }
+            }
+        }
+        if(world->GetBlock(x,y-1,z) != 1)
+        {
+            flag = 0;
+        }
+
+        if(flag == 1)
+        {
+            for(int X = x-1; X <= x+1; X++)
+            {
+                for(int Z = z-1; Z <= z+1; Z++)
+                {
+                    switch(rand()%7)
+                    {
+                    case 1:
+                    if(world->GetBlock(X,world->groundHeight(X,Z)+1,Z) == 0 && world->GetBlock(X,world->groundHeight(X,Z),Z) != 0)
+                    {
+                        world->GetBlock(X,world->groundHeight(X,Z)+1,Z) = 77;
+                    }
+                    break;
+                    case 2:
+                    if(world->GetBlock(X,world->groundHeight(X,Z)+1,Z) == 0 && world->GetBlock(X,world->groundHeight(X,Z),Z) != 0)
+                    {
+                        world->GetBlock(X,world->groundHeight(X,Z)+1,Z) = 77;
+                    }
+                    break;
+                    case 3:
+                    if(world->GetBlock(X,world->groundHeight(X,Z)+1,Z) == 0 && world->GetBlock(X,world->groundHeight(X,Z),Z) != 0)
+                    {
+                        world->GetBlock(X,world->groundHeight(X,Z)+1,Z) = 78;
+                    }
+                    break;
+                    }
+                }
+            }
+            for(int y1 = y; y1 < y + treeHeight; y1 ++)
+            {
+                world->GetBlock(x,y1,z) = 8;
+                if(y1 - y > treeHeight/3)
+                {
+                    if(rand() % 3 == 2)
+                    {
+                        switch(rand() % 4)
+                        {
+                        case 0:
+                        for(int X = x; X <= x + 3; X++)
+                        {
+                            world->GetBlock(X,y1,z) = 8;
+                            if(X == x+3)
+                            {
+                                world->BuildBlockSphere(2,9,X,y1,z,0);
+                            }
+                        }
+                        break;
+                        case 1:
+                        for(int X = x-3; X <= x; X++)
+                        {
+                            world->GetBlock(X,y1,z) = 8;
+                            if(X == x-3)
+                            {
+                                world->BuildBlockSphere(2,9,X,y1,z,0);
+                            }
+                        }
+                        break;
+                        case 2:
+                        for(int Z = z; Z <= z + 3; Z++)
+                        {
+                            world->GetBlock(x,y1,Z) = 8;
+                            if(Z == z+3)
+                            {
+                                world->BuildBlockSphere(2,9,x,y1,Z,0);
+                            }
+                        }
+                        break;
+                        case 3:
+                        for(int Z = z-3; Z <= z; Z++)
+                        {
+                            world->GetBlock(x,y1,Z) = 8;
+                            if(Z == z-3)
+                            {
+                                world->BuildBlockSphere(2,9,x,y1,Z,0);
+                            }
+                        }
+                        break;
+                        }
+                    }
+                }
+                if(y1 - y == treeHeight - 2)
+                {
+                    world->BuildBlockSphere(3,9,x,y1,z,0);
+                }
+            }
+        }
+    }
+}
+
+void WorldGenerator::initBiome(int WORLD_SIZE, CraftWorld *world, PerlinModule* perlin, int seed)
+{
+    float *dataBiomes = new float[WORLD_SIZE * WORLD_SIZE];
+    char frequency = 20 + rand() % 20; //0 - 100%
+
+    perlin->setSeed(seed+5);
+    perlin->setOctaveCount(6);
+    perlin->setPersistence(0.5f);
+    noisepp::utils::PlaneBuilder2D builderBiomes;
+    builderBiomes.setModule(perlin);
+    builderBiomes.setSize(WORLD_SIZE, WORLD_SIZE);
+    builderBiomes.setBounds(2, 2, 6, 4);
+    builderBiomes.setDestination(dataBiomes);
+    builderBiomes.build ();
+
+    char perlinHeight;
 
     for (int z = 0; z < WORLD_SIZE; ++z)
     {
         for (int x = 0; x < WORLD_SIZE; ++x)
         {
-            int Height = data[x + z*WORLD_SIZE]* WORLD_SIZE/12 + WORLD_SIZE/2;
+            perlinHeight = dataBiomes[x + z*WORLD_SIZE]* WORLD_SIZE/12 + WORLD_SIZE/2;
             //int Height = m_HeightMap.GetValue(x, z) * WORLD_SIZE/12 + WORLD_SIZE/2;
 
-            if(Height < waterLevel)
+            if (perlinHeight > 80 - frequency*0.4)
             {
-                world->GetBlock(x, Height-1, z) = sandUnderWater;//sand under water
+                if(world->GetBlock(x, world->groundHeight(x, z), z) == 0) continue;
 
-                for (int y = Height; y < waterLevel; y++)
+                if(world->GetBlock(x, world->groundHeightExcept(x, z, 9), z) == 1)
                 {
-                    world->GetBlock(x, y, z) = water;//water
+                    world->GetBlock(x, world->groundHeightExcept(x, z, 9), z) = 29; // snow
+                }
+                else if(world->GetBlock(x, world->groundHeightWater(x, z), z) == 4)
+                {
+                    world->GetBlock(x, world->groundHeightWater(x, z), z) = 32; // ice
+                    continue;
                 }
 
+                if(world->GetBlock(x, world->groundHeight(x, z), z) != 93 && world->GetBlock(x, world->groundHeight(x, z), z) != 32)
+                {
+                    if(world->GetBlock(x, world->groundHeight(x, z)+1, z) == 0)
+                    {
+                        world->GetBlock(x, world->groundHeight(x, z)+1, z) = 93;
+                    }
+                }
             }
-            else if(Height == waterLevel)
-            {
-                world->GetBlock(x, Height-1, z) = sandUnderWater;//beach sand
-                world->GetBlock(x, Height-2, z) = sandUnderWater;
-                world->GetBlock(x, Height-3, z) = sandUnderWater;
-
-            }
-            else if(Height == waterLevel - 1)
-            {
-                world->GetBlock(x, Height-1, z) = sandUnderWater;
-            }
-
-
-
         }
     }
+    delete [] dataBiomes;
+}
 
-	delete []data;
+void WorldGenerator::initWaterAndCanes(int WORLD_SIZE, CraftWorld *world)
+{
+
+        for (int z = 0; z < WORLD_SIZE; z++)
+        {
+            for (int x = 0; x < WORLD_SIZE; x++)
+            {
+                if (world->GetBlock(x,62,z) == 0)
+                {
+                    world->GetBlock(x,62,z) = 4;
+                    if (world->GetBlock(x+1,62,z) == 7) //placing canes
+                    {
+                        if(rand()% 45 == 1)
+                        {
+                            char height = rand() % 3;
+                            for(int k = 1; k < 2+height; k++)
+                            {
+                                world->GetBlock(x+1,62+k,z) = 33;
+                            }
+                        }
+                    }
+                    if (world->GetBlock(x-1,62,z) == 7) //placing canes
+                    {
+                        if(rand()% 45 == 1)
+                        {
+                            char height = 1+ rand() % 2;
+                            for(int k = 1; k < 2+height; k++)
+                            {
+                                world->GetBlock(x-1,62+k,z) = 33;
+                            }
+                        }
+                    }
+                    if (world->GetBlock(x,61,z) == 1)
+                    {
+                        world->GetBlock(x,61,z) = 2;
+                        continue;
+                    }
+                    for(int y = 61; y >= 50; y--)
+                    {
+                        if (world->GetBlock(x,y,z) != 0)
+                            break;
 
 
+                        if (world->GetBlock(x,y+1,z) == 4)
+                        {
+                            world->GetBlock(x,y,z) = 4;
+                        }
+                        if (world->GetBlock(x,y-1,z) == 1)
+                        {
+                            world->GetBlock(x,y-1,z) = 2;
+                        }
+                    }
+                }
+            }
+        }
 
-    //watering
+}
 
-
-    //make the most bottom layer of cube not destroyable
-    for (int z = 0; z < WORLD_SIZE; ++z)
+void WorldGenerator::initBedrock(int WORLD_SIZE, CraftWorld *world)
+{
+        for (int z = 0; z < WORLD_SIZE; ++z)
     {
         for (int x = 0; x < WORLD_SIZE; ++x)
         {
@@ -465,483 +602,271 @@ void WorldGenerator::initRandompMap(int worldSize,int chunkSize, CraftWorld *wor
             }
         }
     }
-
-    initGeology(WORLD_SIZE, world);
-
-    initDeepGeology(WORLD_SIZE, world);
-
-    initTypes(WORLD_SIZE, terrainType, world);
-
-    initLignite(WORLD_SIZE, world);
-
-    initClay(WORLD_SIZE, world);
-    //init trees
-    if(makeTrees)
-        initTrees(WORLD_SIZE, terrainType, world);
-
-    if(makePumpkins)
-    initPumpkins(WORLD_SIZE, terrainType, world);
-
-    if(makeIron)
-        initIron(WORLD_SIZE, world);
-
-    if(makeCoal)
-        initCoal(WORLD_SIZE, world);
-
-    if(makeGold)
-        initGold(WORLD_SIZE, world);
-
-    if(makeRedStone)
-        initRedStone(WORLD_SIZE, world);
-
-    if(makeDiamond)
-        initDiamond(WORLD_SIZE, world);
-
-    if(makeDirt)
-        initDirt(WORLD_SIZE, world);
-
-    if(makeCanes)
-        initCanes(WORLD_SIZE, world);
-
 }
-void WorldGenerator::initTrees(int WORLD_SIZE, int treeChoose, CraftWorld *world)
+
+void WorldGenerator::initBeachSand(int WORLD_SIZE, CraftWorld *world)
 {
-    unsigned short NumTrees = 0;
-    unsigned short Forest;
-
-    unsigned short gen_t = 0;
-    for(int j = 1; j < 3; ++j)
+    for (int z = 0; z < WORLD_SIZE; ++z)
     {
-    for(int k = 1; k < 3; ++k)
-    {
-        Forest = rand() % 2;
-        gen_t = rand() % 2;
-        if (gen_t == 0)
+        for (int x = 0; x < WORLD_SIZE; ++x)
         {
-            continue;
-        }
-        NumTrees = 30 + rand() % 60;
-
-
-    for (int i = 0; i < NumTrees; ++i)
-    {
-
-        //Choose the tree position
-        int x = (j-1) * 63 + rand() % (j * 63);
-        int z = (k-1) * 63 + rand() % (k * 63);
-        int y = world->groundHeight(x, z);
-
-        if (y <= 0) continue;
-
-        int TrunkHeight = 5;//rand() % 5 + 4;
-
-        if (Forest == 1)
-        {
-        //check if there is an water on there or another tree
-        int flag = 1;
-        for (int y1 = y; y1 < y + 1 + TrunkHeight && y1 < WORLD_SIZE; ++y1)
-        {
-            if(world->GetBlock(x, y1, z) == JungleLeaves::getID() ||world->GetBlock(x, y1, z) == Snow2::getID() || world->GetBlock(x, y1, z) == 4 || world->GetBlock(x, y1, z) == 3 || world->GetBlock(x, y1, z) == 8 || world->GetBlock(x, y1, z) == 9 || world->GetBlock(x, y1, z) == 31 || world->GetBlock(x, y1, z) == 38 || world->GetBlock(x, y1, z) == 25 || world->GetBlock(x, y1, z) == 32 || world->GetBlock(x, y1, z) == 80 || world->GetBlock(x, y1, z) == 78 || world->GetBlock(x, y1, z) == Cloud::getID())
-                flag = 0;
-        }
-        if(world->GetBlock(x, y, z) == 7)
-        {
-            flag = 0;
-        }
-
-
-        if(flag == 0)continue;
-
-
-
-            TrunkHeight = 4 + rand() % 2;
-            //Create the tree trunk
-            for (int y1 = y + 1; y1 < y + 1 + TrunkHeight && y1 < WORLD_SIZE; ++y1)
+            if (world->GetBlock(x,63,z) != 0 && world->GetBlock(x,64,z) == 0)
             {
-                block_t& Block = world->GetBlock(x, y1, z);
-                if (Block == 0) Block = 8;
+                world->GetBlock(x,63,z) = 7;
+                world->GetBlock(x,62,z) = 7;
             }
-
-            //create my leaves
-            for(int yy = 0; yy < 2; yy++)
+            if (world->GetBlock(x,62,z) != 0 && world->GetBlock(x,63,z) == 0)
             {
-                for(int xx = 0; xx < 5; xx++)
+                world->GetBlock(x,62,z) = 7;
+                world->GetBlock(x,61,z) = 7;
+            }
+        }
+    }
+}
+
+void WorldGenerator::initTrees(int WORLD_SIZE, CraftWorld *world, PerlinModule* perlin, int seed)
+{
+    float *dataTrees = new float[WORLD_SIZE * WORLD_SIZE];
+    perlin->setSeed(seed+4);
+    perlin->setOctaveCount(2 + rand() % 6);
+    perlin->setPersistence(0.5f + (rand() % 10 *0.1f));
+    noisepp::utils::PlaneBuilder2D builderTrees;
+    builderTrees.setModule(perlin);
+    builderTrees.setSize(WORLD_SIZE, WORLD_SIZE);
+    builderTrees.setBounds(1 + rand() % 3, 1, 6, 1 + rand() % 3);
+    builderTrees.setDestination(dataTrees);
+    builderTrees.build ();
+
+    char perlinHeight;
+    char woodBlock;
+
+    for (int Z = 0; Z < WORLD_SIZE; Z += 4 +rand()%4)
+    {
+        for (int x = 0; x < WORLD_SIZE; x += 4 +rand()%4)
+        {
+            int z = Z + (-2 + rand() % 3);
+
+            if(x < 0 || x > 127 || z < 0 || z > 127)
+            {
+                continue;
+            }
+            perlinHeight = dataTrees[x + z*WORLD_SIZE]* WORLD_SIZE/12 + WORLD_SIZE/2;
+            if(perlinHeight >  70)
+            {
+                char y = world->groundHeight(x,z);
+                char TrunkHeight = 5;//rand() % 5 + 4;
+
+
+                //check if there is an water on there or another tree
+                bool flag = 1;
+                for (int y1 = y+1; y1 < y + 1 + TrunkHeight && y1 < WORLD_SIZE; ++y1)
+                {
+                    if(world->GetBlock(x, y1, z) != 0)
+                    {
+                        flag = 0;
+                        break;
+                    }
+                }
+                if(world->GetBlock(x, y, z) != 1)
+                {
+                    flag = 0;
+                }
+
+                if(flag == 0)continue;
+
+                if(rand() % 8 == 1)
+                {
+                    woodBlock = 31;
+                    TrunkHeight = 4 + rand() % 2;
+                }
+                else
+                {
+                    woodBlock = 8;
+                    TrunkHeight = 3 + rand() % 2;
+                }
+                //Create the tree trunk
+                for (int y1 = y + 1; y1 < y + 2 + TrunkHeight && y1 < WORLD_SIZE; ++y1)
+                {
+                    block_t& Block = world->GetBlock(x, y1, z);
+                    if (Block == 0) Block = woodBlock;
+                }
+
+                //create my leaves
+                for(int yy = 0; yy < 2; yy++)
+                {
+                    for(int xx = 0; xx < 5; xx++)
+                    {
+                        for(int zz = 0; zz < 3; zz++)
+                        {
+                            int x1 = xx + x - 2;// :D - what a shitty code
+                            int y1 = yy + y + TrunkHeight - 1;
+                            int z1 = zz + z - 1;
+
+                            if (x1 < 0 || y1 < 0 || z1 < 0) continue;
+                            if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+
+                            block_t& Block = world->GetBlock(x1, y1, z1);
+                            if (Block == 0) Block = 9;
+                        }
+                    }
+                }
+
+
+                for(int yy = 0; yy < 2; yy++)
+                {
+                    for(int xx = 0; xx < 3; xx++)
+                    {
+
+                            int x1 = xx + x - 1;// :D - what a shitty code
+                            int y1 = yy + y + TrunkHeight + 1;
+                            int z1 = z;
+
+                            if (x1 < 0 || y1 < 0 || z1 < 0) continue;
+                            if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+
+                            block_t& Block = world->GetBlock(x1, y1, z1);
+                            if (Block == 0) Block = 9;
+                    }
+                }
+
+
+                for(int xx = 0; xx < 3; xx++)
                 {
                     for(int zz = 0; zz < 3; zz++)
                     {
-                        int x1 = xx + x - 2;// :D - what a shitty code
-                        int y1 = yy + y + TrunkHeight - 1;
-                        int z1 = zz + z - 1;
-
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
-                    }
-
-            }
-            }
-
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                for(int xx = 0; xx < 3; xx++)
-                {
-
-                        int x1 = xx + x - 1;// :D - what a shitty code
-                        int y1 = yy + y + TrunkHeight + 1;
-                        int z1 = z;
-
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
-
-            }
-            }
-
-
-            for(int xx = 0; xx < 3; xx++)
-            {
-                for(int zz = 0; zz < 3; zz++)
-                {
 
                         int x1 = xx + x - 1;// :D - what a shitty code
                         int y1 = y + TrunkHeight + 1;
                         int z1 = zz + z - 1;
-                        int rand1 = rand() % 6;
+                        int rand1 = rand() % 8;
 
-                        if (rand1 > 4)
+                        if (rand1 > 6)
                         {
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+                            if (x1 < 0 || y1 < 0 || z1 < 0) continue;
+                            if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
 
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
+                            block_t& Block = world->GetBlock(x1, y1, z1);
+                            if (Block == 0) Block = 9;
                         }
-
-            }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                for(int zz = 0; zz < 3; zz++)
-                {
-
-                        int x1 = x;// :D - what a shitty code
-                        int y1 = yy + y + TrunkHeight + 1;
-                        int z1 = zz + z - 1;
-
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
-
-            }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                for(int xx = 0; xx < 3; xx++)
-                {
-                    for(int zz = 0; zz < 5; zz++)
-                    {
-                        int x1 = xx + x - 1;// :D - what a shitty code
-                        int y1 = yy + y + TrunkHeight - 1;
-                        int z1 = zz + z - 2;
-
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
                     }
-
-            }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                int x1 = x - 2;// :D - what a shitty code
-                int y1 = yy + y + TrunkHeight - 1;
-                int z1 = z - 2;
-                int rand1 = rand() % 3;
-
-                if (rand1 != 1)
-                {
-                if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                block_t& Block = world->GetBlock(x1, y1, z1);
-                if (Block == 0) Block = 9;
                 }
-            }
 
-            for(int yy = 0; yy < 2; yy++)
-            {
-                int x1 = x + 2;// :D - what a shitty code
-                int y1 = yy + y + TrunkHeight - 1;
-                int z1 = z - 2;
-                int rand1 = rand() % 3;
-
-                if (rand1 != 1)
-                {
-                if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                block_t& Block = world->GetBlock(x1, y1, z1);
-                if (Block == 0) Block = 9;
-                }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                int x1 = x - 2;// :D - what a shitty code
-                int y1 = yy + y + TrunkHeight - 1;
-                int z1 = z + 2;
-                int rand1 = rand() % 3;
-
-                if (rand1 != 1)
-                {
-                if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                block_t& Block = world->GetBlock(x1, y1, z1);
-                if (Block == 0) Block = 9;
-                }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                int x1 = x + 2;// :D - what a shitty code
-                int y1 = yy + y + TrunkHeight - 1;
-                int z1 = z + 2;
-                int rand1 = rand() % 3;
-
-                if (rand1 != 1)
-                {
-                if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                block_t& Block = world->GetBlock(x1, y1, z1);
-                if (Block == 0) Block = 9;
-                }
-            }
-        }
-        else
-        {
-        int flag = 1;
-        for (int y1 = y; y1 < y + 1 + TrunkHeight && y1 < WORLD_SIZE; ++y1)
-        {
-            if(world->GetBlock(x, y1, z) == JungleLeaves::getID() ||world->GetBlock(x, y1, z) == Snow2::getID() || world->GetBlock(x, y1, z) == 4 || world->GetBlock(x, y1, z) == 3 || world->GetBlock(x, y1, z) == 8 || world->GetBlock(x, y1, z) == 9 || world->GetBlock(x, y1, z) == 31 || world->GetBlock(x, y1, z) == 38 || world->GetBlock(x, y1, z) == 25 || world->GetBlock(x, y1, z) == 32 || world->GetBlock(x, y1, z) == 80 || world->GetBlock(x, y1, z) == 78 || world->GetBlock(x, y1, z) == Cloud::getID())
-                flag = 0;
-        }
-        if(world->GetBlock(x, y, z) == 7)
-        {
-            flag = 0;
-        }
-
-        if(flag == 0)continue;
-
-
-
-            TrunkHeight = 5 + rand() % 2;
-            //Create the tree trunk
-            for (int y1 = y + 1; y1 < y + 1 + TrunkHeight && y1 < WORLD_SIZE; ++y1)
-            {
-                block_t& Block = world->GetBlock(x, y1, z);
-                if (Block == 0) Block = 31;
-            }
-
-            //create my leaves
-            for(int yy = 0; yy < 2; yy++)
-            {
-                for(int xx = 0; xx < 5; xx++)
+                for(int yy = 0; yy < 2; yy++)
                 {
                     for(int zz = 0; zz < 3; zz++)
                     {
-                        int x1 = xx + x - 2;// :D - what a shitty code
-                        int y1 = yy + y + TrunkHeight - 1;
-                        int z1 = zz + z - 1;
 
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+                            int x1 = x;// :D - what a shitty code
+                            int y1 = yy + y + TrunkHeight + 1;
+                            int z1 = zz + z - 1;
 
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
+                            if (x1 < 0 || y1 < 0 || z1 < 0) continue;
+                            if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+
+                            block_t& Block = world->GetBlock(x1, y1, z1);
+                            if (Block == 0) Block = 9;
                     }
+                }
 
-            }
-            }
-
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                for(int xx = 0; xx < 3; xx++)
+                for(int yy = 0; yy < 2; yy++)
                 {
-
-                        int x1 = xx + x - 1;// :D - what a shitty code
-                        int y1 = yy + y + TrunkHeight + 1;
-                        int z1 = z;
-
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
-
-            }
-            }
-
-
-            for(int xx = 0; xx < 3; xx++)
-            {
-                for(int zz = 0; zz < 3; zz++)
-                {
-
-                        int x1 = xx + x - 1;// :D - what a shitty code
-                        int y1 = y + TrunkHeight + 1;
-                        int z1 = zz + z - 1;
-                        int rand1 = rand() % 6;
-
-                        if (rand1 > 4)
-                        {
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
-                        }
-
-            }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                for(int zz = 0; zz < 3; zz++)
-                {
-
-                        int x1 = x;// :D - what a shitty code
-                        int y1 = yy + y + TrunkHeight + 1;
-                        int z1 = zz + z - 1;
-
-                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == 0) Block = 9;
-
-            }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                for(int xx = 0; xx < 3; xx++)
-                {
-                    for(int zz = 0; zz < 5; zz++)
+                    for(int xx = 0; xx < 3; xx++)
                     {
-                        int x1 = xx + x - 1;// :D - what a shitty code
-                        int y1 = yy + y + TrunkHeight - 1;
-                        int z1 = zz + z - 2;
+                        for(int zz = 0; zz < 5; zz++)
+                        {
+                            int x1 = xx + x - 1;// :D - what a shitty code
+                            int y1 = yy + y + TrunkHeight - 1;
+                            int z1 = zz + z - 2;
 
+                            if (x1 < 0 || y1 < 0 || z1 < 0) continue;
+                            if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+
+                            block_t& Block = world->GetBlock(x1, y1, z1);
+                            if (Block == 0) Block = 9;
+                        }
+                    }
+                }
+
+                for(int yy = 0; yy < 2; yy++)
+                {
+                    int x1 = x - 2;// :D - what a shitty code
+                    int y1 = yy + y + TrunkHeight - 1;
+                    int z1 = z - 2;
+                    int rand1 = rand() % 3;
+
+                    if (rand1 != 1)
+                    {
                         if (x1 < 0 || y1 < 0 || z1 < 0) continue;
                         if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
 
                         block_t& Block = world->GetBlock(x1, y1, z1);
                         if (Block == 0) Block = 9;
                     }
+                }
 
-            }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                int x1 = x - 2;// :D - what a shitty code
-                int y1 = yy + y + TrunkHeight - 1;
-                int z1 = z - 2;
-                int rand1 = rand() % 3;
-
-                if (rand1 != 1)
+                for(int yy = 0; yy < 2; yy++)
                 {
-                if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+                    int x1 = x + 2;// :D - what a shitty code
+                    int y1 = yy + y + TrunkHeight - 1;
+                    int z1 = z - 2;
+                    int rand1 = rand() % 3;
 
-                block_t& Block = world->GetBlock(x1, y1, z1);
-                if (Block == 0) Block = 9;
+                    if (rand1 != 1)
+                    {
+                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
+                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+
+                        block_t& Block = world->GetBlock(x1, y1, z1);
+                        if (Block == 0) Block = 9;
+                    }
+                }
+
+                for(int yy = 0; yy < 2; yy++)
+                {
+                    int x1 = x - 2;// :D - what a shitty code
+                    int y1 = yy + y + TrunkHeight - 1;
+                    int z1 = z + 2;
+                    int rand1 = rand() % 3;
+
+                    if (rand1 != 1)
+                    {
+                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
+                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+
+                        block_t& Block = world->GetBlock(x1, y1, z1);
+                        if (Block == 0) Block = 9;
+                    }
+                }
+
+                for(int yy = 0; yy < 2; yy++)
+                {
+                    int x1 = x + 2;// :D - what a shitty code
+                    int y1 = yy + y + TrunkHeight - 1;
+                    int z1 = z + 2;
+                    int rand1 = rand() % 3;
+
+                    if (rand1 != 1)
+                    {
+                        if (x1 < 0 || y1 < 0 || z1 < 0) continue;
+                        if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
+
+                        block_t& Block = world->GetBlock(x1, y1, z1);
+                        if (Block == 0) Block = 9;
+                    }
                 }
             }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                int x1 = x + 2;// :D - what a shitty code
-                int y1 = yy + y + TrunkHeight - 1;
-                int z1 = z - 2;
-                int rand1 = rand() % 3;
-
-                if (rand1 != 1)
-                {
-                if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                block_t& Block = world->GetBlock(x1, y1, z1);
-                if (Block == 0) Block = 9;
-                }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                int x1 = x - 2;// :D - what a shitty code
-                int y1 = yy + y + TrunkHeight - 1;
-                int z1 = z + 2;
-                int rand1 = rand() % 3;
-
-                if (rand1 != 1)
-                {
-                if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                block_t& Block = world->GetBlock(x1, y1, z1);
-                if (Block == 0) Block = 9;
-                }
-            }
-
-            for(int yy = 0; yy < 2; yy++)
-            {
-                int x1 = x + 2;// :D - what a shitty code
-                int y1 = yy + y + TrunkHeight - 1;
-                int z1 = z + 2;
-                int rand1 = rand() % 3;
-
-                if (rand1 != 1)
-                {
-                if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                block_t& Block = world->GetBlock(x1, y1, z1);
-                if (Block == 0) Block = 9;
-                }
-            }
-
-
         }
     }
 
-            //create my leaves
-
-        }
-
-
-    }
+    delete[] dataTrees;
 }
 
-void WorldGenerator::initPumpkins(int WORLD_SIZE, int PumpkinChoose, CraftWorld *world)
+void WorldGenerator::initPumpkins(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumPumpkins = 5 + rand() % 10;
+    char NumPumpkinsSpawns = 3 + rand() % 6;
+    char Frequency = 7; // 1 - 100
 
-    for (int i = 0; i < NumPumpkins; ++i)
+    for (int i = 0; i < NumPumpkinsSpawns; ++i)
     {
         //Choose the tpumpkin position
         int x = rand() % WORLD_SIZE;
@@ -949,36 +874,37 @@ void WorldGenerator::initPumpkins(int WORLD_SIZE, int PumpkinChoose, CraftWorld 
         //check if there is an water on there or another tree
         unsigned short rad = 0;
 
-        if(PumpkinChoose == 0)
-        {
 
                 for(int x2 = x-3; x2 < x+3; ++x2)
                 {
                     for(int z2 = z-3; z2 < z+3; ++z2)
                     {
-                        if (x2 > 0 && x2 < 128 && z2 > 0 && z2 < 128)
+                        if (x2 > 0 && x2 < WORLD_SIZE && z2 > 0 && z2 < WORLD_SIZE)
                         {
 
-                            rad = rand() % 9;
+                            rad = rand() % 100;
 
-                            if (rad != 2)
+                            if (rad > Frequency)
                                 continue;
 
                             if(world->GetBlock(x2, world->groundHeight(x2, z2), z2 ) == 1 || world->GetBlock(x2, world->groundHeight(x2, z2), z2 ) == 2)
                             {
-                            short rad2 = rand() % 4;
+                                if(world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2 ) == 0)
+                                {
+                                    short rad2 = rand() % 4;
 
-                            switch(rad2)
-                            {
-                            case 0: world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=74; break;
-                            case 1: world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=122; break;
-                            case 2: world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=123; break;
-                            case 3: world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=124; break;
-                            }
+                                    switch(rad2)
+                                    {
+                                    case 0: world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=74; break;
+                                    case 1: world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=122; break;
+                                    case 2: world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=123; break;
+                                    case 3: world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=124; break;
+                                    }
+                                }
                             }
                         }
                     }
-                }
+
 
 
         }
@@ -987,644 +913,241 @@ void WorldGenerator::initPumpkins(int WORLD_SIZE, int PumpkinChoose, CraftWorld 
     }
 }
 
-
-void WorldGenerator::initTypes(int WORLD_SIZE, int TypeChoose, CraftWorld *world)
+void WorldGenerator::initTypes(int WORLD_SIZE, CraftWorld *world) //generate flowers
 {
 
-    int NumTypes = 50+rand() % 100;
+    char NumTypes = 70+rand() % 100; // 255 - max
 
-    for (int i = 0; i < NumTypes; ++i)
+    unsigned char NumSpecies = 2;
+    short Species[NumSpecies];
+
+    Species[0] = 119; //yellow flower
+    Species[1] = 120; //red flower
+
+    for (char i = 0; i < NumTypes; ++i)
     {
         //Choose the tpumpkin position
         int x2 = rand() % WORLD_SIZE;
         int z2 = rand() % WORLD_SIZE;
 
-        bool rad2 = rand() % 2;
-        if(rad2 == 0)
+        char rad2 = rand() % NumSpecies;
+
+        if(world->GetBlock(x2, world->groundHeight(x2, z2), z2 ) == 1 || world->GetBlock(x2, world->groundHeight(x2, z2), z2 ) == 2)
         {
-
-
-            if(world->GetBlock(x2, world->groundHeight(x2, z2), z2 ) == 1 || world->GetBlock(x2, world->groundHeight(x2, z2), z2 ) == 2)
+            if(world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2 ) == 0)
             {
-                world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=119;
-            }
-
-        }
-        else
-        {
-            if(world->GetBlock(x2, world->groundHeight(x2, z2), z2 ) == 1 || world->GetBlock(x2, world->groundHeight(x2, z2), z2 ) == 2)
-            {
-                world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)=120;
+                world->GetBlock(x2, world->groundHeight(x2, z2)+1, z2)= Species[rad2];
             }
         }
+
     }
 }
-
-void WorldGenerator::initGeology(int WORLD_SIZE, CraftWorld *world)
-{
-
-    unsigned char layers = 2 + rand() % 3;
-
-    unsigned short layer[layers];
-
-    for(int i = 0; i <= layers; i++)
-    {
-        layer[i] = 76 + rand() % 3;
-        int yy = 45 + rand() % 35;
-        int ht = 5 + rand() % 10;
-        for(int x = 0; x < 127; x ++)
-        {
-            ht += - 3 + rand() % 7;
-            yy += -1 + rand() % 2;
-
-            if (ht <= 0)
-            {
-                continue;
-            }
-
-            for(int z = 0; z < 127; z ++)
-            {
-                for(int y = yy ; y <= ht; y ++)
-                {
-
-                    if (x >= WORLD_SIZE || y >= WORLD_SIZE || z >= WORLD_SIZE)
-                    {
-                        continue;
-                    }
-
-
-                    block_t& Block = world->GetBlock(x, y, z);
-
-                    if (Block == RockBlock::getID()) {Block = layer[i];}
-                    if (layer[i] == 76)
-                    {
-                       if (Block == 77 || Block == 78)
-                       {
-                            Block = 129;
-                       }
-                    }
-                    if (layer[i] == 77)
-                    {
-                       if (Block == 76 || Block == 78)
-                       {
-                            Block = 129;
-                       }
-                    }
-                    if (layer[i] == 78)
-                    {
-                       if (Block == 77 || Block == 76)
-                       {
-                            Block = 129;
-                       }
-                    }
-                }
-            }
-        }
-
-
-    }
-
-}
-
-void WorldGenerator::initDeepGeology(int WORLD_SIZE, CraftWorld *world)
-{
-
-    unsigned char layers = 2 + rand() % 3;
-
-    unsigned short layer[layers];
-    unsigned short layer2[layers];
-
-    for(int i = 0; i <= layers; i++)
-    {
-        layer[i] = 107 + rand() % 3;
-        layer2[i] = 107 + rand() % 3;
-        unsigned char XO = 2 + rand() % 3;
-        int yy = 1 + rand() % 30;
-        int ht = 5 + rand() % 7;
-        for(int x = 0; x < 127; x ++)
-        {
-            ht += - 3 + rand() % 7;
-            yy += -1 + rand() % 2;
-
-            if (ht <= 0)
-            {
-                continue;
-            }
-
-            for(int z = 0; z < 127; z ++)
-            {
-                for(int y = yy ; y <= ht; y ++)
-                {
-
-                    if (x >= WORLD_SIZE || y >= WORLD_SIZE || z >= WORLD_SIZE)
-                    {
-                        continue;
-                    }
-
-
-                    block_t& Block = world->GetBlock(x, y, z);
-
-                    if (Block == RockBlock::getID())
-                    {
-                        if (y % XO == 0){Block = layer[i];}else{Block = layer2[i];}
-                    }
-                    if (layer[i] == 76)
-                    {
-                       if (Block == 77 || Block == 78)
-                       {
-                            Block = 0;
-                       }
-                    }
-                }
-            }
-        }
-
-
-    }
-
-}
-
-
-
 
 void WorldGenerator::initIron(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumOres = 420;
+    int NumOres = 700;
+    short Ore = 41;
+    char HighestLayer = 64;
+    char NumOreBlocks;
 
     for (int i = 0; i < NumOres; ++i)
     {
+        NumOreBlocks = 3 + rand() % 3;
         //Choose the tpumpkin position
         int x = rand() % WORLD_SIZE;
         int z = rand() % WORLD_SIZE;
-        int y = 64 - rand() % 64;
+        int y = HighestLayer - rand() % HighestLayer-3;
 
-        bool diffuse;
-        int xW, yW, zW;
-
-        xW = 1 + rand() % 3;
-        zW = 1 + rand() % 3;
-        yW = 1 + rand() % 2;
-
-        diffuse = rand() % 2;
-
-        if (diffuse == 0)
+        for(int j = 0; j < NumOreBlocks; j++)
         {
-        for(int yy = 0; yy < yW; yy++)
-        {
-            for(int xx = 0; xx < xW; xx++)
+            if(x > 0 && x < 127 && z > 0 && z < 127 && y > 0 && y < 127)
             {
-                for(int zz = 0; zz < zW; zz++)
-                {
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                    block_t& Block = world->GetBlock(x1, y1, z1);
-                    if (Block == RockBlock::getID()) Block = 41;
-                }
+                if(world->GetBlock(x,y,z) == 3)
+                world->GetBlock(x,y,z) = Ore;
+            }
+            switch(rand() % 6)
+            {
+                case 0: x += 1; break;
+                case 1: x -= 1; break;
+                case 2: z += 1; break;
+                case 3: z -= 1; break;
+                case 4: y += 1; break;
+                case 5: y -= 1; break;
             }
         }
-        }
-        else
-        {
-        for(int yy = 0; yy < yW+2; yy++)
-        {
-            for(int xx = 0; xx < xW+4; xx++)
-            {
-                for(int zz = 0; zz < zW+4; zz++)
-                {
-
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-                    int rand1 = rand() % 4;
-
-                    if(rand1 == 3)
-                    {
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == RockBlock::getID()) Block = 41;
-                    }
-                }
-            }
-        }
-        }
-
-
     }
 }
 
 void WorldGenerator::initCoal(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumOres = 650;
+    int NumOres = 950;
+    short Ore = 42;
+    char HighestLayer = 100;
+    char NumOreBlocks;
 
     for (int i = 0; i < NumOres; ++i)
     {
+        NumOreBlocks = 4 + rand() % 3;
         //Choose the tpumpkin position
         int x = rand() % WORLD_SIZE;
         int z = rand() % WORLD_SIZE;
-        int y = 70 - rand() % 69;
+        int y = HighestLayer - rand() % HighestLayer-3;
 
-        bool diffuse;
-        int xW, yW, zW;
-
-        xW = 1 + rand() % 4;
-        zW = 1 + rand() % 4;
-        yW = 1 + rand() % 2;
-
-        diffuse = rand() % 2;
-
-        if (diffuse == 0)
+        for(int j = 0; j < NumOreBlocks; j++)
         {
-        for(int yy = 0; yy < yW; yy++)
-        {
-            for(int xx = 0; xx < xW; xx++)
+            if(x > 0 && x < 127 && z > 0 && z < 127 && y > 0 && y < 127)
             {
-                for(int zz = 0; zz < zW; zz++)
-                {
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                    block_t& Block = world->GetBlock(x1, y1, z1);
-                    if (Block == RockBlock::getID()) Block = 42;
-                }
+                if(world->GetBlock(x,y,z) == 3)
+                world->GetBlock(x,y,z) = Ore;
+            }
+            switch(rand() % 6)
+            {
+                case 0: x += 1; break;
+                case 1: x -= 1; break;
+                case 2: z += 1; break;
+                case 3: z -= 1; break;
+                case 4: y += 1; break;
+                case 5: y -= 1; break;
             }
         }
-        }
-        else
-        {
-        for(int yy = 0; yy < yW+2; yy++)
-        {
-            for(int xx = 0; xx < xW+4; xx++)
-            {
-                for(int zz = 0; zz < zW+4; zz++)
-                {
-
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-                    int rand1 = rand() % 4;
-
-                    if(rand1 == 2)
-                    {
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == RockBlock::getID()) Block = 42;
-                    }
-                }
-            }
-        }
-        }
-
-
     }
 }
-
-void WorldGenerator::initLignite(int WORLD_SIZE, CraftWorld *world)
-{
-    int NumOres = 300;
-
-    for (int i = 0; i < NumOres; ++i)
-    {
-        //Choose the tpumpkin position
-        int x = rand() % WORLD_SIZE;
-        int z = rand() % WORLD_SIZE;
-        int y = 70 - rand() % 69;
-
-        bool diffuse;
-        int xW, yW, zW;
-
-        xW = 1 + rand() % 2;
-        zW = 1 + rand() % 2;
-        yW = 1 + rand() % 2;
-
-        diffuse = rand() % 2;
-
-        if (diffuse == 0)
-        {
-        for(int yy = 0; yy < yW; yy++)
-        {
-            for(int xx = 0; xx < xW; xx++)
-            {
-                for(int zz = 0; zz < zW; zz++)
-                {
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                    block_t& Block = world->GetBlock(x1, y1, z1);
-                    if (Block == Basalt::getID()) Block = 130;
-                }
-            }
-        }
-        }
-        else
-        {
-        for(int yy = 0; yy < yW+1; yy++)
-        {
-            for(int xx = 0; xx < xW+1; xx++)
-            {
-                for(int zz = 0; zz < zW+1; zz++)
-                {
-
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-                    int rand1 = rand() % 4;
-
-                    if(rand1 == 2)
-                    {
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == Basalt::getID()) Block = 130;
-                    }
-                }
-            }
-        }
-        }
-
-
-    }
-}
-
-
 
 void WorldGenerator::initGold(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumOres = 200;
+    int NumOres = 128;
+    short Ore = 5;
+    char HighestLayer = 32;
+    char NumOreBlocks;
 
     for (int i = 0; i < NumOres; ++i)
     {
+        NumOreBlocks = 2 + rand() % 7;
         //Choose the tpumpkin position
         int x = rand() % WORLD_SIZE;
         int z = rand() % WORLD_SIZE;
-        int y = 32 - rand() % 32;
+        int y = HighestLayer - rand() % HighestLayer-3;
 
-        bool diffuse;
-        int xW, yW, zW;
-
-        xW = 1 + rand() % 2;
-        zW = 1 + rand() % 2;
-        yW = 1 + rand() % 2;
-
-        diffuse = rand() % 2;
-
-        if (diffuse == 0)
+        for(int j = 0; j < NumOreBlocks; j++)
         {
-        for(int yy = 0; yy < yW; yy++)
-        {
-            for(int xx = 0; xx < xW; xx++)
+            if(x > 0 && x < 127 && z > 0 && z < 127 && y > 0 && y < 127)
             {
-                for(int zz = 0; zz < zW; zz++)
-                {
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                    block_t& Block = world->GetBlock(x1, y1, z1);
-                    if (Block == RockBlock::getID()) Block = 5;
-                }
+                if(world->GetBlock(x,y,z) == 3)
+                world->GetBlock(x,y,z) = Ore;
+            }
+            switch(rand() % 6)
+            {
+                case 0: x += 1; break;
+                case 1: x -= 1; break;
+                case 2: z += 1; break;
+                case 3: z -= 1; break;
+                case 4: y += 1; break;
+                case 5: y -= 1; break;
             }
         }
-        }
-        else
-        {
-        for(int yy = 0; yy < yW+1; yy++)
-        {
-            for(int xx = 0; xx < xW+2; xx++)
-            {
-                for(int zz = 0; zz < zW+2; zz++)
-                {
-
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-                    int rand1 = rand() % 4;
-
-                    if(rand1 == 3)
-                    {
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == RockBlock::getID()) Block = 5;
-                    }
-                }
-            }
-        }
-        }
-
-
     }
 }
 
 void WorldGenerator::initRedStone(int WORLD_SIZE, CraftWorld *world)//44
 {
-    int NumOres = 700;
+    int NumOres = 160;
+    short Ore = 44;
+    char HighestLayer = 19;
+    char NumOreBlocks;
 
     for (int i = 0; i < NumOres; ++i)
     {
+        NumOreBlocks = 1 + rand() % 10;
         //Choose the tpumpkin position
         int x = rand() % WORLD_SIZE;
         int z = rand() % WORLD_SIZE;
-        int y = 16 - rand() % 16;
+        int y = HighestLayer - rand() % HighestLayer-3;
 
-        bool diffuse;
-        int xW, yW, zW;
-
-        xW = 1 + rand() % 3;
-        zW = 1 + rand() % 3;
-        yW = 1 + rand() % 2;
-
-        diffuse = rand() % 2;
-
-        if (diffuse == 0)
+        for(int j = 0; j <= NumOreBlocks; j++)
         {
-        for(int yy = 0; yy < yW; yy++)
-        {
-            for(int xx = 0; xx < xW; xx++)
+            if(x > 0 && x < 127 && z > 0 && z < 127 && y > 0 && y < 127)
             {
-                for(int zz = 0; zz < zW; zz++)
-                {
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                    block_t& Block = world->GetBlock(x1, y1, z1);
-                    if (Block == RockBlock::getID()) Block = 44;
-                }
+                if(world->GetBlock(x,y,z) == 3)
+                world->GetBlock(x,y,z) = Ore;
+            }
+            switch(rand() % 6)
+            {
+                case 0: x += 1; break;
+                case 1: x -= 1; break;
+                case 2: z += 1; break;
+                case 3: z -= 1; break;
+                case 4: y += 1; break;
+                case 5: y -= 1; break;
             }
         }
-        }
-        else
-        {
-        for(int yy = 0; yy < yW+1; yy++)
-        {
-            for(int xx = 0; xx < xW+3; xx++)
-            {
-                for(int zz = 0; zz < zW+3; zz++)
-                {
-
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-                    int rand1 = rand() % 4;
-
-                    if(rand1 >= 2)
-                    {
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == RockBlock::getID()) Block = 44;
-                    }
-                }
-            }
-        }
-        }
-
-
     }
 }
 
 void WorldGenerator::initDiamond(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumOres = 100;
+    int NumOres = 60;
+    short Ore = 43;
+    char HighestLayer = 13;
+    char NumOreBlocks;
 
     for (int i = 0; i < NumOres; ++i)
     {
+        NumOreBlocks = 3 + rand() % 3;
         //Choose the tpumpkin position
         int x = rand() % WORLD_SIZE;
         int z = rand() % WORLD_SIZE;
-        int y = 13 - rand() % 13;
+        int y = HighestLayer - rand() % HighestLayer-3;
 
-        bool diffuse;
-        int xW, yW, zW;
-
-        xW = 1 + rand() % 3;
-        zW = 1 + rand() % 3;
-        yW = 1 + rand() % 3;
-
-        diffuse = rand() % 2;
-
-        if (diffuse == 0)
+        for(int j = 0; j <= NumOreBlocks; j++)
         {
-        for(int yy = 0; yy < yW; yy++)
-        {
-            for(int xx = 0; xx < xW; xx++)
+            if(x > 0 && x < 127 && z > 0 && z < 127 && y > 0 && y < 127)
             {
-                for(int zz = 0; zz < zW; zz++)
-                {
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                    block_t& Block = world->GetBlock(x1, y1, z1);
-                    if (Block == RockBlock::getID()) Block = 43;
-                }
+                if(world->GetBlock(x,y,z) == 3)
+                world->GetBlock(x,y,z) = Ore;
+            }
+            switch(rand() % 6)
+            {
+                case 0: x += 1; break;
+                case 1: x -= 1; break;
+                case 2: z += 1; break;
+                case 3: z -= 1; break;
+                case 4: y += 1; break;
+                case 5: y -= 1; break;
             }
         }
-        }
-        else
-        {
-        for(int yy = 0; yy < yW+2; yy++)
-        {
-            for(int xx = 0; xx < xW+2; xx++)
-            {
-                for(int zz = 0; zz < zW+2; zz++)
-                {
-
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-                    int rand1 = rand() % 4;
-
-                    if(rand1 == 3)
-                    {
-                        block_t& Block = world->GetBlock(x1, y1, z1);
-                        if (Block == RockBlock::getID()) Block = 43;
-                    }
-                }
-            }
-        }
-        }
-
-
     }
 }
 
+
 void WorldGenerator::initClay(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumOres = 10 + rand() % 30;
+    int NumOres = 40 + rand() % 30;
+
+    char NumOreBlocks;
 
     for (int i = 0; i < NumOres; ++i)
     {
+        NumOreBlocks = 8 + rand() % 8;
         //Choose the tpumpkin position
         int x = rand() % WORLD_SIZE;
         int z = rand() % WORLD_SIZE;
-        int y = 80 - rand() % 30;
+        int y = 64 - rand() % 16;
 
-        int xW, yW, zW;
-
-        xW = 2 + rand() % 4;
-        zW = 2 + rand() % 4;
-        yW = 1 + rand() % 2;
-
-
-        for(int yy = 0; yy < yW; yy++)
+        for(int j = 0; j <= NumOreBlocks; j++)
         {
-            for(int xx = 0; xx < xW; xx++)
+            if(x > 0 && x < 127 && z > 0 && z < 127 && y > 0 && y < 127)
             {
-                for(int zz = 0; zz < zW; zz++)
-                {
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                    block_t& Block = world->GetBlock(x1, y1, z1);
-                    if (Block == RockBlock::getID()) Block = 99;
-
-                    if (Block == 7)
-                    {
-                        if(rand() % 4 >= 2)
-                        {
-                            Block = 99;
-                        }
-                    }
-
-
-                }
+                if(world->GetBlock(x,y,z) == 7 || ((world->GetBlock(x,y,z) == 2 && world->GetBlock(x,y+1,z) == 4)))
+                world->GetBlock(x,y,z) = 99;
+            }
+            switch(rand() % 6)
+            {
+                case 0: x += 1; break;
+                case 1: x -= 1; break;
+                case 2: z += 1; break;
+                case 3: z -= 1; break;
+                case 4: y += 1; break;
+                case 5: y -= 1; break;
             }
         }
     }
@@ -1633,75 +1156,21 @@ void WorldGenerator::initClay(int WORLD_SIZE, CraftWorld *world)
 
 void WorldGenerator::initDirt(int WORLD_SIZE, CraftWorld *world)
 {
-    int NumOres = 1000;
+    int NumBlocks = 500;
+    char radius = 2 + rand() % 3;
 
-    for (int i = 0; i < NumOres; ++i)
+    short PlaceBlock = 2;
+
+    for (int i = 0; i < NumBlocks; ++i)
     {
-        //Choose the tpumpkin position
         int x = rand() % WORLD_SIZE;
         int z = rand() % WORLD_SIZE;
-        int y = rand() % WORLD_SIZE;
+        int y = 80 - rand() % 78;
 
-        int xW, yW, zW;
+        world->BuildBlockSphere(radius, PlaceBlock, x, y, z, RockBlock::getID());
 
-        xW = 4 + rand() % 8;
-        zW = 4 + rand() % 8;
-        yW = 3 + rand() % 4;
-
-
-        for(int yy = 0; yy < yW; yy++)
-        {
-            for(int xx = 0; xx < xW; xx++)
-            {
-                for(int zz = 0; zz < zW; zz++)
-                {
-                    int x1 = xx + x;// :D - what a shitty code
-                    int y1 = yy + y;
-                    int z1 = zz + z;
-
-                    if (x1 < 0 || y1 < 0 || z1 < 0) continue;
-                    if (x1 >= WORLD_SIZE || y1 >= WORLD_SIZE || z1 >= WORLD_SIZE) continue;
-
-                    block_t& Block = world->GetBlock(x1, y1, z1);
-                    if (Block == RockBlock::getID()) Block = 2;
-                }
-            }
-        }
     }
 }
-
-void WorldGenerator::initCanes(int WORLD_SIZE, CraftWorld *world)
-{
-    int NumCanes = 70;
-
-    for (int i = 0; i < NumCanes; ++i)
-    {
-        //Choose the tpumpkin position
-        int x = rand() % WORLD_SIZE;
-        int z = rand() % WORLD_SIZE;
-        int y = world->groundHeight(x, z);
-
-        if (y <= 0) continue;
-
-        int TrunkHeight = 3;//rand() % 5 + 4;
-
-
-        //check if there is an water on there or another tree
-
-
-        if(world->GetBlock(x, y, z) != SandBlock::getID() || world->GetBlock(x, y+1, z) == WaterBlock::getID())
-            continue;
-
-        for (int y1 = y + 1; y1 < y + 1 + TrunkHeight && y1 < WORLD_SIZE; ++y1)
-        {;
-            if (world->GetBlock(x, y1, z) == 0)
-            {
-                world->GetBlock(x, y1, z) = 33;
-            }
-        }
-    }
-}
-
 
 
 

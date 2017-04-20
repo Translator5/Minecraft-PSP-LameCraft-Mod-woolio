@@ -7,7 +7,8 @@ class LoadingScreen
 {
 
 protected:
-	static int RunLoadingScreen(SceSize args, void *argp);
+    static int RunLoadingScreen(SceSize args, void *argp);
+    void RenderAll();
 	SceUID thid_;
 
 public:

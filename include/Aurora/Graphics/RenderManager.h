@@ -23,6 +23,12 @@
 #include <pspdebug.h>
 #include <psppower.h>
 #include <psptypes.h>
+#include <pspge.h>
+#include <psputils.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
 
 #define BUF_WIDTH (512)
 #define SCR_WIDTH (480)
@@ -34,6 +40,7 @@
 #define	FRAME_BUFFER_WIDTH 		512
 #define FRAME_BUFFER_SIZE		FRAME_BUFFER_WIDTH*SCR_HEIGHT*PIXEL_SIZE
 
+#define	BUFFER_FORMAT		  GU_PSM_8888
 #define SCEGU_SCR_WIDTH       480
 #define SCEGU_SCR_HEIGHT      272
 #define SCEGU_SCR_ASPECT      ((float)SCEGU_SCR_WIDTH / (float)SCEGU_SCR_HEIGHT)
@@ -75,17 +82,19 @@ namespace Aurora
 				BLACK = 0xFF000000
 			};
 
+			float fovv;
+
 			void Init();
 
 			void InitDebugFont();
-			void SetFontStyle(float size, unsigned int color, unsigned int shadowColor, unsigned int options);
-			void DebugPrint(int x,int y,const char *message, ...);
-
+			void SetFontStyle(float size, unsigned int color, unsigned int shadowColor, float angle, unsigned int options);
+			void DebugPrint(int x,int y, const char *message, ...);
 			void Start();
 			void CleanBuffers();
+			void DrawCube(float x, float y, float z);
 
 
-			void StartFrame();
+			void StartFrame(float a, float b, float c);
 			void EndFrame();
 
 			//dialogs rendering
@@ -96,6 +105,7 @@ namespace Aurora
 			void SetClearColor(float r,float g,float b,float a);
 
 			void SetOrtho(float left, float right, float bottom, float top, float zNear, float zFar);
+			void SetOrtho2(float left, float right, float bottom, float top, float zNear, float zFar);
 			void SetPerspective(float _fov,float _aspect,float _znear,float _zfar);
 			void LookAt();
 
@@ -129,6 +139,11 @@ namespace Aurora
 
 		private:
 			unsigned int cleanColor;
+
+            void* _fbp0;
+			void* _fbp1;
+			void* _zbp;
+			void* _frameBuffer;
 
 			char list[0x20000] __attribute__((aligned(64)));//__attribute__((aligned(16))) list[262144]
 			int listNum;

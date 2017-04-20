@@ -11,26 +11,31 @@ class BaseBlock
 {
 public:
 	//texture info
-	int textureRow;
-	float upPlane;
-	float downPlane;
-	float sidePlane;
-	float sidePlane2;
-    float sidePlane3;
-    float sidePlane4;
-    short loot;
+	char textureRow;
+	char upPlane;
+	char downPlane;
+	char sidePlane;
+	char sidePlane2;
+    char sidePlane3;
+    char sidePlane4;
+    int loot;
 	//vertices to show in bar or in hand
 	CraftPSPVertex *vertices;
+	char points;
 
 	//sound type
-	int soundType;//0 grass,1 gravel,2 stone,3 wood
+	char soundType;//0 grass,1 gravel,2 stone,3 wood
 
 	//other properties
 	bool editable;
 	bool transparent;
 	bool lightSource;
 	bool blockSpecial;
-	short material;
+	char material;
+	bool update;
+	bool solid;
+
+	int furnItem;
 
 	BaseBlock();
 	virtual ~BaseBlock();

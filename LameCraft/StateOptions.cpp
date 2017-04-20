@@ -19,12 +19,11 @@ void StateOptions::Init()
 	mSystemMgr = SystemManager::Instance();
 	mSoundMgr = SoundManager::Instance();
 
-	logoSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Logo),0,0,256,64);
-	logoSprite->Scale(1.5f,1.5f);
-	logoSprite->SetPosition(240,50);
-
 	buttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),24,22,200,20);
 	buttonSprite->SetPosition(240,150);
+
+    nbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),56,102,200,20);
+	nbuttonSprite->SetPosition(240,150);
 
 	sbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),24,62,200,20);
 	sbuttonSprite->SetPosition(240,150);
@@ -38,14 +37,10 @@ void StateOptions::Init()
 	halfsbuttonSprite->SetPosition(240,150);
 
 	backSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Dirt),0,0,16,16);
-	backSprite->Scale(2,2);
+	backSprite->Scale(4,4);
 
 	moverSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),191,2,9,20);
 	smoverSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),182,2,9,20);
-
-	lamecraftSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::lameCraft),0,0,256,64);
-	lamecraftSprite->Scale(1.5f,1.5f);
-	lamecraftSprite->SetPosition(240,50);
 
 	selectPos = 0;
 	menuState = 0;
@@ -72,8 +67,8 @@ void StateOptions::Enter()
 
 void StateOptions::CleanUp()
 {
-	delete logoSprite;
 	delete buttonSprite;
+    delete nbuttonSprite;
 	delete sbuttonSprite;
 	delete halfbuttonSprite;
 	delete halfsbuttonSprite;
@@ -408,7 +403,7 @@ void StateOptions::Update(StateManager* sManager)
 void StateOptions::Draw(StateManager* sManager)
 {
 	//start rendering
-	mRender->StartFrame();
+	mRender->StartFrame(1,1,1);
 
 	switch(menuState)
 	{
@@ -418,16 +413,15 @@ void StateOptions::Draw(StateManager* sManager)
 			sceGuEnable(GU_BLEND);
 			sceGuColor(GU_COLOR(1,1,1,1.0f));
 
-			for(int x = 0;x < 16;x++)
-			{
-				for(int y = 0;y < 9;y++)
-				{
-					backSprite->SetPosition(x*32,y*32);
-					backSprite->Draw();
-				}
-			}
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 5; y++)
+                {
+                    backSprite->SetPosition(x*64,y*64);
+                    backSprite->Draw();
+                }
+            }
 
-			lamecraftSprite->Draw();
 
 			//Controls
 			buttonSprite->SetPosition(240,120);
@@ -451,9 +445,11 @@ void StateOptions::Draw(StateManager* sManager)
 
 			//draw subtitles on buttons
 
-			mRender->DebugPrint(240,125,"Controls");
-			mRender->DebugPrint(240,165,"Analog stick");
-			mRender->DebugPrint(240,205,"Back");
+			DrawText(240,125,GU_COLOR(1,1,1,1) ,0.345f,"Controls");
+			DrawText(240,165,GU_COLOR(1,1,1,1) ,0.345f,"Analog stick");
+			DrawText(240,205,GU_COLOR(1,1,1,1) ,0.345f,"Back");
+
+			DrawText(240,25,GU_COLOR(1,1,1,1) ,0.345f,"Options");
 		}
 		break;
 		case 1://controls
@@ -462,14 +458,15 @@ void StateOptions::Draw(StateManager* sManager)
 			sceGuEnable(GU_BLEND);
 			sceGuColor(GU_COLOR(1,1,1,1.0f));
 
-			for(int x = 0;x < 16;x++)
-			{
-				for(int y = 0;y < 9;y++)
-				{
-					backSprite->SetPosition(x*32,y*32);
-					backSprite->Draw();
-				}
-			}
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 5; y++)
+                {
+                    backSprite->SetPosition(x*64,y*64);
+                    backSprite->Draw();
+                }
+            }
+
 
 			int starty = 60;
 			//something
@@ -502,14 +499,14 @@ void StateOptions::Draw(StateManager* sManager)
 
 			//write action names
 			starty = 67;
-			mRender->SetFontStyle(0.7f,0xFFFFFFFF,0xFF000000,0x00000000);
+			mRender->SetFontStyle(0.35f,0xFFFFFFFF,0,0,0x00000000);
 			for(int i = controlStart;i < controlEnd;i++)
 			{
 				//action
 				mRender->DebugPrint(250,starty + (i * 30) - (controlStart * 30),InputHelper::Instance()->getActionName(i).c_str());
 			}
 
-			mRender->SetFontStyle(0.6f,0xFFFFFFFF,0xFF000000,0x00000200);
+			mRender->SetFontStyle(0.6f,0xFFFFFFFF,0,0,0x00000200);
 			starty = 65;
 			for(int i = controlStart;i < controlEnd;i++)
 			{
@@ -520,9 +517,8 @@ void StateOptions::Draw(StateManager* sManager)
 					mRender->DebugPrint(160,starty + (i * 30) - (controlStart * 30),InputHelper::Instance()->getButtonName(InputHelper::Instance()->getConnection(i).button).c_str());
 			}
 
-			mRender->SetFontStyle(0.5f,0xFFFFFFFF,0xFF000000,0x00000200);
-			mRender->DebugPrint(240,265,"Back");
-			mRender->DebugPrint(240,20,"CONTROLS");
+			DrawText(240,265,GU_COLOR(1,1,1,1) ,0.345f,"Back");
+			DrawText(240,25,GU_COLOR(1,1,1,1) ,0.345f,"Controls");
 		}
 		break;
 		case 2://analog stick
@@ -531,29 +527,27 @@ void StateOptions::Draw(StateManager* sManager)
 			sceGuEnable(GU_BLEND);
 			sceGuColor(GU_COLOR(1,1,1,1.0f));
 
-			for(int x = 0;x < 16;x++)
-			{
-				for(int y = 0;y < 9;y++)
-				{
-					backSprite->SetPosition(x*32,y*32);
-					backSprite->Draw();
-				}
-			}
-
-			lamecraftSprite->Draw();
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 5; y++)
+                {
+                    backSprite->SetPosition(x*64,y*64);
+                    backSprite->Draw();
+                }
+            }
 
 			//something
-			buttonSprite->SetPosition(240,100);
-			buttonSprite->Draw();
+			nbuttonSprite->SetPosition(240,100);
+			nbuttonSprite->Draw();
 
-			buttonSprite->SetPosition(240,130);
-			buttonSprite->Draw();
+			nbuttonSprite->SetPosition(240,130);
+			nbuttonSprite->Draw();
 
-			buttonSprite->SetPosition(240,160);
-			buttonSprite->Draw();
+			nbuttonSprite->SetPosition(240,160);
+			nbuttonSprite->Draw();
 
-			buttonSprite->SetPosition(240,190);
-			buttonSprite->Draw();
+			nbuttonSprite->SetPosition(240,190);
+			nbuttonSprite->Draw();
 
 			//back
 			buttonSprite->SetPosition(240,260);
@@ -584,12 +578,15 @@ void StateOptions::Draw(StateManager* sManager)
 			sceGuDisable(GU_BLEND);
 			sceGuEnable(GU_DEPTH_TEST);
 
+            mRender->SetFontStyle(0.35f,0xFFFFFFFF,0,0,0x00000200);
+
 			mRender->DebugPrint(240,105,"Analog up : %d%%",(int)(fabs(InputHelper::Instance()->analogYup) * 100.0f));
 			mRender->DebugPrint(240,135,"Analog down : %d%%",(int)(fabs(InputHelper::Instance()->analogYdown) * 100.0f));
 			mRender->DebugPrint(240,165,"Analog left : %d%%",(int)(fabs(InputHelper::Instance()->analogXleft) * 100.0f));
 			mRender->DebugPrint(240,195,"Analog right : %d%%",(int)(fabs(InputHelper::Instance()->analogXright) * 100.0f));
 
 			mRender->DebugPrint(240,265,"Back");
+			DrawText(240,25,GU_COLOR(1,1,1,1) ,0.345f,"Analog stick");
 		}
 		break;
 	}
@@ -598,3 +595,10 @@ void StateOptions::Draw(StateManager* sManager)
 	mRender->EndFrame();
 }
 
+void StateOptions::DrawText(int x,int y, unsigned int color, float size, const char *message, ...)
+{
+    mRender->SetFontStyle(size,GU_COLOR(0.24,0.24,0.24,1),0xFF3F3F3F,0,0x00000200|0x00000000);
+    mRender->DebugPrint(x+(size/0.345f),y+(size/0.345f),message);
+    mRender->SetFontStyle(size,color,0xFF3F3F3F,0,0x00000200|0x00000000);
+    mRender->DebugPrint(x,y,message);
+}

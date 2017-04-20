@@ -16,13 +16,15 @@
 #include <Aurora/Graphics/Camera.h>
 #include <Aurora/Graphics/Sprite.h>
 #include <Aurora/Graphics/Effects/SkyLight.h>
-#include <Aurora/Graphics/Effects/SkyClouds.h>
-#include <Aurora/Graphics/Effects/SkyDome.h>
+#include <Aurora/Graphics/Effects/SnowBall2.h>
 
 #include "LameMob.h"
 #include "CraftWorld2.h"
 #include "InputHelper.h"
 #include "SoundManager.h"
+#include "Chest2.h"
+#include "Furnace2.h"
+
 
 using namespace Aurora::Graphics;
 using namespace Aurora::Utils;
@@ -37,13 +39,12 @@ public:
 	virtual ~StatePlay();
 
 	void Init();
-	void InitParametric(int terrainType,bool makeFlat,bool makeTrees,bool makePumpkins,bool makeTypes,bool makeWater,bool makeCaves,bool makeSnow,bool makeCoal,bool makeGold,bool makeRedStone,bool makeDiamond,bool makeDirt,bool makeCanes,int seedIII);
+	void InitParametric(bool makeTrees,bool makePumpkins,bool makeTypes,bool makeWater,bool makeCaves,bool makeSnow,bool makeCoal,bool makeGold,bool makeRedStone,bool makeDiamond,bool makeDirt,bool makeCanes,int seedIII, int terBuilderType);
 	void Enter();
 	void CleanUp();
 
 	void Pause();
 	void Resume();
-    void makeExplosion(const int x, const int y, const int z, short r);
 	void LoadTextures();
 
 	void HandleEvents(StateManager* sManager);
@@ -63,13 +64,21 @@ private:
 
 	void advancedBlit(int sx, int sy, int sw, int sh, int dx, int dy, int slice);
 	bool TryToMove(Vector3 moveVector,float dt);
-    void ChangeInvList(short x);
 	void SetDayTimeAfterLoad();
 	void CraftItem2x2();
 	void CraftItem3x3();
+
+	void CheckForFurnFuel(Furnace* Fur);
+	void CheckForFurnWorking(Furnace* Fur);
+	void ReadyFurnSmelting(Furnace* Fur);
+
+    int FindFurnaceId(int x, int y, int z);
+
 	int FindChestId(int x, int y, int z);
+
 	void HungerTime();
 	void HealthTime();
+	void OxygenTime();
 
 private:
 
@@ -83,33 +92,36 @@ private:
 	int freeMemory;
 	float freeMemoryTimer;
 
-
+    float cloudsMove;
+    bool cloudsWay;
 
 	CraftWorld *mWorld;
-	ObjModel *cubeModel;
 	ObjModel *dModel[5];
 
     SkyLight *skyLight;
-	SkyDome *skyDome;
+    SkyLight *skyMoonLight;
 
+    bool cycle;
 	float sunTime;
 	float sunTimeTick;
 	bool sunMoonSwitch;
-	bool mobSpawn;
 	bool startDt;
     float dT; //time of destr
     float dET; //end time of destt
     float dS; //speed of destr
-    int dStd; //
+    char dStd; //destroy animation
 
     bool hurt;
     float hurt_time;
+    float dtt;
 
+    float furnaceTimes;
 
     Vector3 testPos1;
 
 	Vector3 cubePos;
 	bool showCube;
+
 
     int craftSlotId[4];
     int craftSlotAm[4];
@@ -127,8 +139,13 @@ private:
     int craftItemAm3;
     bool craftItemSt3;
 
-    int chestId;
+    float musicTimeGo;
+    float musicTime;
 
+    char chestId;
+    char furnaceId;
+    Chest* UseChest;
+    Furnace* UseFurnace;
 	//zmienne do poruszania
 	float GRAVITY;
 	float JUMPVELOCITY;
@@ -145,27 +162,26 @@ private:
 	bool footInWater;
 	bool headInLava;
 	bool footInLava;
+
 	bool invEn;
-	bool craftEn;
-	bool craft2xEn;
+	bool upEn;
 	bool craft3xEn;
 	bool chestEn;
-    int barPosition;
-    int invXPosition;
-    int invYPosition;
+	bool furnaceEn;
 
-    float shift_x;
-    float shift_y;
+    char barPosition;
+    char invXPosition;
+    char invYPosition;
 
-    int time_z;
+    short time_z; //cave sounds timer
 
 	int ram1;
 	int ram2;
-	int tick;
-	int tickH;
-	int tick2;
-	int chunks; // 0 - 7;
-    int yy;
+	float tickHunger;
+	float tickHealth;
+	int tickChunk;
+	float tickOS;
+	short chunks; // 0 - 7;
 
     int chunkId;
 
@@ -175,25 +191,45 @@ private:
 	float dt;
 
 	//textures info
-	int texture;
+	//int texture[16];
+	int texture[16];
 	int blue;
 	int red;
+	int black;
 
-	Sprite *selectInvSprite;
+    int snowBall4;
+	int cloudsTex;
+	int suntex;
+	int moontex;
+
+	unsigned char currentTexture;
+	unsigned char timeTexture;
+
 	Sprite *invSprite;
-    Sprite *craft2xSprite;
-    Sprite *craft3xSprite;
-    Sprite *chestSprite;
+    Sprite *crtSprite;
+    Sprite *chtSprite;
+    Sprite *selectInvSprite;
 	Sprite *barSprite;
 	Sprite *crossSprite;
 	Sprite *selectSprite;
 
+	Sprite *furArrowSprite;
+	Sprite *furFireSprite;
+    Sprite *furSprite;
+
 	Sprite *hpCellSprite;
-	Sprite *hpSprite;
-	Sprite *hpHalfSprite;
+	Sprite *hp44Sprite;
+	Sprite *hp34Sprite;
+	Sprite *hp24Sprite;
+	Sprite *hp14Sprite;
+
 	Sprite *hgCellSprite;
-	Sprite *hgSprite;
-	Sprite *hgHalfSprite;
+	Sprite *hg44Sprite;
+	Sprite *hg34Sprite;
+	Sprite *hg24Sprite;
+	Sprite *hg14Sprite;
+
+	Sprite *bubbleSprite;
 
 	float cameraSpeed;
 	float cameraMoveSpeed;
@@ -201,11 +237,15 @@ private:
 	//menu sprites
 	Sprite *buttonSprite;
 	Sprite *sbuttonSprite;
+	Sprite *nbuttonSprite;
+	Sprite *moverSprite;
 
 	int menuState;//0 game,1 menu
 	bool menuOptions;
 	int optionsMenuPos;
 	int selectPos;
+
+    char statisticsPage;
 
 	//some settings
 	bool canFly;
@@ -219,8 +259,22 @@ private:
 	//Headbob
 	bool canHeadBob;
 	float bobCycle;
+	bool bobType;
 
+    float shift_x;
+    float shift_y;
+
+    float changeY;
+
+    bool anim[3];
 	bool makeScreen;
+	bool dieFactor;
+
+    void DrawText(int x,int y, unsigned int color, float size, const char *message, ...);
+    void DrawText2(int x,int y, unsigned int color, float size, const char *message, ...);
+
+	std::vector<SnowBall2*> mSnowBalls;
+
 };
 
 #endif

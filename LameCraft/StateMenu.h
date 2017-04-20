@@ -50,11 +50,15 @@ public:
 private:
 
 	void ScanSaveFiles(const char* dirName);
+	void DrawText(int x,int y, unsigned int color, float size, const char *message, ...);
 
 private:
 	Sprite *buttonSprite;
 	Sprite *sbuttonSprite;
 	Sprite *nbuttonSprite;
+    Sprite *buttonSprite2;
+	Sprite *sbuttonSprite2;
+	Sprite *mbuttonSprite2;
 	Sprite *backSprite;
 	Sprite *logoSprite;
 	Sprite *selectSaveSprite;
@@ -75,6 +79,12 @@ private:
 	int loadSavePos;
 	int aboutPos;
 	char worldName[32];
+	float time_s;
+
+    float size_f;
+
+	float fontcolor;
+	bool fontcoloroption;
 
 	bool saveSubmenu;
 	int saveSubMenuSelect;
@@ -83,7 +93,7 @@ private:
 	int loadSaveEnd;
 	int loadSaveMax;
 
-	int timex;
+	float timex;
 
 	short animationscreen;
 
@@ -94,12 +104,9 @@ private:
 
 	std::vector<SaveFile> saveFilesList;
 	std::string newWorldName;
+	std::string newWorldSeed;
 	std::string newWorldNamestr;
-	short seed_2[36];
-    short seed_length;
 	//options for parametric map generation
-	short terrainType;
-	bool makeFlat;
 	bool makeTrees;
 	bool makeWater;
 	bool makeCaves;
@@ -113,8 +120,8 @@ private:
     bool makeDiamond;
     bool makeDirt;
     bool makeCanes;
+    int terrainBuilder;
 	short generateSelectPose;
-
 
 	//game version
 	short currentVersion;

@@ -35,7 +35,7 @@ void SplashScreen::ShowSplash()
 	{
 		dt = mTimer.GetDeltaTime();
 
-		RenderManager::InstancePtr()->StartFrame();
+		RenderManager::InstancePtr()->StartFrame(1,1,1);
 
 		sceGuDisable(GU_DEPTH_TEST);
 		sceGuEnable(GU_BLEND);

@@ -42,14 +42,25 @@ void StateMenu::Init()
     nbuttonSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),24,42,200,20);
     nbuttonSprite->SetPosition(240,150);
 
+    buttonSprite2 = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),24,22,200,20);
+    buttonSprite2->SetPosition(240,150);
+    buttonSprite2->Scale(0.5f,1);
+
+    sbuttonSprite2 = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),24,62,200,20);
+    sbuttonSprite2->SetPosition(240,150);
+    sbuttonSprite2->Scale(0.5f,1);
+
+    mbuttonSprite2 = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Utils),24,82,200,20);
+    mbuttonSprite2->SetPosition(240,150);
+    mbuttonSprite2->Scale(0.5f,1);
+
     backSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Dirt),0,0,16,16);
-    backSprite->Scale(2,2);
+    backSprite->Scale(4,4);
 
     selectSaveSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::Glass),0,0,64,64);
     selectSaveSprite->Scale(7,0.6f);
 
-    lamecraftSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::lameCraft),0,0,256,64);
-    lamecraftSprite->Scale(1.5f,1.5f);
+    lamecraftSprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::lameCraft),0,0,300,64);
     lamecraftSprite->SetPosition(240,50);
 
     screen1Sprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::screen1));
@@ -63,7 +74,6 @@ void StateMenu::Init()
 
     screen4Sprite = new Sprite(TextureHelper::Instance()->GetTexture(TextureHelper::screen4));
     screen4Sprite->SetPosition(260,136);
-
     selectPos = 0;
 
     //load save info
@@ -73,10 +83,12 @@ void StateMenu::Init()
     loadSelectPos = 0;
     loadSavePos = 0;
     aboutPos = 0;
-    newWorldName = "NewWorld";
+    newWorldName = "World";
+    newWorldSeed = "";
+
+    size_f = 0.35f;
     //for map generation
-    terrainType = 0;
-    makeFlat = false;
+
     makeTrees = true;
     makeWater = true;
     makeCaves = true;
@@ -92,11 +104,12 @@ void StateMenu::Init()
     makeCanes = true;
     generateSelectPose = 0;
     SplashNumber = rand() % 5;
+    time_s = 0;
 
     saveSubmenu = false;
     saveSubMenuSelect = 2;
     seed_1 = 0;
-    seed_length = 0;
+
     newWorldNamestr = newWorldName.c_str();
     currentVersion = 30;
 
@@ -106,6 +119,9 @@ void StateMenu::Init()
 
 	animationscreen = 1;
 	timex = 2400;
+	fontcoloroption = 0;
+	fontcolor = 0;
+	srand(time(0));
 }
 
 void StateMenu::Enter()
@@ -120,9 +136,6 @@ delete screen1Sprite;
 delete screen2Sprite;
 delete screen3Sprite;
 delete screen4Sprite;
-
-
-
 }
 
 void StateMenu::Pause()
@@ -481,22 +494,96 @@ void StateMenu::HandleEvents(StateManager* sManager)
 
         if(mSystemMgr->KeyPressed(PSP_CTRL_UP))
         {
-            generateSelectPose--;
-            if(generateSelectPose < 0)
-                generateSelectPose = 6;
-
             mSoundMgr->PlayMenuSound();
+            if (generateSelectPose >= 2 && generateSelectPose <= 4)
+            {
+                generateSelectPose = 1;
+                return;
+            }
+            if (generateSelectPose >= 5 && generateSelectPose <= 6)
+            {
+                generateSelectPose = 4;
+                return;
+            }
+            if (generateSelectPose == 0)
+            {
+                generateSelectPose = 7;
+                return;
+            }
+            generateSelectPose--;
+        }
+
+        if(mSystemMgr->KeyPressed(PSP_CTRL_RIGHT))
+        {
+            if (generateSelectPose >= 2 && generateSelectPose <= 3)
+            {
+                generateSelectPose ++;
+                mSoundMgr->PlayMenuSound();
+                return;
+            }
+            if (generateSelectPose == 5)
+            {
+                generateSelectPose = 6;
+                mSoundMgr->PlayMenuSound();
+                return;
+            }
+            if (generateSelectPose == 0)
+            {
+                generateSelectPose = 1;
+                mSoundMgr->PlayMenuSound();
+                return;
+            }
+
+        }
+
+        if(mSystemMgr->KeyPressed(PSP_CTRL_LEFT))
+        {
+            if (generateSelectPose >= 3 && generateSelectPose <= 4)
+            {
+                generateSelectPose --;
+                mSoundMgr->PlayMenuSound();
+                return;
+            }
+            if (generateSelectPose == 6)
+            {
+                generateSelectPose = 5;
+                mSoundMgr->PlayMenuSound();
+                return;
+            }
+            if (generateSelectPose == 1)
+            {
+                generateSelectPose = 0;
+                mSoundMgr->PlayMenuSound();
+                return;
+            }
+
+
         }
 
 
 
         if(mSystemMgr->KeyPressed(PSP_CTRL_DOWN))
         {
+            mSoundMgr->PlayMenuSound();
+            if (generateSelectPose >= 2 && generateSelectPose <= 4)
+            {
+                generateSelectPose = 5;
+                return;
+            }
+            if (generateSelectPose >= 5 && generateSelectPose <= 6)
+            {
+                generateSelectPose = 7;
+                return;
+            }
+            if (generateSelectPose >= 0 && generateSelectPose <= 1)
+            {
+                generateSelectPose = 2;
+                return;
+            }
             generateSelectPose++;
-            if(generateSelectPose > 6)
+            if(generateSelectPose > 7)
                 generateSelectPose = 0;
 
-            mSoundMgr->PlayMenuSound();
         }
 
         if(mSystemMgr->KeyPressed(PSP_CTRL_CIRCLE))
@@ -535,11 +622,8 @@ void StateMenu::HandleEvents(StateManager* sManager)
                 {
                 {
                 seed_1 = 0;
-                seed_length = 0;
-                for(int h =0;h<36;h++)
-                {
-                seed_2[h] = '0';
-                }
+                newWorldSeed = "";
+
                 unsigned short test[128];
                 unsigned short opis[10] = {'W','o','r','l','d',' ','s','e','e','d'};
                 if(mSystemMgr->ShowOSK(opis,test,128) != -1)
@@ -549,47 +633,17 @@ void StateMenu::HandleEvents(StateManager* sManager)
                     {
                         unsigned c = test[j];
 
-
-                        if (j < 36)
+                        if(48 <= c && c <= 57)
                         {
-                            if(48 <= c && c <= 57)
-                            {
-                                seed_2[j] = test[j];
-                            }
-                        }
-
-                    }
-
-                    for(int m = 0; m <= 35; m++)
-                    {
-                        if (seed_2[m] == '0')
-                        {
-                            seed_length = m;
+                            newWorldSeed += c;
                         }
                     }
 
-                    for(int j = 0; j < 35; j++)
-                    {
-                        if (j > seed_length)
-                        {
-                            continue;
-                        }
+                    seed_1 = std::atoi(newWorldSeed.c_str());
 
-                            switch(seed_2[j])
-                            {
-                                case 48: break;
-                                case 49: j != seed_length ? seed_1 += 1*(10^(seed_length-j)) : seed_1 + 1; break;
-                                case 50: j != seed_length ? seed_1 += 2*(10^(seed_length-j)) : seed_1 + 2; break;
-                                case 51: j != seed_length ? seed_1 += 3*(10^(seed_length-j)) : seed_1 + 3; break;
-                                case 52: j != seed_length ? seed_1 += 4*(10^(seed_length-j)) : seed_1 + 4; break;
-                                case 53: j != seed_length ? seed_1 += 5*(10^(seed_length-j)) : seed_1 + 5; break;
-                                case 54: j != seed_length ? seed_1 += 6*(10^(seed_length-j)) : seed_1 + 6; break;
-                                case 55: j != seed_length ? seed_1 += 7*(10^(seed_length-j)) : seed_1 + 7; break;
-                                case 56: j != seed_length ? seed_1 += 8*(10^(seed_length-j)) : seed_1 + 8; break;
-                                case 57: j != seed_length ? seed_1 += 9*(10^(seed_length-j)) : seed_1 + 9; break;
-                                }
-                            }
-                        }
+
+
+                }
 
                 }
 
@@ -600,43 +654,39 @@ void StateMenu::HandleEvents(StateManager* sManager)
 
             if(generateSelectPose == 2)
             {
-                makeFlat = !makeFlat;
+                terrainBuilder = 0;
 
-                if(makeFlat)
-                {
-                    makeWater = false;
-                }
+                makeWater = false;
             }
 
             if(generateSelectPose == 3)
             {
-                makeTrees = !makeTrees;
+                terrainBuilder = 1;
+
+                makeWater = true;
             }
 
             if(generateSelectPose == 4)
             {
-                //generate parametric terrain
-                makeWater = !makeWater;
+                terrainBuilder = 2;
 
-                //don't make water type terrain without hills
-                if(makeWater)
-                {
-                    makeFlat = false;
-                }
+                makeWater = true;
             }
 
             if(generateSelectPose == 5)
             {
-                makeCaves = !makeCaves;
+                makeTrees = !makeTrees;
             }
 
             if(generateSelectPose == 6)
             {
+                makeCaves = !makeCaves;
+            }
+
+            if(generateSelectPose == 7)
+            {
                 StatePlay *statePlay = new StatePlay();
-                LoadingScreen *loading = new LoadingScreen();
-                statePlay->InitParametric(terrainType,makeFlat,makeTrees,makeWater,makeCaves,makePumpkins,makeTypes,makeIron,makeCoal,makeGold,makeRedStone,makeDiamond,makeDirt,makeCanes,seed_1);
-                loading->KillLoadingScreen();
-                delete loading;
+                statePlay->InitParametric(makeTrees,makeWater,makeCaves,makePumpkins,makeTypes,makeIron,makeCoal,makeGold,makeRedStone,makeDiamond,makeDirt,makeCanes,seed_1,terrainBuilder);
                 statePlay->InitCamera();
                 statePlay->SetWorldAndSaveName(newWorldName,nextSaveFileName);
                 sManager->PushState(statePlay);
@@ -684,8 +734,6 @@ void StateMenu::HandleEvents(StateManager* sManager)
                 generateSelectPose = 0;
                 menuState = 5;
 
-                terrainType = 0;
-                makeFlat = false;
                 makeTrees = true;
                 makeWater = true;
                 makeCaves = true;
@@ -699,6 +747,7 @@ void StateMenu::HandleEvents(StateManager* sManager)
                 makeDiamond = true;
                 makeDirt = true;
                 makeCanes = true;
+                terrainBuilder = 0;
 
             }
 
@@ -727,30 +776,6 @@ void StateMenu::Update(StateManager* sManager)
 {
 
 
-        if (animationscreen == 1)
-        {
-            if(timex < 19200)
-            {
-                timex++;
-            }
-            if (timex > 19100)
-            {
-                animationscreen = 2;
-            }
-        }
-        else
-        {
-            if(timex > 0)
-            {
-                timex--;
-            }
-            if (timex < 100)
-            {
-                animationscreen = 1;
-            }
-        }
-
-
 
 
 }
@@ -758,7 +783,7 @@ void StateMenu::Update(StateManager* sManager)
 void StateMenu::Draw(StateManager* sManager)
 {
     //start rendering
-    mRender->StartFrame();
+    mRender->StartFrame(1,1,1);
 
     switch(menuState)
     {
@@ -766,7 +791,7 @@ void StateMenu::Draw(StateManager* sManager)
     {
         sceGuDisable(GU_DEPTH_TEST);
         sceGuEnable(GU_BLEND);
-        sceGuColor(GU_COLOR(1,1,1,1.0f));
+        sceGuColor(GU_COLOR(1,1,1,0.4f));
 
 
         screen1Sprite->SetPosition(-480+(-920 + (timex/10)),136);
@@ -778,12 +803,12 @@ void StateMenu::Draw(StateManager* sManager)
         screen4Sprite->SetPosition(960+(-920 + (timex/10)),136);
         screen4Sprite->Draw();
 
+        sceGuColor(GU_COLOR(1,1,1,1.0f));
 
 
-
-
-
-
+        time_s += 0.1f;
+        //mRender->DebugPrint(240,50,"Time: %f", time_s);
+        float fontsize = 0.8 + sinf(time_s) * 0.18f;
         //logo
         lamecraftSprite->Draw();
 
@@ -809,11 +834,11 @@ void StateMenu::Draw(StateManager* sManager)
         {
             if (animationscreen == 1)
             {
-                timex < 16400 ? timex++ : animationscreen = 2;
+                timex < 15000 ? timex+= 2 : animationscreen = 2;
             }
             else
             {
-                timex > 2450 ? timex-- : animationscreen = 1;
+                timex > 2450 ? timex-= 2 : animationscreen = 1;
             }
         }
 
@@ -823,17 +848,32 @@ void StateMenu::Draw(StateManager* sManager)
         sceGuEnable(GU_DEPTH_TEST);
 
         //draw subtitles on buttons
+        DrawText(240,125,GU_COLOR(1,1,1,1) ,0.35f,"SinglePlayer");
+        DrawText(240,165,GU_COLOR(1,1,1,1) ,0.35f, "Options");
+        DrawText(240,205,GU_COLOR(1,1,1,1) ,0.35f,"About");
 
-        mRender->DebugPrint(240,125,"SinglePlayer");
-        mRender->DebugPrint(240,165,"Options");
-        mRender->DebugPrint(240,205,"About");
-		mRender->DebugPrint(60,265,"v1.0.2 Beta");
+        mRender->SetFontStyle(0.35f ,GU_COLOR(0.24,0.24,0.24,1),0,0,0x00000000|0x00004000);
+        mRender->DebugPrint(3,270,"1.1 beta");
+        mRender->SetFontStyle(0.35f ,GU_COLOR(1,1,1,1),0,0,0x00000000|0x00004000);
+        mRender->DebugPrint(2,269,"1.1 beta");
 
-		//Text
-        float time_s = ((float)(clock() % CLOCKS_PER_SEC)) / ((float)CLOCKS_PER_SEC);
-        //mRender->DebugPrint(240,50,"Time: %f", time_s);
-        float fontsize = (time_s < 0.5f) ? time_s*511 : (1.0f-time_s)*511;
-        //mRender->DebugPrint(240,25,"Size: %f", (fontsize/500));
+        if (fontcoloroption == 0)
+        {
+            fontcolor += 0.05f;
+            if (fontcolor > 0.9f)
+            {
+                fontcoloroption = 1;
+            }
+        }
+        else
+        {
+            fontcolor -= 0.05f;
+            if (fontcolor < 0.1f)
+            {
+                fontcoloroption = 0;
+            }
+        }
+
         char *SplashText;
         //Randomly generate the text number - because is in "while" not working yet
         //SplashNumber = rand() % 2; // 0-2
@@ -844,30 +884,28 @@ void StateMenu::Draw(StateManager* sManager)
             SplashText = "Woo, minecraft!";
             break;
         case 1:
-            SplashText = "Craft, build, survive!";
+            SplashText = "With survival!";
             break;
         case 2:
-            SplashText = "Fan fiction";
+            SplashText = "For psp!";
             break;
         case 3:
-            SplashText = "Teetsuuuuoooo";
+            SplashText = "Woolio >3";
             break;
         case 4:
-            SplashText = "Gasp! ";
+            SplashText = "S4inex >3";
             break;
         case 5:
-            SplashText = "Beta! ";
+            SplashText = "Beta!";
             break;
         case 6:
             SplashText = "Camxpspx123 sucks! ";
             break;
         }
 
-        mRender->SetFontStyle( (fontsize/500+0.5) ,0xFF00FFFF,0xFF000000,0x00000200);
-        mRender->DebugPrint(400,80,SplashText);
+        //mRender->SetFontStyle(fontsize ,0xFF00FFFF,0,0,0x00000200|0x00004000);
+        //DrawText(360,80,GU_COLOR(1,fontcolor,0,1)  ,fontsize,SplashText);
 
-        //Reset de original font for next menu items
-        mRender->SetFontStyle(0.5f,0xFFFFFFFF,0xFF000000,0x00000200);
 		}
 		break;
     case 1://load menu
@@ -876,11 +914,11 @@ void StateMenu::Draw(StateManager* sManager)
         sceGuEnable(GU_BLEND);
         sceGuColor(GU_COLOR(1,1,1,1.0f));
 
-        for(int x = 0; x < 16; x++)
+        for(int x = 0; x < 8; x++)
         {
-            for(int y = 0; y < 9; y++)
+            for(int y = 0; y < 5; y++)
             {
-                backSprite->SetPosition(x*32,y*32);
+                backSprite->SetPosition(x*64,y*64);
                 backSprite->Draw();
             }
         }
@@ -897,18 +935,18 @@ void StateMenu::Draw(StateManager* sManager)
         {
             if(loadSavePos == i)
             {
-                mRender->SetFontStyle(1.0f,0xFF000000,0xFFFFFFFF,0x00000000);
+                mRender->SetFontStyle(1.0f,0xFF000000,0xFFFFFFFF,0,0x00000000);
                 mRender->DebugPrint(30,50 + (i * 40) - (loadSaveStart * 40),"%s",saveFilesList[i].worldName);
 
-                mRender->SetFontStyle(0.7f,0xFF7F7F7F,0xFF000000,0x00000000);
+                mRender->SetFontStyle(0.7f,0xFF7F7F7F,0xFF000000,0,0x00000000);
                 mRender->DebugPrint(40,65 + (i * 40) - (loadSaveStart * 40),"%s",saveFilesList[i].fileName.c_str());
             }
             else
             {
-                mRender->SetFontStyle(0.8f,0xFFFFFFFF,0xFF000000,0x00000000);
+                mRender->SetFontStyle(0.8f,0xFFFFFFFF,0xFF000000,0,0x00000000);
                 mRender->DebugPrint(30,50 + (i * 40) - (loadSaveStart * 40),"%s",saveFilesList[i].worldName);
 
-                mRender->SetFontStyle(0.5f,0xFF7F7F7F,0xFF000000,0x00000000);
+                mRender->SetFontStyle(0.5f,0xFF7F7F7F,0xFF000000,0,0x00000000);
                 mRender->DebugPrint(40,60 + (i * 40) - (loadSaveStart * 40),"%s",saveFilesList[i].fileName.c_str());
             }
 
@@ -929,11 +967,6 @@ void StateMenu::Draw(StateManager* sManager)
         //selected button
 
 
-
-        mRender->SetFontStyle(0.5f,0xFFFFFFFF,0xFF000000,0x00000200);
-        //draw subtitles on buttons
-        mRender->DebugPrint(240,20,"LOAD WORLD");
-
         if(saveSubmenu)
         {
             sbuttonSprite->SetPosition(240,(saveSubMenuSelect * 25) + 210);
@@ -949,16 +982,17 @@ void StateMenu::Draw(StateManager* sManager)
 
         if(saveSubmenu)
         {
-            mRender->DebugPrint(240,215,"Are you sure?");
-            mRender->DebugPrint(240,240,"Yes");
-            mRender->DebugPrint(240,265,"No");
+            DrawText(240,215,GU_COLOR(1,1,1,1) ,0.35f,"Are you sure?");
+            DrawText(240,240,GU_COLOR(1,1,1,1) ,0.35f,"Yes");
+            DrawText(240,265,GU_COLOR(1,1,1,1) ,0.35f,"No");
         }
         else
         {
-            mRender->DebugPrint(240,215,"Play");
-            mRender->DebugPrint(240,240,"Delete");
-            mRender->DebugPrint(240,265,"Back");
+            DrawText(240,215,GU_COLOR(1,1,1,1),0.35f,"Play");
+            DrawText(240,240,GU_COLOR(1,1,1,1) ,0.35f,"Delete");
+            DrawText(240,265,GU_COLOR(1,1,1,1) ,0.35f,"Back");
         }
+        DrawText(240,20,GU_COLOR(1,1,1,1) ,0.35f,"Load world");
     }
     break;
     case 3://about
@@ -969,11 +1003,11 @@ void StateMenu::Draw(StateManager* sManager)
         sceGuEnable(GU_BLEND);
         sceGuColor(GU_COLOR(1,1,1,1.0f));
 
-        for(int x = 0; x < 16; x++)
+        for(int x = 0; x < 8; x++)
         {
-            for(int y = 0; y < 9; y++)
+            for(int y = 0; y < 5; y++)
             {
-                backSprite->SetPosition(x*32,y*32);
+                backSprite->SetPosition(x*64,y*64);
                 backSprite->Draw();
             }
         }
@@ -992,62 +1026,14 @@ void StateMenu::Draw(StateManager* sManager)
         sceGuDisable(GU_BLEND);
         sceGuEnable(GU_DEPTH_TEST);
 
-        //about text
-        mRender->SetFontStyle(0.7f,0xFFFFFFFF,0xFF000000,0x00000000);
-        mRender->DebugPrint(40,100,"Original Code:  Drakon");
-        mRender->DebugPrint(40,120,"Mod by:        Woolio & Joel16");
-        mRender->DebugPrint(40,140,"Version:        1.0.2");
+        DrawText(240,100,GU_COLOR(1,1,1,1) ,0.7f,"Original Code: Drakon");
+        DrawText(240,120,GU_COLOR(1,1,1,1) ,0.7f,"Mod by: Woolio");
+        DrawText(240,140,GU_COLOR(1,1,1,1) ,0.7f,"Version: 1.1 beta");
 
-        //button text
-        mRender->SetFontStyle(0.5f,0xFFFFFFFF,0xFF000000,0x00000200);
-        mRender->DebugPrint(240,240,"Check for update");
-        mRender->DebugPrint(240,265,"Back");
-    }
-    break;
-    case 4://choose generation type
-    {
+        DrawText(240,240,GU_COLOR(1,1,1,1) ,0.35f,"Check for update");
+        DrawText(240,265,GU_COLOR(1,1,1,1) ,0.35f,"Back");
+        DrawText(240,25,GU_COLOR(1,1,1,1) ,0.345f,"About");
 
-
-        sceGuDisable(GU_DEPTH_TEST);
-        sceGuEnable(GU_BLEND);
-        sceGuColor(GU_COLOR(1,1,1,1.0f));
-
-        for(int x = 0; x < 16; x++)
-        {
-            for(int y = 0; y < 9; y++)
-            {
-                backSprite->SetPosition(x*32,y*32);
-                backSprite->Draw();
-            }
-        }
-
-        //logo
-        lamecraftSprite->Draw();
-
-        //Randomly
-        buttonSprite->SetPosition(240,120);
-        buttonSprite->Draw();
-
-        //Parametric
-        buttonSprite->SetPosition(240,160);
-        buttonSprite->Draw();
-
-        //back
-        buttonSprite->SetPosition(240,200);
-        buttonSprite->Draw();
-
-        //selected button
-        sbuttonSprite->SetPosition(240,(generateSelectPose * 40) + 120);
-        sbuttonSprite->Draw();
-
-        sceGuDisable(GU_BLEND);
-        sceGuEnable(GU_DEPTH_TEST);
-
-        //draw subtitles on buttons
-
-        mRender->DebugPrint(240,125,"Random Terrain");
-        mRender->DebugPrint(240,165,"Parametric Terrain");
-        mRender->DebugPrint(240,205,"Back");
     }
     break;
     case 5://paramateric view
@@ -1058,11 +1044,11 @@ void StateMenu::Draw(StateManager* sManager)
         sceGuEnable(GU_BLEND);
         sceGuColor(GU_COLOR(1,1,1,1.0f));
 
-        for(int x = 0; x < 16; x++)
+        for(int x = 0; x < 8; x++)
         {
-            for(int y = 0; y < 9; y++)
+            for(int y = 0; y < 5; y++)
             {
-                backSprite->SetPosition(x*32,y*32);
+                backSprite->SetPosition(x*64,y*64);
                 backSprite->Draw();
             }
         }
@@ -1070,56 +1056,94 @@ void StateMenu::Draw(StateManager* sManager)
         //logo
 
         //name
-        nbuttonSprite->SetPosition(240,70);
+        nbuttonSprite->SetPosition(120,70);
         nbuttonSprite->Draw();
         //seed
-        nbuttonSprite->SetPosition(240,95);
+        nbuttonSprite->SetPosition(360,70);
         nbuttonSprite->Draw();
-        //trees
-        buttonSprite->SetPosition(240,120);
-        buttonSprite->Draw();
-        //
-        buttonSprite->SetPosition(240,145);
+
+        buttonSprite2->SetPosition(120,120);
+        buttonSprite2->Draw();
+
+        buttonSprite2->SetPosition(240,120);
+        buttonSprite2->Draw();
+
+        buttonSprite2->SetPosition(360,120);
+        buttonSprite2->Draw();
+
+        buttonSprite2->SetPosition(120,170);
+        buttonSprite2->Draw();
+
+        buttonSprite2->SetPosition(360,170);
+        buttonSprite2->Draw();
+
+        buttonSprite->SetPosition(240,230);
         buttonSprite->Draw();
 
-        //Structures
-        buttonSprite->SetPosition(240,170);
-        buttonSprite->Draw();
-
-        //water
-        buttonSprite->SetPosition(240,195);
-        buttonSprite->Draw();
 
 
-        buttonSprite->SetPosition(240,220);
-        buttonSprite->Draw();
 
-        sbuttonSprite->SetPosition(240,(generateSelectPose * 25) + 70);
-        sbuttonSprite->Draw();
+        if(generateSelectPose >= 0 && generateSelectPose <= 1)
+        {
+            sbuttonSprite->SetPosition(120 + (generateSelectPose * 240),70);
+        }
+        if(generateSelectPose >= 2 && generateSelectPose <= 4)
+        {
+            sbuttonSprite2->SetPosition(120 + ((generateSelectPose-2) * 120),120);
+        }
+        if(generateSelectPose >= 5 && generateSelectPose <= 6)
+        {
+            sbuttonSprite2->SetPosition(120 + ((generateSelectPose-5) * 240),170);
+        }
+        if(generateSelectPose == 7)
+        {
+            sbuttonSprite->SetPosition(240,230);
+        }
+
+        mbuttonSprite2->SetPosition(120 + (terrainBuilder * 120),120);
+        mbuttonSprite2->Draw();
+
+        if (makeTrees == true)
+        {
+            mbuttonSprite2->SetPosition(120,170);
+            mbuttonSprite2->Draw();
+        }
+
+        if (makeCaves == true)
+        {
+            mbuttonSprite2->SetPosition(360,170);
+            mbuttonSprite2->Draw();
+        }
+
+        if(generateSelectPose >= 2 && generateSelectPose <= 6)
+        {
+            sbuttonSprite2->Draw();
+        }
+        else
+        {
+            sbuttonSprite->Draw();
+        }
 
         sceGuDisable(GU_BLEND);
         sceGuEnable(GU_DEPTH_TEST);
 
         //draw subtitles on buttons
-        mRender->DebugPrint(370,75,"Name");
-        mRender->DebugPrint(370,100,"Seed");
+        DrawText(120,50,GU_COLOR(1,1,1,1) ,0.35f,"Name");
+        DrawText(360,50,GU_COLOR(1,1,1,1) ,0.35f,"Seed");
 
+        DrawText(120,125,GU_COLOR(1,1,1,1) ,0.35f,"Flat");
+        DrawText(240,125,GU_COLOR(1,1,1,1) ,0.35f,"Old");
+        DrawText(360,125,GU_COLOR(1,1,1,1) ,0.35f,"New");
 
+        DrawText(120,175,GU_COLOR(1,1,1,1) ,0.35f,"Trees");
+        DrawText(360,175,GU_COLOR(1,1,1,1) ,0.35f,"Caves");
+        DrawText(240,235,GU_COLOR(1,1,1,1) ,0.35f,"Generate");
 
+        DrawText(240,25,GU_COLOR(1,1,1,1) ,0.35f,"New world");
 
-
-
-
-        makeFlat == true ?  mRender->DebugPrint(240,125,"Flat terrain"):mRender->DebugPrint(240,125,"Terrain with hills");
-        makeTrees == true ? mRender->DebugPrint(240,150,"Trees : ON"):mRender->DebugPrint(240,150,"Trees : OFF");
-        makeWater == true ? mRender->DebugPrint(240,175,"Water : ON"):mRender->DebugPrint(240,175,"Water : OFF");
-        makeCaves == true ? mRender->DebugPrint(240,200,"Caves : ON"):mRender->DebugPrint(240,200,"Caves : OFF");
-        mRender->DebugPrint(240,225,"Generate");
-        mRender->DebugPrint(240,75,"%s",newWorldName.c_str());
-        mRender->DebugPrint(240,100,"%i buggy",seed_1);
-
-
-
+        mRender->SetFontStyle(0.35f ,GU_COLOR(1,1,1,1),0,0,0x00000000|0x00004000);
+        mRender->DebugPrint(28,75,"%s",newWorldName.c_str());
+        mRender->DebugPrint(268,75,"%s",newWorldSeed.c_str());
     }
     break;
     case 7://New or load map
@@ -1130,28 +1154,25 @@ void StateMenu::Draw(StateManager* sManager)
         sceGuEnable(GU_BLEND);
         sceGuColor(GU_COLOR(1,1,1,1.0f));
 
-        for(int x = 0; x < 16; x++)
+        for(int x = 0; x < 8; x++)
         {
-            for(int y = 0; y < 9; y++)
+            for(int y = 0; y < 5; y++)
             {
-                backSprite->SetPosition(x*32,y*32);
+                backSprite->SetPosition(x*64,y*64);
                 backSprite->Draw();
             }
         }
 
-        //logo
-        lamecraftSprite->Draw();
-
         //Randomly
-        buttonSprite->SetPosition(240,120);
+        buttonSprite->SetPosition(240,100);
         buttonSprite->Draw();
 
         //Parametric
-        buttonSprite->SetPosition(240,160);
+        buttonSprite->SetPosition(240,140);
         buttonSprite->Draw();
 
         //selected button
-        sbuttonSprite->SetPosition(240,(generateSelectPose * 40) + 120);
+        sbuttonSprite->SetPosition(240,(generateSelectPose * 40) + 100);
         sbuttonSprite->Draw();
 
         sceGuDisable(GU_BLEND);
@@ -1159,8 +1180,9 @@ void StateMenu::Draw(StateManager* sManager)
 
         //draw subtitles on buttons
 
-        mRender->DebugPrint(240,125,"New world");
-        mRender->DebugPrint(240,165,"Load world");
+        DrawText(240,105,GU_COLOR(1,1,1,1) ,0.35f,"New world");
+        DrawText(240,145,GU_COLOR(1,1,1,1) ,0.35f,"Load world");
+        DrawText(240,25,GU_COLOR(1,1,1,1) ,0.35f,"SinglePlayer");
     }
     break;
 
@@ -1283,4 +1305,13 @@ void StateMenu::ScanSaveFiles(const char* dirName)
             }
         }
     }
+}
+
+
+void StateMenu::DrawText(int x,int y, unsigned int color, float size, const char *message, ...)
+{
+    mRender->SetFontStyle(size,GU_COLOR(0.24,0.24,0.24,1),0,0,0x00000200|0x00000000);
+    mRender->DebugPrint(x+(size/(float)0.35f),y+(size/(float)0.35f),message);
+    mRender->SetFontStyle(size,color,0,0,0x00000200|0x00000000);
+    mRender->DebugPrint(x,y,message);
 }
