@@ -221,7 +221,7 @@ void Drop::Render(Frustum &camFrustum, Vector3 playerPos, float camAngle)
         if(camFrustum.BoxInFrustum(bBox) == Frustum::Intersects)
         {
             float myLight = myCrft->BlockFinalLight(position.x,position.y,position.z);
-            float angle = ATAN2(position.x-(playerPos.x+(cosf(camAngle+PI)*4)),position.z-(playerPos.z+(sinf(camAngle+PI)*4)))-PI*0.5f;
+            float angle = ATAN2_fast(position.x-(playerPos.x+(cosf(camAngle+PI)*4)),position.z-(playerPos.z+(sinf(camAngle+PI)*4)))-PI*0.5f;
 
             sceGuColor(GU_COLOR(myLight,myLight,myLight,1.0f));
             sceGuEnable(GU_DEPTH_TEST);

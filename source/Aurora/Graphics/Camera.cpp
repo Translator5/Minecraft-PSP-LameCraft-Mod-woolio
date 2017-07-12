@@ -1,6 +1,9 @@
 #include <Aurora/Graphics/Camera.h>
 #define PI 3.1415926535897f
 
+#define PI_FLOAT     3.14159265f
+#define PIBY2_FLOAT  1.5707963f
+
 namespace Aurora
 {
 	namespace Graphics
@@ -10,7 +13,7 @@ namespace Aurora
 			needUpdate = true;
 			upDownAngle2 = 0.0f;
 			upDownAngle = 0.0f;
-			horAngle = 0.0f;
+			horAngle = 270.0f;
 
 			m_vOffset = Vector3(0.0f, 0.0f, 0.0f);
 			m_vPosition = Vector3(0.0f, 0.0f, 0.0f);
@@ -200,7 +203,7 @@ namespace Aurora
 			m_vView = m_vPosition + m_vOffset + vNewView;
 			if(m_vPosition.z-m_vView.z != 0 && m_vPosition.x-m_vView.x != 0)
             {
-                horAngle = (PI+(atan2f(m_vPosition.z-m_vView.z,m_vPosition.x-m_vView.x)))/PI*180;
+                horAngle = (PI+(atan_(m_vPosition.z-m_vView.z,m_vPosition.x-m_vView.x)))/PI*180;
             }
 
 
@@ -214,6 +217,33 @@ namespace Aurora
 			vAxis.normalize();
 
 			RotateView(speed, vAxis.x, vAxis.y, vAxis.z);
+		}
+
+		float Camera::atan_(float y, float x)
+		{
+            if ( x == 0.0f )
+            {
+                if ( y > 0.0f ) return PIBY2_FLOAT;
+                if ( y == 0.0f ) return 0.0f;
+                return -PIBY2_FLOAT;
+            }
+            float atan;
+            float z = y/x;
+            if ( fabs( z ) < 1.0f )
+            {
+                atan = z/(1.0f + 0.28f*z*z);
+                if ( x < 0.0f )
+                {
+                    if ( y < 0.0f ) return atan - PI_FLOAT;
+                    return atan + PI_FLOAT;
+                }
+            }
+            else
+            {
+                atan = PIBY2_FLOAT - z/(z*z + 0.28f);
+                if ( y < 0.0f ) return atan - PI_FLOAT;
+            }
+            return atan;
 		}
 	}
 }

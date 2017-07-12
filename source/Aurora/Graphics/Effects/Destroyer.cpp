@@ -53,206 +53,211 @@ namespace Aurora
 
 			BoundingBox modelBox = crft->blockTypes[blockId].collideBox;
 
-            if(stad != -1)
+            int temp = stad;
+            if(stad == -1)
             {
-                // left
-
-                boxVertices[i].x = modelBox.min.x -size;
-                boxVertices[i].y = modelBox.min.y -size;
-                boxVertices[i].z = modelBox.max.z +size;
-                boxVertices[i].u = stad/16.0f + (0.5+modelBox.max.z)*pixel;
-                boxVertices[i].v = 1-(0.5+modelBox.min.y)*pixel;
-                i++;
-
-                boxVertices[i].x = modelBox.min.x -size;
-                boxVertices[i].y = modelBox.max.y +size;
-                boxVertices[i].z = modelBox.max.z +size;
-                boxVertices[i].u = stad/16.0f + (0.5+modelBox.max.z)*pixel;
-                boxVertices[i].v = 1-(0.5+modelBox.max.y)*pixel;
-                i++;
-
-                boxVertices[i].x = modelBox.min.x -size;
-                boxVertices[i].y = modelBox.max.y +size;
-                boxVertices[i].z = modelBox.min.z -size;
-                boxVertices[i].u = stad/16.0f + (0.5+modelBox.min.z)*pixel;
-                boxVertices[i].v = 1-(0.5+modelBox.max.y)*pixel;
-                i++;
-
-                boxVertices[i].x = modelBox.min.x -size;
-                boxVertices[i].y = modelBox.min.y -size;
-                boxVertices[i].z = modelBox.min.z -size;
-                boxVertices[i].u = stad/16.0f + (0.5+modelBox.min.z)*pixel;
-                boxVertices[i].v = 1-(0.5+modelBox.min.y)*pixel;
-                i++;
-
-                sceKernelDcacheWritebackInvalidateRange(boxVertices,4 * sizeof(TexturesPSPVertex));
-
-                // right
-                i = 0;
-
-                boxVertices2[i].x = modelBox.max.x +size;
-                boxVertices2[i].y = modelBox.min.y -size;
-                boxVertices2[i].z = modelBox.min.z -size;
-                boxVertices2[i].u = stad/16.0f + (0.5+modelBox.max.z)*pixel;
-                boxVertices2[i].v = 1-(0.5+modelBox.min.y)*pixel;
-                i++;
-
-                boxVertices2[i].x = modelBox.max.x +size;
-                boxVertices2[i].y = modelBox.max.y +size;
-                boxVertices2[i].z = modelBox.min.z -size;
-                boxVertices2[i].u = stad/16.0f + (0.5+modelBox.max.z)*pixel;
-                boxVertices2[i].v = 1-(0.5+modelBox.max.y)*pixel;
-                i++;
-
-                boxVertices2[i].x = modelBox.max.x +size;
-                boxVertices2[i].y = modelBox.max.y +size;
-                boxVertices2[i].z = modelBox.max.z +size;
-                boxVertices2[i].u = stad/16.0f + (0.5+modelBox.min.z)*pixel;
-                boxVertices2[i].v = 1-(0.5+modelBox.max.y)*pixel;
-                i++;
-
-                boxVertices2[i].x = modelBox.max.x +size;
-                boxVertices2[i].y = modelBox.min.y -size;
-                boxVertices2[i].z = modelBox.max.z +size;
-                boxVertices2[i].u = stad/16.0f + (0.5+modelBox.min.z)*pixel;
-                boxVertices2[i].v = 1-(0.5+modelBox.min.y)*pixel;
-                i++;
-
-                sceKernelDcacheWritebackInvalidateRange(boxVertices2,4 * sizeof(TexturesPSPVertex));
-
-                // back
-                i = 0;
-
-                boxVertices3[i].x = modelBox.min.x -size;
-                boxVertices3[i].y = modelBox.max.y +size;
-                boxVertices3[i].z = modelBox.min.z -size;
-                boxVertices3[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
-                boxVertices3[i].v = 1-(0.5+modelBox.max.y)*pixel;
-                i++;
-
-                boxVertices3[i].x = modelBox.max.x +size;
-                boxVertices3[i].y = modelBox.max.y +size;
-                boxVertices3[i].z = modelBox.min.z -size;
-                boxVertices3[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
-                boxVertices3[i].v = 1-(0.5+modelBox.max.y)*pixel;
-                i++;
-
-                boxVertices3[i].x = modelBox.max.x +size;
-                boxVertices3[i].y = modelBox.min.y -size;
-                boxVertices3[i].z = modelBox.min.z -size;
-                boxVertices3[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
-                boxVertices3[i].v = 1-(0.5+modelBox.min.y)*pixel;
-                i++;
-
-                boxVertices3[i].x = modelBox.min.x -size;
-                boxVertices3[i].y = modelBox.min.y -size;
-                boxVertices3[i].z = modelBox.min.z -size;
-                boxVertices3[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
-                boxVertices3[i].v = 1-(0.5+modelBox.min.y)*pixel;
-                i++;
-
-                sceKernelDcacheWritebackInvalidateRange(boxVertices3,4 * sizeof(TexturesPSPVertex));
-
-                //front
-                i = 0;
-
-                boxVertices4[i].x = modelBox.min.x -size;
-                boxVertices4[i].y = modelBox.min.y -size;
-                boxVertices4[i].z = modelBox.max.z +size;
-                boxVertices4[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
-                boxVertices4[i].v = 1-(0.5+modelBox.min.y)*pixel;
-                i++;
-
-                boxVertices4[i].x = modelBox.max.x +size;
-                boxVertices4[i].y = modelBox.min.y -size;
-                boxVertices4[i].z = modelBox.max.z +size;
-                boxVertices4[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
-                boxVertices4[i].v = 1-(0.5+modelBox.min.y)*pixel;
-                i++;
-
-                boxVertices4[i].x = modelBox.max.x +size;
-                boxVertices4[i].y = modelBox.max.y +size;
-                boxVertices4[i].z = modelBox.max.z +size;
-                boxVertices4[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
-                boxVertices4[i].v = 1-(0.5+modelBox.max.y)*pixel;
-                i++;
-
-                boxVertices4[i].x = modelBox.min.x -size;
-                boxVertices4[i].y = modelBox.max.y +size;
-                boxVertices4[i].z = modelBox.max.z +size;
-                boxVertices4[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
-                boxVertices4[i].v = 1-(0.5+modelBox.max.y)*pixel;
-                i++;
-
-                sceKernelDcacheWritebackInvalidateRange(boxVertices4,4 * sizeof(TexturesPSPVertex));
-
-                // bot
-                i = 0;
-
-                boxVertices5[i].x = modelBox.min.x -size;
-                boxVertices5[i].y = modelBox.min.y -size;
-                boxVertices5[i].z = modelBox.min.z -size;
-                boxVertices5[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
-                boxVertices5[i].v = 1-(0.5+modelBox.max.z)*pixel;
-                i++;
-
-                boxVertices5[i].x = modelBox.max.x +size;
-                boxVertices5[i].y = modelBox.min.y -size;
-                boxVertices5[i].z = modelBox.min.z -size;
-                boxVertices5[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
-                boxVertices5[i].v = 1-(0.5+modelBox.max.z)*pixel;
-                i++;
-
-                boxVertices5[i].x = modelBox.max.x +size;
-                boxVertices5[i].y = modelBox.min.y -size;
-                boxVertices5[i].z = modelBox.max.z +size;
-                boxVertices5[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
-                boxVertices5[i].v = 1-(0.5+modelBox.min.z)*pixel;
-                i++;
-
-                boxVertices5[i].x = modelBox.min.x -size;
-                boxVertices5[i].y = modelBox.min.y -size;
-                boxVertices5[i].z = modelBox.max.z +size;
-                boxVertices5[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
-                boxVertices5[i].v = 1-(0.5+modelBox.min.z)*pixel;
-                i++;
-
-                sceKernelDcacheWritebackInvalidateRange(boxVertices5,4 * sizeof(TexturesPSPVertex));
-
-                // top
-                i = 0;
-
-                boxVertices6[i].x = modelBox.min.x -size;
-                boxVertices6[i].y = modelBox.max.y +size;
-                boxVertices6[i].z = modelBox.max.z +size;
-                boxVertices6[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
-                boxVertices6[i].v = 1-(0.5+modelBox.max.z)*pixel;
-                i++;
-
-                boxVertices6[i].x = modelBox.max.x +size;
-                boxVertices6[i].y = modelBox.max.y +size;
-                boxVertices6[i].z = modelBox.max.z +size;
-                boxVertices6[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
-                boxVertices6[i].v = 1-(0.5+modelBox.max.z)*pixel;
-                i++;
-
-                boxVertices6[i].x = modelBox.max.x +size;
-                boxVertices6[i].y = modelBox.max.y +size;
-                boxVertices6[i].z = modelBox.min.z -size;
-                boxVertices6[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
-                boxVertices6[i].v = 1-(0.5+modelBox.min.z)*pixel;
-                i++;
-
-                boxVertices6[i].x = modelBox.min.x -size;
-                boxVertices6[i].y = modelBox.max.y +size;
-                boxVertices6[i].z = modelBox.min.z -size;
-                boxVertices6[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
-                boxVertices6[i].v = 1-(0.5+modelBox.min.z)*pixel;
-                i++;
-
-                sceKernelDcacheWritebackInvalidateRange(boxVertices6,4 * sizeof(TexturesPSPVertex));
+                stad = 10;
             }
-            else
+            // left
+
+            boxVertices[i].x = modelBox.min.x -size;
+            boxVertices[i].y = modelBox.min.y -size;
+            boxVertices[i].z = modelBox.max.z +size;
+            boxVertices[i].u = stad/16.0f + (0.5+modelBox.max.z)*pixel;
+            boxVertices[i].v = 1-(0.5+modelBox.min.y)*pixel;
+            i++;
+
+            boxVertices[i].x = modelBox.min.x -size;
+            boxVertices[i].y = modelBox.max.y +size;
+            boxVertices[i].z = modelBox.max.z +size;
+            boxVertices[i].u = stad/16.0f + (0.5+modelBox.max.z)*pixel;
+            boxVertices[i].v = 1-(0.5+modelBox.max.y)*pixel;
+            i++;
+
+            boxVertices[i].x = modelBox.min.x -size;
+            boxVertices[i].y = modelBox.max.y +size;
+            boxVertices[i].z = modelBox.min.z -size;
+            boxVertices[i].u = stad/16.0f + (0.5+modelBox.min.z)*pixel;
+            boxVertices[i].v = 1-(0.5+modelBox.max.y)*pixel;
+            i++;
+
+            boxVertices[i].x = modelBox.min.x -size;
+            boxVertices[i].y = modelBox.min.y -size;
+            boxVertices[i].z = modelBox.min.z -size;
+            boxVertices[i].u = stad/16.0f + (0.5+modelBox.min.z)*pixel;
+            boxVertices[i].v = 1-(0.5+modelBox.min.y)*pixel;
+            i++;
+
+            sceKernelDcacheWritebackInvalidateRange(boxVertices,4 * sizeof(TexturesPSPVertex));
+
+            // right
+            i = 0;
+
+            boxVertices2[i].x = modelBox.max.x +size;
+            boxVertices2[i].y = modelBox.min.y -size;
+            boxVertices2[i].z = modelBox.min.z -size;
+            boxVertices2[i].u = stad/16.0f + (0.5+modelBox.max.z)*pixel;
+            boxVertices2[i].v = 1-(0.5+modelBox.min.y)*pixel;
+            i++;
+
+            boxVertices2[i].x = modelBox.max.x +size;
+            boxVertices2[i].y = modelBox.max.y +size;
+            boxVertices2[i].z = modelBox.min.z -size;
+            boxVertices2[i].u = stad/16.0f + (0.5+modelBox.max.z)*pixel;
+            boxVertices2[i].v = 1-(0.5+modelBox.max.y)*pixel;
+            i++;
+
+            boxVertices2[i].x = modelBox.max.x +size;
+            boxVertices2[i].y = modelBox.max.y +size;
+            boxVertices2[i].z = modelBox.max.z +size;
+            boxVertices2[i].u = stad/16.0f + (0.5+modelBox.min.z)*pixel;
+            boxVertices2[i].v = 1-(0.5+modelBox.max.y)*pixel;
+            i++;
+
+            boxVertices2[i].x = modelBox.max.x +size;
+            boxVertices2[i].y = modelBox.min.y -size;
+            boxVertices2[i].z = modelBox.max.z +size;
+            boxVertices2[i].u = stad/16.0f + (0.5+modelBox.min.z)*pixel;
+            boxVertices2[i].v = 1-(0.5+modelBox.min.y)*pixel;
+            i++;
+
+            sceKernelDcacheWritebackInvalidateRange(boxVertices2,4 * sizeof(TexturesPSPVertex));
+
+            // back
+            i = 0;
+
+            boxVertices3[i].x = modelBox.min.x -size;
+            boxVertices3[i].y = modelBox.max.y +size;
+            boxVertices3[i].z = modelBox.min.z -size;
+            boxVertices3[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
+            boxVertices3[i].v = 1-(0.5+modelBox.max.y)*pixel;
+            i++;
+
+            boxVertices3[i].x = modelBox.max.x +size;
+            boxVertices3[i].y = modelBox.max.y +size;
+            boxVertices3[i].z = modelBox.min.z -size;
+            boxVertices3[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
+            boxVertices3[i].v = 1-(0.5+modelBox.max.y)*pixel;
+            i++;
+
+            boxVertices3[i].x = modelBox.max.x +size;
+            boxVertices3[i].y = modelBox.min.y -size;
+            boxVertices3[i].z = modelBox.min.z -size;
+            boxVertices3[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
+            boxVertices3[i].v = 1-(0.5+modelBox.min.y)*pixel;
+            i++;
+
+            boxVertices3[i].x = modelBox.min.x -size;
+            boxVertices3[i].y = modelBox.min.y -size;
+            boxVertices3[i].z = modelBox.min.z -size;
+            boxVertices3[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
+            boxVertices3[i].v = 1-(0.5+modelBox.min.y)*pixel;
+            i++;
+
+            sceKernelDcacheWritebackInvalidateRange(boxVertices3,4 * sizeof(TexturesPSPVertex));
+
+            //front
+            i = 0;
+
+            boxVertices4[i].x = modelBox.min.x -size;
+            boxVertices4[i].y = modelBox.min.y -size;
+            boxVertices4[i].z = modelBox.max.z +size;
+            boxVertices4[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
+            boxVertices4[i].v = 1-(0.5+modelBox.min.y)*pixel;
+            i++;
+
+            boxVertices4[i].x = modelBox.max.x +size;
+            boxVertices4[i].y = modelBox.min.y -size;
+            boxVertices4[i].z = modelBox.max.z +size;
+            boxVertices4[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
+            boxVertices4[i].v = 1-(0.5+modelBox.min.y)*pixel;
+            i++;
+
+            boxVertices4[i].x = modelBox.max.x +size;
+            boxVertices4[i].y = modelBox.max.y +size;
+            boxVertices4[i].z = modelBox.max.z +size;
+            boxVertices4[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
+            boxVertices4[i].v = 1-(0.5+modelBox.max.y)*pixel;
+            i++;
+
+            boxVertices4[i].x = modelBox.min.x -size;
+            boxVertices4[i].y = modelBox.max.y +size;
+            boxVertices4[i].z = modelBox.max.z +size;
+            boxVertices4[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
+            boxVertices4[i].v = 1-(0.5+modelBox.max.y)*pixel;
+            i++;
+
+            sceKernelDcacheWritebackInvalidateRange(boxVertices4,4 * sizeof(TexturesPSPVertex));
+
+            // bot
+            i = 0;
+
+            boxVertices5[i].x = modelBox.min.x -size;
+            boxVertices5[i].y = modelBox.min.y -size;
+            boxVertices5[i].z = modelBox.min.z -size;
+            boxVertices5[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
+            boxVertices5[i].v = 1-(0.5+modelBox.max.z)*pixel;
+            i++;
+
+            boxVertices5[i].x = modelBox.max.x +size;
+            boxVertices5[i].y = modelBox.min.y -size;
+            boxVertices5[i].z = modelBox.min.z -size;
+            boxVertices5[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
+            boxVertices5[i].v = 1-(0.5+modelBox.max.z)*pixel;
+            i++;
+
+            boxVertices5[i].x = modelBox.max.x +size;
+            boxVertices5[i].y = modelBox.min.y -size;
+            boxVertices5[i].z = modelBox.max.z +size;
+            boxVertices5[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
+            boxVertices5[i].v = 1-(0.5+modelBox.min.z)*pixel;
+            i++;
+
+            boxVertices5[i].x = modelBox.min.x -size;
+            boxVertices5[i].y = modelBox.min.y -size;
+            boxVertices5[i].z = modelBox.max.z +size;
+            boxVertices5[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
+            boxVertices5[i].v = 1-(0.5+modelBox.min.z)*pixel;
+            i++;
+
+            sceKernelDcacheWritebackInvalidateRange(boxVertices5,4 * sizeof(TexturesPSPVertex));
+
+            // top
+            i = 0;
+
+            boxVertices6[i].x = modelBox.min.x -size;
+            boxVertices6[i].y = modelBox.max.y +size;
+            boxVertices6[i].z = modelBox.max.z +size;
+            boxVertices6[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
+            boxVertices6[i].v = 1-(0.5+modelBox.max.z)*pixel;
+            i++;
+
+            boxVertices6[i].x = modelBox.max.x +size;
+            boxVertices6[i].y = modelBox.max.y +size;
+            boxVertices6[i].z = modelBox.max.z +size;
+            boxVertices6[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
+            boxVertices6[i].v = 1-(0.5+modelBox.max.z)*pixel;
+            i++;
+
+            boxVertices6[i].x = modelBox.max.x +size;
+            boxVertices6[i].y = modelBox.max.y +size;
+            boxVertices6[i].z = modelBox.min.z -size;
+            boxVertices6[i].u = stad/16.0f + (0.5+modelBox.max.x)*pixel;
+            boxVertices6[i].v = 1-(0.5+modelBox.min.z)*pixel;
+            i++;
+
+            boxVertices6[i].x = modelBox.min.x -size;
+            boxVertices6[i].y = modelBox.max.y +size;
+            boxVertices6[i].z = modelBox.min.z -size;
+            boxVertices6[i].u = stad/16.0f + (0.5+modelBox.min.x)*pixel;
+            boxVertices6[i].v = 1-(0.5+modelBox.min.z)*pixel;
+            i++;
+
+            sceKernelDcacheWritebackInvalidateRange(boxVertices6,4 * sizeof(TexturesPSPVertex));
+
+            stad = temp;
+
+           /* else
             {
                 // left
                 i = 0;
@@ -353,13 +358,13 @@ namespace Aurora
                 i++;
 
                 sceKernelDcacheWritebackInvalidateRange(boxVertices16,4 * sizeof(SimplePSPVertex2));
-            }
+            }*/
 		}
 
 		void Destroyer::Render(float stad)
 		{
-		    if(stad != -1)
-            {
+		    //if(stad != -1)
+            //{
                 sceGuEnable(GU_TEXTURE_2D);
                 sceGuBlendFunc(GU_ADD, GU_DST_COLOR, GU_SRC_COLOR, 0xFFFFFFFF,0xFFFFFFFF);
                 sceGuDepthMask(1);
@@ -376,10 +381,10 @@ namespace Aurora
                 sceGuDepthMask(0);
                 sceGuBlendFunc(GU_ADD, GU_SRC_ALPHA, GU_ONE_MINUS_SRC_ALPHA, 0, 0);
                 sceGuDisable(GU_TEXTURE_2D);
-            }
-            else
-            {
-                sceGuColor(GU_COLOR(0.0,0.0,0.0,0.5f));
+            //}
+            //else
+            //{
+                /*sceGuColor(GU_COLOR(0.0,0.0,0.0,0.5f));
                 sceGuDisable(GU_TEXTURE_2D);
                 sceGuShadeModel(GU_FLAT);
 
@@ -393,8 +398,8 @@ namespace Aurora
 
                 sceGuShadeModel(GU_SMOOTH);
                 sceGuDepthOffset(0);
-                sceGuDepthMask(0);
-            }
+                sceGuDepthMask(0);*/
+            //}
 		}
 	}
 }

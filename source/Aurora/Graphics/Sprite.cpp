@@ -326,6 +326,22 @@ namespace Aurora
 			sceGumPopMatrix();
 		}
 
+        void Sprite::DrawLinear()
+		{
+			sceGumPushMatrix();
+
+			ScePspFVector3 loc = {posX,posY,0.0f};
+			sceGumTranslate(&loc);
+
+			sceGuEnable(GU_TEXTURE_2D);
+			TextureManager::Instance()->SetTexture(imageNumber,GU_LINEAR,GU_LINEAR);
+
+			sceGumDrawArray(GU_TRIANGLE_STRIP,GU_TEXTURE_32BITF|GU_VERTEX_32BITF|GU_TRANSFORM_3D, 4, 0, vertices);
+
+			sceGuDisable(GU_TEXTURE_2D);
+			sceGumPopMatrix();
+		}
+
         void Sprite::ConstDraw()
 		{
 			sceGumPushMatrix();

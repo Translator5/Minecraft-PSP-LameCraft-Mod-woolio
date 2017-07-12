@@ -138,10 +138,11 @@ namespace Aurora
 
                 SetScale(0.13f,0.18f);
                 SetGravity(0.0f);
-                SetFramesAmount(2);
-                SetBrightness(1.0f, 1.0f);
+                SetBrightness(1.0f);
 
                 velocity = Vector3(0,0.0f,0);
+
+                totalFrames = 1;
             }
             if(name == "bubble")
             {
@@ -323,10 +324,22 @@ namespace Aurora
 		    float texturePixel = (float)1.0f/256.0f;
             float percent = (float)1.0f/16.0f;
 
+            int tex_x, tex_y;
+            if(crtf->mainOptions.fastRendering == true && (blockId == LeavesBlock::getID() || blockId == BirchLeaves::getID() || blockId == SpruceLeaves::getID()))
+            {
+                tex_x = crtf->blockTypes[blockId].downPlane_x+1;
+                tex_y = crtf->blockTypes[blockId].downPlane_y;
+            }
+            else
+            {
+                tex_x = crtf->blockTypes[blockId].downPlane_x;
+                tex_y = crtf->blockTypes[blockId].downPlane_y;
+            }
+
             if(varf1 == -1.0f)
             {
-                varf1 = crtf->blockTypes[blockId].downPlane_y * percent + (rand() % 12)*texturePixel + texturePixel*0.5f;
-                varf2 = crtf->blockTypes[blockId].downPlane_x * percent + (rand() % 12)*texturePixel + texturePixel*0.5f;
+                varf1 = tex_y * percent + (rand() % 12)*texturePixel + texturePixel*0.5f;
+                varf2 = tex_x * percent + (rand() % 12)*texturePixel + texturePixel*0.5f;
             }
             float texCordY = varf1;
             float texScaleY = texturePixel*4 + texturePixel*0.5f;

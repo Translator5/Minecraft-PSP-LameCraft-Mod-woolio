@@ -28,15 +28,15 @@ namespace Aurora
 
 			skyVertices[i].x = vfpu_sinf((sun_angle/180)*PI)*r;// * stepScale;
 			skyVertices[i].y = vfpu_cosf(((sun_angle)/180)*PI)*-r;// * stepScale;
-			skyVertices[i].z = -250;// * stepScale;
+			skyVertices[i].z = -250*0.9f;// * stepScale;
 			skyVertices[i].u = 0.f;// * textureScale;
 			skyVertices[i].v = 0.f;// * textureScale;
 			i++;
 
 			// (x, y - 1, z)
-			skyVertices[i].x = vfpu_sinf(((sun_angle-45)/180)*PI)*r;// * stepScale;
-			skyVertices[i].y = vfpu_cosf(((sun_angle-45)/180)*PI)*-r;// * stepScale;
-			skyVertices[i].z = -250;// * stepScale;
+			skyVertices[i].x = vfpu_sinf(((sun_angle-45*0.9f)/180)*PI)*r;// * stepScale;
+			skyVertices[i].y = vfpu_cosf(((sun_angle-45*0.9f)/180)*PI)*-r;// * stepScale;
+			skyVertices[i].z = -250*0.9f;// * stepScale;
 			skyVertices[i].u = 0.f;// * textureScale;
 			skyVertices[i].v = 1.f;// * textureScale;
 			i++;
@@ -44,15 +44,15 @@ namespace Aurora
 			// (x + 1, y, z)
 			skyVertices[i].x = vfpu_sinf((sun_angle/180)*PI)*r;// * stepScale;
 			skyVertices[i].y = vfpu_cosf((sun_angle/180)*PI)*-r;// * stepScale;
-			skyVertices[i].z = 250;// * stepScale;
+			skyVertices[i].z = 250*0.9f;// * stepScale;
 			skyVertices[i].u = 1.f;// * textureScale;
 			skyVertices[i].v = 0.f;// * textureScale;
 			i++;
 
 			// (x + 1, y - 1, z)
-			skyVertices[i].x = vfpu_sinf(((sun_angle-45)/180)*PI)*r;// * stepScale;
-			skyVertices[i].y = vfpu_cosf(((sun_angle-45)/180)*PI)*-r;// * stepScale;
-			skyVertices[i].z = 250;// * stepScale;
+			skyVertices[i].x = vfpu_sinf(((sun_angle-45*0.9f)/180)*PI)*r;// * stepScale;
+			skyVertices[i].y = vfpu_cosf(((sun_angle-45*0.9f)/180)*PI)*-r;// * stepScale;
+			skyVertices[i].z = 250*0.9f;// * stepScale;
 			skyVertices[i].u = 1.f;// * textureScale;
 			skyVertices[i].v = 1.f;// * textureScale;
 

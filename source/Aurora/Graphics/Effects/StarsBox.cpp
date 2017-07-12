@@ -17,7 +17,7 @@ namespace Aurora
 			boxVertices5 = (TexturesPSPVertex*)memalign(16,4 * sizeof(TexturesPSPVertex));
 			boxVertices6 = (TexturesPSPVertex*)memalign(16,4 * sizeof(TexturesPSPVertex));
 
-			size = 0.85f;
+			size = 0.95f;
 
 			Build();
 		}
@@ -245,6 +245,7 @@ namespace Aurora
 
 		    sceGuColor(GU_COLOR(alpha,alpha,alpha,alpha));
 			sceGuEnable(GU_TEXTURE_2D);
+			sceGuTexScale(0.85f,0.85f);
             sceGuEnable(GU_BLEND);
 			sceGuDisable(GU_DEPTH_TEST);
 			sceGuDepthMask(GU_TRUE);
@@ -264,6 +265,7 @@ namespace Aurora
             sceGuEnable(GU_DEPTH_TEST);
 			//sceGuDisable(GU_TEXTURE_2D);
 			sceGuDisable(GU_BLEND);
+			sceGuTexScale(1.0f,1.0f);
 			sceGuDisable(GU_TEXTURE_2D);
 			sceGuColor(GU_COLOR(1.0,1.0,1.0,1.0));
 		}

@@ -58,12 +58,92 @@ void TNT::ActivateOtherTNTs()
                         float distance = (myWorld->FastDistance2d(abs(position.x-TestTNT2->position.x)*10,abs(position.z-TestTNT2->position.z)*10))/10.0f+abs(position.y-TestTNT2->position.y);
                         if(distance <= 4.0f && distance >= 0.0f)
                         {
-                            float angle2 = atan2f(position.x-(TestTNT2->position.x), position.z-(TestTNT2->position.z))+PI;
+                            float angle2 = ATAN2_fast(position.x-(TestTNT2->position.x), position.z-(TestTNT2->position.z))+PI;
 
                             TestTNT2->velocity.x += sinf(angle2)*(7.5f-distance)*(7.5f-distance);
                             TestTNT2->velocity.z += cosf(angle2)*(7.5f-distance)*(7.5f-distance);
                             TestTNT2->velocity.y += ((TestTNT2->position.y-position.y)/2.5f)*(6.5f-distance)*(6.5f-distance);
                         }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void TNT::HurtNearbyMobs(float dt)
+{
+    if(myWorld->mZombies.empty() == false)
+    {
+        for(unsigned int j = 0; j < myWorld->mZombies.size(); j++)
+        {
+            if(j < myWorld->mZombies.size())
+            {
+                Zombie* TestMob = myWorld->mZombies[j];
+                if(TestMob != NULL)
+                {
+                    float dist = myWorld->FastDistance2d(abs(position.x-TestMob->position.x)*10,abs(position.z-TestMob->position.z)*10)/10.0f + abs(position.y-(TestMob->position.y-0.7))/2.0f;
+
+                    if(dist < 5.3f)
+                    {
+                        TestMob->TakeDamageFromPointExplosion(30-(dist*4.7),0.75,dt,position);
+                    }
+                }
+            }
+        }
+    }
+    if(myWorld->mCreepers.empty() == false)
+    {
+        for(unsigned int j = 0; j < myWorld->mCreepers.size(); j++)
+        {
+            if(j < myWorld->mCreepers.size())
+            {
+                Creeper* TestMob = myWorld->mCreepers[j];
+                if(TestMob != NULL)
+                {
+                    float dist = myWorld->FastDistance2d(abs(position.x-TestMob->position.x)*10,abs(position.z-TestMob->position.z)*10)/10.0f + abs(position.y-(TestMob->position.y-0.7))/2.0f;
+
+                    if(dist < 5.3f)
+                    {
+                        TestMob->TakeDamageFromPointExplosion(30-(dist*4.7),0.75,dt,position);
+                    }
+                }
+            }
+        }
+    }
+    if(myWorld->mCows.empty() == false)
+    {
+        for(unsigned int j = 0; j < myWorld->mCows.size(); j++)
+        {
+            if(j < myWorld->mCows.size())
+            {
+                Cow* TestMob = myWorld->mCows[j];
+                if(TestMob != NULL)
+                {
+                    float dist = myWorld->FastDistance2d(abs(position.x-TestMob->position.x)*10,abs(position.z-TestMob->position.z)*10)/10.0f + abs(position.y-(TestMob->position.y-0.7))/2.0f;
+
+                    if(dist < 5.3f)
+                    {
+                        TestMob->TakeDamageFromPointExplosion(30-(dist*4.7),0.75,dt,position);
+                    }
+                }
+            }
+        }
+    }
+    if(myWorld->mSheeps.empty() == false)
+    {
+        for(unsigned int j = 0; j < myWorld->mSheeps.size(); j++)
+        {
+            if(j < myWorld->mSheeps.size())
+            {
+                Sheep* TestMob = myWorld->mSheeps[j];
+                if(TestMob != NULL)
+                {
+                    float dist = myWorld->FastDistance2d(abs(position.x-TestMob->position.x)*10,abs(position.z-TestMob->position.z)*10)/10.0f + abs(position.y-(TestMob->position.y-0.7))/2.0f;
+
+                    if(dist < 5.3f)
+                    {
+                        TestMob->TakeDamageFromPointExplosion(30-(dist*4.7),0.75,dt,position);
                     }
                 }
             }
@@ -172,13 +252,14 @@ void TNT::Update(float dt)
     if(timeToExplode <= 0.0f && toDestroy == false) // if our time has ended
     {
         ActivateOtherTNTs();
+        HurtNearbyMobs(dt);
 
         float dist = myWorld->FastDistance2d(abs(position.x-myWorld->playerPos.x)*10,abs(position.z-myWorld->playerPos.z)*10)/10.0f + abs(position.y-(myWorld->playerPos.y-0.7))/2.0f;
 
         if(dist < 5.3f)
         {
             myWorld->kickedStart = true;
-            myWorld->kickedAngle = atan2f(position.x-myWorld->playerPos.x,position.z-myWorld->playerPos.z);
+            myWorld->kickedAngle = ATAN2_fast(position.x-myWorld->playerPos.x,position.z-myWorld->playerPos.z);
             myWorld->kickedBy = 2;
             myWorld->kickedDamage = 32-(dist*5.6);
         }
