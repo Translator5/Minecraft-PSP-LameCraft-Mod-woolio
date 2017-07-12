@@ -98,30 +98,19 @@ namespace Aurora
                 {
                     world->ItemHaveTerrainTexture(handItemId) == true ? TextureManager::Instance()->SetTextureModeulate(world->textureTerrainId) : TextureManager::Instance()->SetTextureModeulate(world->textureItemsId);
 
-                    if(handItemId <= 276)
-                    {
-                        ScePspFVector3 loc40 = {-PIXEL*4.7f,PIXEL*6.9,-PIXEL*5.625};
-                        sceGumTranslate(&loc40);
+                    ScePspFVector3 loc40 = {-PIXEL*5.0f,PIXEL*7.3,0};
+                    sceGumTranslate(&loc40);
 
-                        sceGumRotateX(0.0f);
-                        sceGumRotateY(0.0f);
-                        sceGumRotateZ(-PI*0.2f);
+                    /*sceGumRotateX(PI/6.5f);
+                    sceGumRotateY(PI/2.0f);
+                    sceGumRotateZ(PI/6.5f); */
 
-                        ScePspFVector3 scale = {0.75,0.75,0.75};
-                        sceGumScale(&scale);
-                    }
-                    else
-                    {
-                        ScePspFVector3 loc40 = {-PIXEL*7.4f,PIXEL*7.0,-PIXEL};
-                        sceGumTranslate(&loc40);
+                    sceGumRotateZ(-PI/3.5f);
+                    sceGumRotateY(PI/2.0f);
+                    sceGumRotateX(0.18f);
 
-                        sceGumRotateX(PI/6.5f);
-                        sceGumRotateY(PI/2.0f);
-                        sceGumRotateZ(PI/6.5f);
-
-                        ScePspFVector3 scale = {0.53,0.53,0.53};
-                        sceGumScale(&scale);
-                    }
+                    ScePspFVector3 scale = {0.53,0.53,0.53};
+                    sceGumScale(&scale);
 
                     world->drawFull3DItem(handItemId,1.0f);
                 }
@@ -282,6 +271,48 @@ namespace Aurora
                 sceGumPopMatrix();
             }
 
+            // belly
+            if(world->armorId[2] != 326)
+            {
+                sceGumPushMatrix();
+                ScePspFVector3 loc14 = {0,0,0};
+                sceGumTranslate(&loc14);
+
+                sceGumRotateX(0.0f);
+                sceGumRotateY(0.0f);
+                sceGumRotateZ(0.0f);
+
+                world->drawBelly(world->armorId[2],1.0f);
+                sceGumPopMatrix();
+            }
+
+
+            // helmet
+            if(world->armorId[0] != 324)
+            {
+                sceGumPushMatrix();
+                ScePspFVector3 loc7 = {0,PIXEL*10,0};
+                sceGumTranslate(&loc7);
+
+                sceGumRotateX(0.0f);
+                sceGumRotateY(0.0f);
+                sceGumRotateZ(0.0f);
+
+                if(world->armorId[0] == Pumpkin3::getID())
+                {
+                    ScePspFVector3 sca = {0.6f,0.6f,0.6f};
+                    sceGumScale(&sca);
+                    TextureManager::Instance()->SetTextureModeulate(TextureHelper::Instance()->GetTexture(TextureHelper::Terrain1));
+                    world->drawCubes(Pumpkin2::getID(),1.0f);
+                }
+                else
+                {
+                    world->drawArmor(world->armorId[0],1.0f);
+                }
+
+                sceGumPopMatrix();
+            }
+
 
             // chestplate
             if(world->armorId[1] != 325)
@@ -325,33 +356,6 @@ namespace Aurora
                 }
 
                 world->drawShoulder(world->armorId[1],1.0f);
-                sceGumPopMatrix();
-            }
-
-
-            // helmet
-            if(world->armorId[0] != 324)
-            {
-                sceGumPushMatrix();
-                ScePspFVector3 loc7 = {0,PIXEL*10,0};
-                sceGumTranslate(&loc7);
-
-                sceGumRotateX(0.0f);
-                sceGumRotateY(0.0f);
-                sceGumRotateZ(0.0f);
-
-                if(world->armorId[0] == Pumpkin3::getID())
-                {
-                    ScePspFVector3 sca = {0.6f,0.6f,0.6f};
-                    sceGumScale(&sca);
-                    TextureManager::Instance()->SetTextureModeulate(TextureHelper::Instance()->GetTexture(TextureHelper::Terrain1));
-                    world->drawCubes(Pumpkin2::getID(),1.0f);
-                }
-                else
-                {
-                    world->drawArmor(world->armorId[0],1.0f);
-                }
-
                 sceGumPopMatrix();
             }
 

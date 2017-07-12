@@ -139,6 +139,7 @@ namespace Aurora
 
 		void TextureManager::SetTextureModeulate(int number)
 		{
+
 			if(currentTexture != number)
 			{
 				Image *image = Images[number];
@@ -180,6 +181,35 @@ namespace Aurora
 				sceGuTexImage(1,mip1->power2Width,mip1->power2Height,mip1->power2Width,mip1->ImageData);
 				sceGuTexImage(2,mip2->power2Width,mip2->power2Height,mip2->power2Width,mip2->ImageData);
 				sceGuTexImage(3,mip3->power2Width,mip3->power2Height,mip3->power2Width,mip3->ImageData);
+
+				currentTexture = texture;
+			}
+		}
+
+        void TextureManager::SetMipMaps2Textures(int texture,int mipmap1)
+		{
+			if(currentTexture != texture)
+			{
+				Image *image = Images[texture];
+				Image *mip1 = Images[mipmap1];
+
+				/*sceGuTexMode(image->ColorMode,3,0,1);
+				sceGuTexFunc(GU_TFX_REPLACE,GU_TCC_RGBA);
+				sceGuTexOffset( 0.0f, 0.0f );
+				sceGuTexWrap(GU_REPEAT,GU_REPEAT);
+				sceGuTexLevelMode(GU_TEXTURE_AUTO,0.0f);
+				sceGuTexFilter(GU_LINEAR_MIPMAP_LINEAR,GU_LINEAR); */
+
+                sceGuTexMode(image->ColorMode,2,0,image->Swizzle);
+				sceGuTexFunc(GU_TFX_MODULATE,GU_TCC_RGBA);
+				sceGuTexOffset( 0.0f, 0.0f );
+				sceGuTexWrap(GU_CLAMP,GU_CLAMP);
+				sceGuTexLevelMode(GU_TEXTURE_AUTO,0.0f);
+				sceGuTexFilter(GU_NEAREST_MIPMAP_NEAREST,GU_NEAREST);
+
+				sceGuTexImage(0,image->power2Width,image->power2Height,image->power2Width,image->ImageData);
+				sceGuTexImage(1,image->power2Width,image->power2Height,image->power2Width,image->ImageData);
+				sceGuTexImage(2,mip1->power2Width,mip1->power2Height,mip1->power2Width,mip1->ImageData);
 
 				currentTexture = texture;
 			}

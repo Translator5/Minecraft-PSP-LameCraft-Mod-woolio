@@ -513,7 +513,8 @@ namespace Aurora
 		void RenderManager::TakeNextScreenshot()
 		{
 			char name[20];
-			sprintf(name,"Screenshots/screen%d.png",screenNumber);
+			//sprintf(name,"Screenshots/screen%d.png",screenNumber);
+			sprintf(name,"ms0:/PICTURE/screen%d.png",screenNumber);
 			TakeScreenshot(name);
 			screenNumber++;
 		}

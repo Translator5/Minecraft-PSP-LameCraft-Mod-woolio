@@ -10,6 +10,7 @@ namespace Aurora
 	{
 		SkyBox::SkyBox()
 		{
+		    vertsNum = 0;
             BuildVertexObject();
 		}
 
@@ -20,6 +21,18 @@ namespace Aurora
 
 		void SkyBox::BuildVertexObject()
 		{
+		    bool skyBoxMatrix[11*14] = {0,0,0,0,1,1,1,1,1,1,0,0,0,0,
+                                        0,0,0,1,1,1,1,1,1,1,1,0,0,0,
+                                        0,0,1,1,1,1,1,1,1,1,1,1,0,0,
+                                        0,1,1,1,1,1,1,1,1,1,1,1,1,0,
+                                        0,1,1,1,1,1,1,1,1,1,1,1,1,0,
+                                        1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                                        1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                                        1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                                        1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                                        1,1,0,0,0,0,0,0,0,0,0,0,1,1,
+                                        0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
             size = 36.0f;
             std::vector<Vector3*> mPosition;
             std::vector<Vector3*> mTriangle;
@@ -33,7 +46,7 @@ namespace Aurora
 
             int vert = 0;
 
-            x = -size * 7 -size/2.0f;
+            x = -size * 1 -size/2.0f;
             y = 0;
             z = -size * 7 -size/2.0f;
 
@@ -41,22 +54,26 @@ namespace Aurora
             iVertex = 0;
             points = 0;
 
-            for(int i = 0; i < 14; i++)
+            for(int i = 0; i < 11; i++)
             {
                 for(int j = 0; j < 14; j++)
                 {
-                    mPosition.push_back(new Vector3(x+i*size,   y, z+(j+1)*size));
-                    mPosition.push_back(new Vector3(x+(i+1)*size, y, z+(j+1)*size));
-                    mPosition.push_back(new Vector3(x+(i+1)*size, y, z+j*size));
-                    mPosition.push_back(new Vector3(x+i*size,   y, z+j*size));
+                    if(skyBoxMatrix[i*14+j] == true)
+                    {
+                        mPosition.push_back(new Vector3(x+i*size,   y, z+(j+1)*size));
+                        mPosition.push_back(new Vector3(x+(i+1)*size, y, z+(j+1)*size));
+                        mPosition.push_back(new Vector3(x+(i+1)*size, y, z+j*size));
+                        mPosition.push_back(new Vector3(x+i*size,   y, z+j*size));
 
-                    mTriangle.push_back(new Vector3(iVertex, iVertex+1, iVertex+2));
-                    mTriangle.push_back(new Vector3(iVertex+2, iVertex+3, iVertex));
+                        mTriangle.push_back(new Vector3(iVertex, iVertex+1, iVertex+2));
+                        mTriangle.push_back(new Vector3(iVertex+2, iVertex+3, iVertex));
 
-                    iVertex += 4;
-                    points += 6;
+                        iVertex += 4;
+                        points += 6;
+                    }
                 }
             }
+            vertsNum = points;
 
             skyBoxVertices = (SimplePSPVertex2*)memalign(16,points * sizeof(SimplePSPVertex2));
 
@@ -99,8 +116,12 @@ namespace Aurora
 
 		}
 
-		void SkyBox::Render(Vector3 color)
+		void SkyBox::Render(Vector3 color, Vector3 playerPos, float camAngle)
 		{
+            sceGumRotateX(0.0f);
+            sceGumRotateY(-camAngle);
+            sceGumRotateZ(0.0f);
+
 		    sceGuColor(GU_COLOR(color.x,color.y,color.z,1.0f));
 		    sceGuFrontFace(GU_CW);
 
@@ -108,7 +129,7 @@ namespace Aurora
             sceGuDisable(GU_DEPTH_TEST);
 			//sceGuDepthMask(GU_TRUE);
 
-			sceGumDrawArray(GU_TRIANGLES, GU_VERTEX_32BITF | GU_TRANSFORM_3D, 1176, 0, skyBoxVertices);
+			sceGumDrawArray(GU_TRIANGLES, GU_VERTEX_32BITF | GU_TRANSFORM_3D, vertsNum, 0, skyBoxVertices);
 
            // sceGuDepthMask(GU_FALSE);
             sceGuEnable(GU_DEPTH_TEST);
